@@ -1,0 +1,11 @@
+# 20071017 Nelson
+%{
+	<HTML> <HEAD> <!-- This HTML file has been created by a ruby servlet -->
+	<TITLE>Camera #{cameraName} Interface</TITLE>
+	</HEAD>
+	<FRAMESET cols="25%,75%">
+		<FRAME src="/camerahistory?cameraName=#{cameraName}&index=0&navigation=0" name="shownav">
+		<FRAME src="/showimage?cameraName=#{cameraName}&imageName=ifetch.png" name="showframe">
+	</FRAMESET>
+	</HTML>
+ }

@@ -1,0 +1,505 @@
+#!/usr/bin/ruby
+
+####################################################################################
+# ifetch-tools is a set of tools in ruby that can collect images from ip based cameras,
+# monitor collection process, and provide an interface to view collected history.
+# Copyright (C) 2005-2009 Richard Nelson
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+##############################################################################################
+# Set the current version information.
+##############################################################################################
+VER = "0.14.0"
+
+##############################################################################################
+# The below should daemonize this code.
+##############################################################################################
+#exit if fork			# Parent exits, child continues.
+#Process.setsid			# Become session leader.
+#exit if fork			# Zap session leader. See [1].
+#Dir.chdir "/"			# Release old working directory.
+##File.umask 0000			# Ensure sensible umask. Adjust as needed.
+#File.umask 0177			# Ensure sensible umask. Adjust as needed.
+#STDIN.reopen "/dev/null"	# Free file descriptors and
+#STDOUT.reopen "/dev/null", "a"	# point them somewhere sensible.
+#STDERR.reopen STDOUT		# STDOUT/ERR should better go to a logfile.
+
+##############################################################################################
+# Do the require and include stuff we need for our operations.
+##############################################################################################
+require 'English'
+require 'drb'
+require 'ftools'
+require 'logger'
+require 'net/http'
+require 'time'
+require 'RMagick'
+
+##############################################################################################
+# Initialize the array for the image access info with all nil values.
+##############################################################################################
+$image_array = Array.new
+
+##############################################################################################
+# Initialize various variables that we intend to pull in with nil values.
+##############################################################################################
+data_location=nil
+day_image_sleep=nil
+image_addr=nil
+image_addr_port=nil
+image_count=nil
+image_count_on_motion=nil
+image_pwd=nil
+image_sleep=nil
+image_uid=nil
+image_url=nil
+log_files=nil
+log_size=nil
+motion_enable=nil
+motion_mdpp=nil
+motion_sleep=nil
+
+##############################################################################################
+# Define a class for our DRB communications.
+##############################################################################################
+class DataExchangeServer
+	def xchange_array
+		$image_array
+	end
+end
+
+##############################################################################################
+# Define the way we pull in an image from a camera.
+#
+# This def will pull the image from the cam now and return the response.
+##############################################################################################
+def pullimage(address,port,url,uid,pwd)
+	Net::HTTP.start(address, port) do |http|
+		req_img = Net::HTTP::Get.new(url)
+		#req_img.basic_auth 'username', 'password'
+		req_img.basic_auth uid, pwd
+		response = http.request(req_img)
+		#puts "Code = #{response.code}"
+		#puts "Message = #{response.message}"
+		#response.each {|key, val| printf "%14s = %40.40s\n", key, val }
+		## Nelson working		f.write(response.body)
+		#Magick::Image.from_blob(response.body)[0];
+		response.body
+	end
+end
+
+##############################################################################################
+# The two def below are modified from gpl code at:
+# http://spodzone.org.uk/packages/hawking-HNC230G-motion-detect.txt
+# Copyright Tim Haynes <tim+hawking@spodzone.org.uk> 2006-
+# Distributable under the terms of the Gnu Public Licence (GPL) - see
+# <http://www.gnu.org/copyleft/gpl.html>.
+##############################################################################################
+##############################################################################################
+# Define process(image) 
+# massage an image to be suitable for comparison
+# here we compute the luminosity channel since rmagick's builtin doesn't work
+# and scale it down to half/quarter-size to remove tiny transient errors.
+##############################################################################################
+def process(image)
+	#image.colorize(0.25, 0.6, 0.15, 1, Magick::Pixel::from_color("grey")).modulate(1.25,0.01,1).scale(0.5)
+	image_temp=Magick::Image.from_blob(image)[0];
+	#image_temp.colorize(0.25, 0.6, 0.15, 1, Magick::Pixel::from_color("grey")).modulate(1.25,0.01,1).scale(0.5)
+	#image_temp.modulate(1.25,0.01,1).scale(0.5)
+	image_temp.modulate.scale(0.25)
+end
+def difference(a,b)
+	#a.write("a.jpeg")
+	#b.write("b.jpeg")
+	# see "mean difference per pixel" in the RMagick docs
+	a.difference(b)[1]
+end
+
+
+###############################################################
+# Eval in the ifetch-tools.conf file with error trap on this operation.
+begin
+	eval(File.open("/etc/ifetch-tools/ifetch-tools.conf") {|fh| fh.read})
+rescue
+	puts "Error encountered reading the ifetch-tools.conf file of: "+$!
+end
+
+###############################################################
+# Eval in the conf file for the camera with error trap on this operation.
+begin
+	eval(File.open(ARGV[0]) {|fh| fh.read})
+rescue
+	puts "Encountered reading the camera.conf file of: "+$!
+end
+
+###############################################################
+# Set the prefix to be the name of the conf file. Also the prefix is now expected to be a  numeric value for port operations on drb exchange.
+prefix=File.basename(ARGV[0], ".conf")
+
+###############################################################
+# Set on varialbe names for file operations.
+pid_name = "/var/run/ifetch-tools/#{prefix}.pid"
+log_name = "/var/log/ifetch-tools/#{prefix}.txt"
+
+################################################################
+# Set the singleton so we can be the only one with this config.
+lock_file = File::open("/var/lock/ifetch-tools/#{prefix}.lock", 'w')
+if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
+	# Do stuff on singleton if clean singleton established. 
+	###############################################################
+	# Just drop our PID out for multi camera monitoring and operations.
+	File.open(pid_name,'w') do |f|
+		f.write(Process.pid)
+	end
+
+	###############################################################
+	# Setup for logging.
+	log = Logger.new(log_name, 5, log_size*1024)
+
+	###############################################################
+	# Lets trap here to ensure we can close clean with the signal of INT
+	# Funny on the rescue where this shows up. Please see the rescue where we
+	# are watching the HTTP:: stuff that I seem to have to make a clause for
+	# exit.
+	trap("INT"){ 
+		puts "Caught INT so attempting to exit!"
+		log.warn("Caught INT so attempting to exit!")
+		exit
+	}
+
+	###############################################################
+	# First thing and let the log file know we are alive.
+	log.info("ifetch version - #{VER} starting.")
+
+	###############################################################
+	## 20070203 Nelson - After a bit of consideration and talking with a user on history
+	## operations I need a way to offer greater history than what I had designed for so
+	## the trick we shall try is to use the mod of the image count and splice out the images
+	## to sub folders. This may take some time and to do so we will glob in still.
+
+	###############################################################
+	# 20090122 Nelson - tesing for /var/lib/ifetch-tools which is the default location that
+	# data is to be stored in. Just create it if it does not exists.
+	if File.exist?("/var/lib/ifetch-tools") then
+		log.info("/var/lib/ifetch-tools directory exists.")
+	else
+		log.info("No /var/lib/ifetch-tools data directory found so creating one.")
+		Dir.mkdir("/var/lib/ifetch-tools")
+		# This is a simple step on directory structures to override File.umaks setting.
+		File.chmod(0700, "/var/lib/ifetch-tools")
+	end
+
+	###############################################################
+	# 20080224 Nelson - modified for dynamic symlink via variable data_location that can now
+	# be included in the camera conf file.
+	#
+	# Below is the code to generate the folder structure for history work.
+	# If the MODPRIME is changed in the ifetch.conf file then the history will need to be smoked!
+	log.info("Testing for directory structure for camera #{prefix}!")
+	# Fist check for the camera directory.
+	if File.exist?("/var/lib/ifetch-tools/#{prefix}") then
+		log.info("Camera #{prefix} parent directory exists.")
+		# This is a simple step on directory structures to override File.umaks setting.
+		File.chmod(0700, "/var/lib/ifetch-tools/#{prefix}")
+	else
+		log.info("Camera #{prefix} NO htdocs folder starting data directory generation.")
+		if data_location!=nil then
+			log.info("Camera #{prefix} data directory is being generated for symlink operations at #{data_location}.")
+			if File.exist?(data_location+"/#{prefix}") then
+				log.info("Camera #{prefix} symlink parent directory exists.")
+				log.info("Camera #{prefix} only creating symlink.")
+				File.symlink(data_location+"/#{prefix}", "/var/lib/ifetch-tools/#{prefix}")
+			else
+				log.info("Camera #{prefix} NO symlink parent directory exists.")
+				log.info("Camera #{prefix} creating parent and symlink.")
+				Dir.mkdir(data_location+"/#{prefix}")
+				log.info("Camera #{prefix} data directory is being symlinked from #{data_location}/#{prefix} to /var/lib/ifetch-tools/#{prefix}.")
+				File.symlink(data_location+"/#{prefix}", "/var/lib/ifetch-tools/#{prefix}")
+			end
+			# This is a simple step on directory structures to override File.umaks setting.
+			File.chmod(0700, data_location+"/#{prefix}")
+		else
+			log.info("Camera #{prefix} data directory is being generated and NOT symlinked.")
+			Dir.mkdir("/var/lib/ifetch-tools/#{prefix}")
+			# This is a simple step on directory structures to override File.umaks setting.
+			File.chmod(0700, "/var/lib/ifetch-tools/#{prefix}")
+		end
+	end
+	# Now handle the mod directory.
+	0.upto(MODPRIME-1) do |count|
+		if File.exist?("/var/lib/ifetch-tools/#{prefix}/#{count}") then
+			log.info("Camera #{prefix} mod #{count} directory exists.")
+		else
+			log.info("Camera #{prefix} mod #{count} directory is being generated.")
+			Dir.mkdir("/var/lib/ifetch-tools/#{prefix}/#{count}")
+		end
+		# This is a simple step on directory structures to override File.umaks setting.
+		File.chmod(0700, "/var/lib/ifetch-tools/#{prefix}/#{count}")
+	end
+
+	###############################################################
+	# We will use info here because we will sniff for all ok later with entry on the log 
+	# and a simple sentry on success after trouble.
+	log.info("Please wait for history to initialize before attempting to access the history!")
+
+	###############################################################
+	# This is the area where we collect the timestamps are on any history.
+	# Initialize an arrary
+	tmp_history_array = Array.new
+	# Get a listing of all the images in the history
+	history_files = Dir["/var/lib/ifetch-tools/#{prefix}/*/*.jpg"]
+	# Unremark the below lines for diagnostic 
+	#puts history_files
+	#puts history_files.length
+	0.upto(history_files.length - 1) do |count|
+		# Pop off the index from the image name for the array index, time stamp the file, recreate array.
+		##################### Bug fix 6960 #############################################
+		# Remarking out the line changed for reference. This bug also required a change in 
+		# the code on the image time stamp in the array for exchange.
+		#tmp_history_array[File.basename(history_files[count], ".jpg").split(/_/)[1].to_i] = File.new(history_files[count]).mtime.to_s+","+history_files[count]
+		# Get the acutal file number:
+		temp_fn = File.basename(history_files[count], ".jpg").split(/_/)[1].to_i
+		tmp_history_array[temp_fn] = Time.parse(File.mtime(history_files[count]).to_s).strftime("%Y-%m-%d %H:%M:%S")+","+[prefix,temp_fn.divmod(MODPRIME)[1].to_s,File.basename(history_files[count])].join('/')
+		#Unremark for below for diag on the actual number being split out. 
+		#puts File.basename(history_files[count], ".jpg").split(/_/)[1]
+	end
+
+	#puts tmp_history_array
+	if image_count >= tmp_history_array.length then
+		log.info("Starting history generation with history count normal!")
+		0.upto(history_files.length - 1) do |count|
+			# 20070316 Nelson: Well we have an issue if images are missing from an array.
+			# We need to watch out for null entries since we base a lot of logic on the expectation 
+			# of a set of images in sequence. So before we do a 1 to 1 transfer lets make sure the 
+			# transfer is not nil. 
+			# One issue that would appear later in the code is the sorting for latest image recorded
+			# and needing to start writing again after most recent images. So the below modification
+			# should address the issue.
+			if tmp_history_array[count] != nil then
+				#puts tmp_history_array[count] 
+				$image_array[count] = tmp_history_array[count] 
+			else
+				$image_array[count] = "19000101 00:00:01,/ifetch.png"
+			end
+		end
+	else
+		#puts "History is more than desired count."
+		log.info("Starting history generation with history count over set collection!")
+		0.upto(image_count - 1) do |count|
+			$image_array[count] = tmp_history_array[count] 
+		end
+		log.info("Dumping history count over set collection from disk!")
+		image_count.upto(history_files.length - 1) do |count|
+			#puts "Deleting "+tmp_history_array[count].split(/,/)[1]+"!"
+			File.delete("/var/lib/ifetch-tools/"+tmp_history_array[count].split(/,/)[1])
+		end
+	end
+
+	# 20070108 Nelson: We need to bump the image count to the next correct number.
+	# Set the counter up for starting at correct location.
+	if history_files.length > 1 then 
+		#puts image_count
+		#puts $image_array.max
+		#puts $image_array.index($image_array.max)
+		# Switching from count = $image_array.index($image_array.sort[0]) to the below
+		count = $image_array.index($image_array.max)
+		#puts count
+		history_count = $image_array.length
+		#if image_count > history_count then
+		#	count = history_count-1
+		#	#puts $image_array.sort[0]
+		#end
+	else
+		count = -1
+		history_count = 0
+	end
+
+	log.info("History generation complete with #{history_count} images in the history and start image of #{[count+1]}. Collection count set at #{image_count}. History access is now online.")
+
+	# Here we clear out things we want to like unused array space.
+	tmp_history_array.clear
+	history_files = ""
+
+	###############################################################
+	# Put in service 20061011 test code.
+	# Setup the communication model with DRB for the servlet to talk to us.
+	#DRb::DRbServer.default_load_limit LOADLIMIT
+	#DRb.start_service("druby://:7777", SentenceWrapper.new, {:load_limit => 90214400})
+	#DRb.start_service('druby://localhost:9000', aServerObject)
+	drb_port = "druby://localhost:"+(BASEPORT+prefix.to_i).to_s
+	aServerObject = DataExchangeServer.new
+	DRb.start_service(drb_port, aServerObject, {:load_limit => LOADLIMIT})
+	#puts "Hello!"
+	#DRb.thread.join # Don't exit just yet!
+
+	# Set a sentry to a value of 0 to skip clean operation logging. This is the 
+	# default behavior.
+	sentry_check = 0
+	
+
+	###############################################################
+	# Here is where we add a couple of things for the motion detection operations.
+	# Set a sentry for skip checking that will count down until images without test are done.
+	motion_sentry = 0
+	# We need a reference image to test with and we will not write it so we do not need to time stamp it.
+	if motion_enable == 0 then
+		begin
+			log.info("Motion detection enabled. Pulling first image!")
+			image1=pullimage(image_addr,image_addr_port,image_url,image_uid,image_pwd)
+		rescue Exception
+			log.warn("Encountered an error during image1 initial pull of: "+$!)
+		end
+
+	end
+	###############################################################
+	# Now start the loop that monitors via image_count.
+	until count>image_count
+		# Test here to ensure once we get to image_count just start over.
+		if count < image_count-1
+			# puts "I am adding 1 to count check!"
+			count=count+1
+		else
+			#puts "I am here at count check!"
+			#puts count
+			count=0
+		end
+		begin
+			# Get the current image
+			image2=pullimage(image_addr,image_addr_port,image_url,image_uid,image_pwd)
+			image_name_DRB_exchange = [prefix,count.divmod(MODPRIME)[1].to_s,prefix+"_"+count.to_s+".jpg"].join('/')
+			image_name = ["/var/lib/ifetch-tools",image_name_DRB_exchange].join('/')
+			##################### Bug fix 6960 #############################################
+			# Remarking out the line changed for reference. There is also a line in the history
+			# recovery area is changed for .mtime on file.
+			#$image_array[count] = DateTime.now.to_s+","+image_name
+			$image_array[count] = Time.now.strftime("%Y-%m-%d %H:%M:%S")+","+image_name_DRB_exchange
+			
+			################################################################################
+			# Now we test to see if we are doing motion detection and if so then we need two
+			# images and we will now compare for difference unless asked to skip
+			# Just to be safe run the Garbage Collection
+			if motion_enable == 0 then
+				#puts "Starting sentry_motion test.\n"
+				if motion_sentry < 1 then
+					# Here we are asked to listen for testing again.
+					#puts "Before"
+					mdpp = difference(process(image2),process(image1))
+					#mdpp2 = difference(process2(image2),process2(image1))
+					GC.start
+					puts "Images tested resulted with mdpp of #{mdpp}"
+					#puts "Images tested resulted with mdpp of #{mdpp} and mdpp2 of #{mdpp2}"
+					if mdpp > motion_mdpp then
+						puts "Motion detected!"
+						log.info("Motion detected: mdpp=#{mdpp} and motion_mdpp=#{motion_mdpp}!")
+						motion_sentry = image_count_on_motion
+					else
+						# Here drop the count back and just keep writing out the same image number
+						# until we detect sufficient mdpp.
+						# I suppose count could equal 0.
+						if count != 0 then
+							count=count-1
+						end
+					end
+				else
+					# Here we are taking the number of images without testing.
+					# Drop one of the count of untested images.
+					motion_sentry = motion_sentry-1
+				end
+				#puts "Ending sentry_motion test.\n"
+			end
+			# Write image2 to image1, since image1 is what we write and image2 is latest.
+			#puts "Swap images"
+			image1 = image2
+			###############################################################
+			# Now put image in a file	Also let us do a quick error trap here.
+			#puts count
+			#puts "#{image_name} - Image Name"
+			#puts $image_array[count]
+			begin
+				File.open(image_name,'w') do |f|
+					f.write(image1)
+				end
+			rescue Exception
+				log.warn("Encountered an error during image file output of: "+$!)
+			end
+
+		###############################################################
+		# Now throttle the program back if need be.
+		# First test to see if which sleep we need to use.
+		# Use the motion burst as first option if triggered.
+		if motion_sentry > 0 then
+			puts "Performing motion_sleep of #{motion_sleep}."
+			sleep motion_sleep
+		else
+			# Set the daily sleep modification specified in each camera conf.
+			sleep_test_data = day_image_sleep[Time.now.strftime("%w").to_i].split(",")
+			if Time.now.strftime("%H:%M") >= sleep_test_data[0] && Time.now.strftime("%H:%M") <= sleep_test_data[1]
+	 			# If we are here we are in a modified time in the day for sleep change
+				#puts true
+				sleep sleep_test_data[2].to_f
+			else
+				#puts false
+				sleep image_sleep
+			end
+		end
+
+		###############################################################
+		# If we encounter an issue that raised the rescue Exception and set the sentry_check = 1
+		# then we are just listenting here if we get to this point to let the log file know that 
+		# we are ok again. This is used to determine the health of a running script to a camera for
+		# for problems. I am sure there are better ways but this seems KISS.
+		if sentry_check != 0 
+			log.info("Sentry clear hit and appears to be operating again ok! ifetch version - #{VER}!")
+			sentry_check = 0
+		end
+		###############################################################
+		# Rescue out for all errors.
+		rescue Exception
+			###############################################################
+			# First things is notify there is an error.
+			#puts "Encountered an error: "+$!
+			#log.warn("Encountered an error from the Net::HTTP work of: "+$!)
+			log.warn("Encountered an error on collection of: "+$!)
+			# Sleep a bit when error is raised for this process.
+			sleep ERRORSLEEP
+
+			###############################################################
+			# Try to setup catching a clean interrupt. This seems to be odd that I have to 
+			# do this. It is for the trap("INT") form comman line testing.
+			if ""+$! == 'exit'
+				log.warn('Exiting now!')
+				# Try to be nice and close the lock file.
+				lock_file.close
+				exit
+			end
+			###############################################################
+			# If we encounter an issue lets set a sentry to let the program know that 
+			# we are still alive and well. Setting the sentry to 1 will force an information
+			# output to logging that we are back to ok status.
+			sentry_check = 1
+		end
+	end
+
+###############################################################
+# Try to close the lock file and the Logger.
+lock_file.close
+log.close
+
+else
+	###############################################################
+	# If we get here we already have a running ifetch.rb
+	puts "According to lock file the program for the conf file is already running!"
+end

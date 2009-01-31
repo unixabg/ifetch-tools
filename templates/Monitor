@@ -1,0 +1,57 @@
+# 20080120 Nelson - Modified for images to load correct if garbage added after /monitor call.
+# 20071128 Nelson - Modified for HOMELINK navigation.
+# 20071017 Nelson
+%{
+	<HTML> <HEAD> <!-- This HTML file has been created by a ruby servlet -->
+	<TITLE>Camera Monitor Interface</TITLE>
+	<SCRIPT type="text/javascript">
+	<!--
+	function redirecter(){
+		window.location = "/monitor"
+	}
+	//-->
+	</SCRIPT>
+	</HEAD>
+	<BODY LINK=#{LINK} ALINK=#{ALINK} VLINK=#{VLINK} BGCOLOR=#{BGCOLOR}  onLoad="setTimeout('redirecter()', 30000)">
+	<TABLE border="1" cellpadding="5" >
+	<TBODY>
+	<TD>
+		<A HREF="#{HOMELINK}"><img src="/ifetch.png" width=100 heigth=100 ></A>
+		<BR>wwwifetch ver. - #{VER} 
+	</TD>
+	<TD>
+		<CENTER><FONT size=+2>Operation & Action Legend</FONT></Center>
+		<TABLE border="0" cellpadding="5" >
+		<TBODY>
+		<TD>
+			<IMG src="/start.jpg" border="0"> - Start collection
+			<BR><IMG src="/stop.jpg" border="0"> - Stop collection
+			<BR><IMG src="/log.jpg" border="0"> - View log
+			<BR><A HREF="/startallcameras"><IMG src="/restart.jpg" border="0"></A> - Start all cameras 
+			<BR>
+		</TD>
+		<TD>
+			<IMG src="/grey.jpg" border="0"> - Collection offline
+			<BR><IMG src="/green.jpg" border="0"> - Collection working
+			<BR><IMG src="/red.jpg" border="0"> - Collection in alarm mode
+		</TD>
+		</TR>
+		</TBODY></TABLE>
+	</TD>
+	</TR>
+	</TBODY></TABLE>
+	<TABLE border="1" cellpadding="5" >
+	<TBODY>
+	<TR>
+	<TD>Camera-PID</TD>
+	<TD>Actions</TD>
+	<TD>Status</TD>
+	<TD>Logs</TD>
+	<TD>Information</TD>
+	</TR>
+	#{myTempRespond}
+	</TBODY></TABLE>
+	<P>Monitor page of wwwifetch ver. - #{VER}</P>
+	</BODY>
+	</HTML>
+}

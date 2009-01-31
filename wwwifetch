@@ -1,0 +1,496 @@
+#!/usr/bin/ruby
+
+#####################################################################################
+# ifetch-tools is a set of tools that can collect images from ip based cameras,
+# monitor collection process, and provide an interface to view collected history.
+# Copyright (C) 2005-2009 Richard Nelson
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+##############################################################################################
+# Set some variables.
+##############################################################################################
+# Version number
+VER = "0.8.0"
+# Max number of cams to show and work with for all creation operations.
+
+##############################################################################################
+# Do the require and include stuff we need for our operations.
+##############################################################################################
+require 'webrick'
+require 'drb'
+#require 'logger'
+# Unremark the below two lines if you want to try with high-performance.
+#require 'rubygems'
+#require 'webrick/highperformanceserver'
+include WEBrick
+
+
+##############################################################################################
+# Suck in the config settings from the ifetch-tools.conf file.
+##############################################################################################
+begin
+	eval(File.open("/etc/ifetch-tools/ifetch-tools.conf") {|fh| fh.read})
+rescue
+	puts "Error encountered reading the conf file of: "+$!
+end
+
+
+##############################################################################################
+# Class definitions below.
+##############################################################################################
+
+##############################################################################################
+# Camera generates two frames and calls CameraHistory on the left frame of the system. 
+##############################################################################################
+class Camera < HTTPServlet::AbstractServlet
+	def do_GET(req, res)
+		HTTPAuth.basic_auth(req, res, 'Camera History Realm') {|user, pass|
+			# this block returns true if
+			# authentication token is valid
+			user == HISTORYUSER && pass == HISTORYPASS
+		}
+		res['Content-Type'] = "text/html" # Tell the browser how we are talking
+		cameraName = /[A-Za-z0-9_]+/.match(req.query['cameraName'])[0] # Crop out all the bad stuff.
+		res.body = eval(File.open("/usr/share/ifetch-tools/templates/Camera") {|fh| fh.read})
+	end
+end
+
+##############################################################################################
+# CameraHistory generates the left frame of the system and setup some stuff to do the magic
+# on the camera history.
+##############################################################################################
+class CameraHistory < HTTPServlet::AbstractServlet
+	def do_GET(req, res)
+		HTTPAuth.basic_auth(req, res, 'Camera History Realm') {|user, pass|
+			# this block returns true if
+			# authentication token is valid
+			user == HISTORYUSER && pass == HISTORYPASS
+		}
+		res['Content-Type'] = "text/html" # Tell the browser how we are talking
+		cameraName = /[A-Za-z0-9_]+/.match(req.query['cameraName'])[0] # Crop out all the bad stuff.
+		#  page = /[0-9]+/.match(req.query['page'])[0] # Crop out all the bad stuff.
+		index = /[0-9]+/.match(req.query['index'])[0] # Crop out all the bad stuff.
+		myJumpNavigation = "" # Jump navigation string.
+		myNavigation = "" # General navigation string.
+		myTempRespond = "" # Set a local var to null.
+		navigation = /[0-9]+/.match(req.query['navigation'])[0] # Crop out all the bad stuff.
+
+		# Here is the performance boost for exchange of data between the collection daemon and the web interface
+		DRb.start_service(nil,nil,{:load_limit => LOADLIMIT})
+		drb_port = "druby://localhost:"+(BASEPORT+cameraName.to_i).to_s
+		#obj = DRbObject.new(nil, 'druby://localhost:9000')
+		obj = DRbObject.new(nil, drb_port)
+
+		# Define our array to handle the DRb exchange.
+		imgSorted = Array.new
+
+		# Now use obj, imgSorted is not as descriptive but remember that we expect the sequence to be pre sorted so in fact name is ok.
+		imgSorted = obj.xchange_array
+		DRb.stop_service() # Stop the DRb on the webrick session
+
+		imgSortedLength = imgSorted.length
+		totalPages = imgSortedLength / IMAGESPERPAGE # Get the total number of pages.
+		#puts imgSortedLength
+
+		# This is just a logic flow here for the first page while the system is populating.
+		# Note, that the way we display images will cause drift in respect to amount of images and the time at the interface.
+		#if totalPages != 0
+		#totalPagesCounter = totalPages - 1
+		#end 
+
+		# Ok here we are getting a number to reference so we do not have time drift.
+		tmpIndex = index.to_i
+
+		# Set a sentry for start over on count back to 0
+		# We do not have to worry about backward count since that is addressed in the "< Previous | Next >" navigation on down.
+		indexSentry = -1
+
+		# Generate the response of images per page and guard against no images yet.
+		if imgSortedLength > 0
+			if tmpIndex+IMAGESPERPAGE >= imgSortedLength
+				lastImgOnPage = imgSortedLength - 1
+				indexSentry = tmpIndex+IMAGESPERPAGE - imgSortedLength - 1
+			else
+				lastImgOnPage = tmpIndex+IMAGESPERPAGE - 1
+			end
+		else 
+			lastImgOnPage = 0
+			totalPages = -1
+		end
+
+		# This just keeps us from populating the navigation frame on the initial login to history and if no history collected yet.
+		if navigation.to_i == 1 && imgSortedLength > 0 
+		# Ok now actually populate the page with the lastImgOnPage
+			index.to_i.upto(lastImgOnPage) do |imgIndex|
+				#imgTime, imgFile = imgSorted[5].to_s.split(/,/)
+				imgTime, imgFile = imgSorted[imgIndex].split(/,/)
+				#puts imgFile
+				# Ok here we are getting a number to reference so we do not have time drift based on our new navigation.
+				#imgTime, imgFile = imgSorted[imgIndex].to_s.split(/,/)
+				# 20090122 Nelson - Added small fix for .deb and user data expected in different location.
+				# myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'" target="showframe"><IMG SRC="'+imgFile+'" width='+HISTORYIMAGEWIDTH+' heigth='+HISTORYIMAGEHEIGTH+'></A><BR>'+"\n"
+				myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'" target="showframe"><IMG SRC="/data/'+imgFile+'" width='+HISTORYIMAGEWIDTH+' heigth='+HISTORYIMAGEHEIGTH+'></A><BR>'+"\n"
+			end
+			# 20081007 Nelson - removing this block to leave last page possibly short.
+			### Now finish starting back at 0 on the page that ran over the end of the array 
+			if imgSortedLength >= IMAGESPERPAGE
+				0.to_i.upto(indexSentry) do |imgIndex|
+					#imgTime, imgFile = imgSorted[5].to_s.split(/,/)
+					imgTime, imgFile = imgSorted[imgIndex].split(/,/)
+					#puts imgFile
+					# Ok here we are getting a number to reference so we do not have time drift based on our new navigation.
+					imgTime, imgFile = imgSorted[imgIndex].to_s.split(/,/)
+					myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'" target="showframe"><IMG SRC="/data/'+imgFile+'" width='+HISTORYIMAGEWIDTH+' heigth='+HISTORYIMAGEHEIGTH+'></A><BR>'+"\n"
+				end
+			end
+		end
+
+		# Ok here we do the Jump List as an array for just a bit.
+		#myJumpNavigation = myJumpNavigation+'<OPTION STYLE="color : #ff6666" selected > *-- Navigation Jump --* '+"\n"
+		myJumpHash = Hash.new
+		myJumpHash["0"] = '<OPTION STYLE="color : #ff6666" selected > *-- Navigation Jump --*'+"\n"
+
+		# Build the navi
+		0.upto(totalPages) do |count|
+			pageIndex = count*IMAGESPERPAGE
+			# Bug 11618 squash - The below is since we index with 0 and not 1 we have to watch for even page count division in to our total images and adjust if need be.
+			if pageIndex >= lastImgOnPage
+				pageIndex = pageIndex-1
+			end
+
+			# Split out our info from the array element.
+			imgTime, imgFile = imgSorted[pageIndex].split(/,/)
+			#puts imgFile
+
+			# tmpIndex will hold the index position of the page we are on.
+			tmpIndex = File.basename(imgFile, ".jpg").split(/_/)[1].to_i
+
+			# This is the elements in the jumping list. This could be sorted but for now I am leaving since I sort of like how if shows the scroll of image count in an abstract way.
+			#myJumpNavigation = myJumpNavigation+'<OPTION value="/camerahistory?cameraName='+cameraName+'&index='+tmpIndex.to_s+'&navigation=1">'+imgTime+"\n"
+			myJumpHash[imgTime] = '<OPTION value="/camerahistory?cameraName='+cameraName+'&index='+tmpIndex.to_s+'&navigation=1">'+imgTime+"\n"
+		end
+
+		# Now that we have built it lets prep it to display it like we want (sorted in this case).
+		#myJumpNavigation = myJumpHash.sort.each {|key, value| puts "The key value is #{key} and the hash is #{value}" }
+		myJumpHash.sort.each {|key, value| myJumpNavigation = "#{myJumpNavigation}#{value}" }
+		#puts myJumpNavigation
+
+		# Ok here is where we handle the < Previous | Next >" navigation.
+		# Here is the code for a sinle page of images only or if this is the first time the user hits the hitsory.
+		if index.to_i-IMAGESPERPAGE < 0 && index.to_i+IMAGESPERPAGE > imgSortedLength-1 || navigation.to_i == 0 
+			myNavigation = %{<FORM NAME="myform">
+				<SELECT name="mylist" onChange="disp_text();"
+				#{myJumpNavigation}
+				</SELECT></FORM>Please select a time.<BR>
+			}
+		else
+			# If we are here then there is more than one page of images.
+			# Here is the move back page code
+			if index.to_i-IMAGESPERPAGE >= 0
+				myNavigation = %{<FORM NAME="myform">
+					<SELECT name="mylist" onChange="disp_text();">
+					#{myJumpNavigation}
+					</SELECT></FORM>
+					<A HREF="/camerahistory?cameraName=#{cameraName}&index=#{index.to_i-IMAGESPERPAGE}&navigation=1"> < Previous </A>
+				}
+			else
+				myNavigation = %{<FORM NAME="myform">
+					<SELECT name="mylist" onChange="disp_text();">
+					#{myJumpNavigation}
+					</SELECT></FORM>
+					<A HREF="/camerahistory?cameraName=#{cameraName}&index=#{index.to_i-IMAGESPERPAGE+imgSortedLength-1}&navigation=1"> < Previous </A>
+				}
+			end
+			# Here is the move forward between page code
+			if index.to_i+IMAGESPERPAGE <= imgSortedLength-1
+				myNavigation = %{#{myNavigation}| <A HREF="/camerahistory?cameraName=#{cameraName}&index=#{index.to_i+IMAGESPERPAGE}&navigation=1"> Next > </A><BR>
+				}
+			else
+				myNavigation = %{#{myNavigation}| <A HREF="/camerahistory?cameraName=#{cameraName}&index=#{indexSentry}&navigation=1"> Next > </A><BR>
+				}
+			end
+		end
+
+	# Now generate the page with the correct substitution.
+	res.body = eval(File.open("/usr/share/ifetch-tools/templates/CameraHistory") {|fh| fh.read})
+	end
+end
+
+##############################################################################################
+# Start and Stop the collection process for a given camera.
+##############################################################################################
+class CameraStartStop < HTTPServlet::AbstractServlet
+	def do_GET(req, res)
+		HTTPAuth.basic_auth(req, res, 'Camera Monitor Realm') {|user, pass|
+			# this block returns true if
+			# authentication token is valid
+			user == MONITORUSER && pass == MONITORPASS
+		}
+		res['Content-Type'] = "text/html" # Tell the browser how we are talking
+		cameraName = /[A-Za-z0-9_]+/.match(req.query['cameraName'])[0] # Crop out all the bad stuff.
+		# Now test for the status of the cameras lock file. If running we stop and if not we start.
+		myTempRespond = ""
+		lock_file = File::open("/var/lock/ifetch-tools/"+cameraName.to_s+".lock", 'w')
+		if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
+			# Camera not running action here
+			# Really important here to close the file or you will get confused!
+			lock_file.close
+			system_call = "/usr/bin/ifetch /etc/ifetch-tools/cameras/"+cameraName.to_s+".conf&"
+			pid = fork {
+				Process.setsid
+				(0...1024).each do |i|
+					begin
+						IO.for_fd(i).close
+					rescue Errno::EBADF
+					end
+				end
+				pid2 = fork { exec(system_call) }
+				Process.detach(pid2)
+				exit!
+			}
+			Process.detach(pid)
+			myTempRespond = "The servlet is attempting to start camera #{cameraName.to_s}"
+		else
+			# Camera running action here
+			# Set the camera_pid to hold the pid of the running camera process.
+			camera_pid = File.read("/var/run/ifetch-tools/"+cameraName.to_s+".pid").chomp
+			system_call = "kill -s 9 #{camera_pid} &"
+			Process.detach( fork { system(system_call) } )
+			myTempRespond = "The servlet is attempting to stop camera #{cameraName.to_s} "
+		end
+		res.body = eval(File.open("/usr/share/ifetch-tools/templates/CameraStartStop") {|fh| fh.read})
+	end
+end
+
+##############################################################################################
+# Monitor will be used as the basis to check the status of each camera that is listed from the
+# conf dir at the time of the servlet creation. The tool will use the listing of files with
+# the .conf extension.
+##############################################################################################
+class Monitor < HTTPServlet::AbstractServlet
+	def do_GET(req, res)
+		HTTPAuth.basic_auth(req, res, 'Camera Monitor Realm') {|user, pass|
+			# this block returns true if
+			# authentication token is valid
+			user == MONITORUSER && pass == MONITORPASS
+		}
+		res['Content-Type'] = "text/html" # Tell the browser how we are talking
+		myTempRespond = ""
+
+		# 20061207 not as clean as I would like it but this seems to do the trick
+		camera_array = Array.new
+		cam_count = 0
+		Dir["/etc/ifetch-tools/cameras/*.conf"].each do |cam_tmp|
+			camera_array[cam_count] = File.basename(cam_tmp, ".conf").to_i
+			cam_count = cam_count+1
+		end
+		camera_array.sort.each do |camera_num|
+			# Now test for the status of the cameras lock file.
+			lock_file = File::open("/var/lock/ifetch-tools/"+camera_num.to_s+".lock", 'w')
+			# Table entry 1 is the camera number, entry 2 is the PID, entry 3 is the status, and entry 4 is Information
+			if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
+				# Table entry one is the camera number, entry 2 is the status, and entry 3 is Information
+				myTempRespond =	 myTempRespond+'<TR><TD><CENTER>'+camera_num.to_s+'</CENTER></TD><TD><A HREF="/camerastartstop?cameraName='+camera_num.to_s+'"><CENTER><IMG SRC="/start.jpg"></A></CENTER></TD><TD><CENTER><IMG SRC="/grey.jpg"></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></CENTER></A></TD><TD>Camera ifetch is not running. </TD></TR>'
+				# Really important here to close the file or you will get confused!
+				lock_file.close
+			else
+				# Set the camera_pid to hold the pid of the running camera process.
+				camera_pid = File.read("/var/run/ifetch-tools/"+camera_num.to_s+".pid").chomp
+				# Put the camera pid and camera number in the table
+				myTempRespond = myTempRespond+'<TD><CENTER><A HREF="/camera?cameraName='+camera_num.to_s+'"> '+camera_num.to_s+'</A> - '+camera_pid+'</CENTER></TD><TD><CENTER><A HREF="/camerastartstop?cameraName='+camera_num.to_s+'"><IMG SRC="/stop.jpg"></A></CENTER></TD>'
+			# Set the logFileName
+			logFileName = "/var/log/ifetch-tools/"+camera_num.to_s+".txt"
+			# Remarked out the backtick with tail for a pure ruby try. Not for sure about performance but want to try.
+			# logFileLastLine = `/usr/bin/tail -n 1 #{logFileName}`.split(/,/)
+				# Put the notes of what the log file says in monitor.
+				tempForLastLine=[]
+				File.open(logFileName, "r") { |f|
+					while f.gets
+						tempForLastLine.push $_
+						tempForLastLine.shift if $. > 1
+					end
+				}
+
+				#tempForLastLine.each{|e| print e}
+				logFileLastLine = tempForLastLine[0].split(/,/) 
+
+				# Below is for diagnostics
+				#myTempRespond = myTempRespond+logFileLastLine[0]+logFileName
+				if logFileLastLine[0] == "I" then
+					myTempRespond = myTempRespond+'<TD><CENTER><IMG SRC="/green.jpg"></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></A></CENTER></TD><TD> '+logFileLastLine[1]+" </TD></TR>"
+				else
+					myTempRespond = myTempRespond+'<TD><CENTER><IMG SRC="/red.jpg"></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></A><CENTER></TD><TD> '+logFileLastLine[1]+" </TD></TR>"
+				end
+			end
+		end
+
+		res.body = eval(File.open("/usr/share/ifetch-tools/templates/Monitor") {|fh| fh.read})
+	end
+end
+
+##############################################################################################
+# Display an image and a time stamp. of the system. 
+##############################################################################################
+class ShowImage < HTTPServlet::AbstractServlet
+	def do_GET(req, res)
+	HTTPAuth.basic_auth(req, res, 'Camera History Realm') {|user, pass|
+		# this block returns true if
+		# authentication token is valid
+		user == HISTORYUSER && pass == HISTORYPASS
+	}
+	res['Content-Type'] = "text/html" # Tell the browser how we are talking
+		cameraName = /[A-Za-z0-9_]+/.match(req.query['cameraName'])[0] # Crop out all the bad stuff.
+		imgFile = /[\/A-Za-z0-9_+(.jpg)]+/.match(req.query['imageName'])[0] # Crop out all the bad stuff.
+
+		if imgFile != "ifetch.png"
+			# tmpIndex will hold the index position of the page we are on.
+			tmpIndex = File.basename(imgFile, ".jpg").split(/_/)[1].to_i
+			theDate = File.mtime("/var/lib/ifetch-tools/#{imgFile}")
+			pageToBuild = %{<A HREF="/camerahistory?cameraName=#{cameraName}&index=#{tmpIndex}&navigation=1 "target="shownav"><IMG SRC="/data/#{imgFile}"></A>}
+		else
+			tmpIndex = 0
+			theDate = "Welcome to camera number #{cameraName} history."
+			pageToBuild = %{<IMG SRC="#{imgFile}">}
+		end
+		res.body = eval(File.open("/usr/share/ifetch-tools/templates/ShowImage") {|fh| fh.read})
+	end
+end
+
+##############################################################################################
+# Attempt to start all cameras.
+##############################################################################################
+class StartAllCameras < HTTPServlet::AbstractServlet
+	def do_GET(req, res)
+		HTTPAuth.basic_auth(req, res, 'Camera Monitor Realm') {|user, pass|
+			# this block returns true if
+			# authentication token is valid
+			user == MONITORUSER && pass == MONITORPASS
+		}
+		res.body = eval(File.open("/usr/share/ifetch-tools/templates/StartAllCameras") {|fh| fh.read})
+		start_all_cameras
+	end
+end
+
+##############################################################################################
+# The below def should attempt to start every camera conf it can find.
+##############################################################################################
+def start_all_cameras
+	camera_array = Array.new
+	Dir["/etc/ifetch-tools/cameras/*.conf"].each do |cam_tmp|
+		cameraName = File.basename(cam_tmp, ".conf").to_i
+		pid = fork {
+			Process.setsid
+			(0...1024).each do |i|
+				begin
+					IO.for_fd(i).close
+				rescue Errno::EBADF
+				end
+			end
+			system_call = "/usr/bin/ifetch /etc/ifetch-tools/cameras/"+cameraName.to_s+".conf&"
+			pid2 = fork { exec(system_call) }
+			Process.detach(pid2)
+			exit!
+		}
+		Process.detach(pid)
+	end
+end
+
+##############################################################################################
+# The below should daemonize this code.
+# 20090124 Nelson - Remarking out since I want init.d to catch the pid correct.
+##############################################################################################
+#exit if fork			# Parent exits, child continues.
+#Process.setsid			# Become session leader.
+#exit if fork			# Zap session leader. See [1].
+#Dir.chdir "/"			# Release old working directory.
+##File.umask 0000			# Ensure sensible umask. Adjust as needed.
+#STDIN.reopen "/dev/null"	# Free file descriptors and
+#STDOUT.reopen "/dev/null", "a"	# point them somewhere sensible.
+#STDERR.reopen STDOUT		# STDOUT/ERR should better go to a logfile.
+
+##############################################################################################
+# Enable the logging operations we want below.
+##############################################################################################
+# Set up the log information
+server_log = WEBrick::Log::new("/var/log/ifetch-tools/wwwifetch-server.txt", WEBrick::Log::DEBUG)
+access_log = WEBrick::BasicLog::new("/var/log/ifetch-tools/wwwifetch-access.txt")
+referer_log = WEBrick::BasicLog::new("/var/log/ifetch-tools/wwwifetch-referer.txt")
+agent_log = WEBrick::BasicLog::new("/var/log/ifetch-tools/wwwifetch-agent.txt")
+custom_log = WEBrick::BasicLog::new("/var/log/ifetch-tools/wwwifetch-custom.txt")
+
+##############################################################################################
+# Setup for layered approach for authentication.
+##############################################################################################
+authenticate_history = Proc.new do |req, res|
+	HTTPAuth.basic_auth(req, res, 'History Level Authentication Required') do |user, pass|
+		#user == 'foo' && password == 'bar'
+		user == HISTORYUSER && pass == HISTORYPASS
+	end
+end
+
+
+
+##############################################################################################
+# Create the instance of the web server.
+##############################################################################################
+s = WEBrick::HTTPServer.new(
+	:Port => 2000,
+	#:DocumentRoot => "/usr/share/ifetch-tools/htdocs", 
+	:DocumentRoot => "/dev/null", 
+	:Logger         => server_log,
+	:AccessLog      => [
+	[ access_log, WEBrick::AccessLog::COMMON_LOG_FORMAT  ],
+	[ referer_log,   WEBrick::AccessLog::REFERER_LOG_FORMAT ],
+	[ agent_log,     WEBrick::AccessLog::AGENT_LOG_FORMAT   ],
+	[ custom_log, "%a %U %T" ]  # peeraddr, Request-URI, process time
+	]
+	)
+
+##############################################################################################
+# Create some mount points for servlet navigation
+##############################################################################################
+# Monitor Operations
+s.mount("/monitor", Monitor)
+s.mount("/camerastartstop", CameraStartStop)
+s.mount("/startallcameras", StartAllCameras)
+
+# History Operations
+s.mount("/camera", Camera)
+s.mount("/camerahistory", CameraHistory)
+s.mount("/showimage", ShowImage)
+s.mount('/', HTTPServlet::FileHandler, "/usr/share/ifetch-tools/htdocs",
+	:FancyIndexing => true,
+	:HandlerCallback => authenticate_history # Hook up the authentication proc.
+)
+# The below is for .deb operations and good locations.
+s.mount('/log/', WEBrick::HTTPServlet::FileHandler, '/var/log/ifetch-tools/')
+s.mount('/data/', WEBrick::HTTPServlet::FileHandler, '/var/lib/ifetch-tools/')
+
+# Catch the INT sig to shutdown
+trap("INT"){ 
+	s.shutdown
+}
+
+##############################################################################################
+# Start the cameras
+##############################################################################################
+start_all_cameras
+
+##############################################################################################
+# Launch webrick
+##############################################################################################
+s.start
+

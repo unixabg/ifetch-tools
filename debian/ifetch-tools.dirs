@@ -1,0 +1,4 @@
+/etc/ifetch-tools/cameras
+/var/log/ifetch-tools
+/var/run/ifetch-tools
+/var/lock/ifetch-tools

@@ -1,0 +1,17 @@
+# 20071128 Nelson - Modified for HOMELINK navigation.
+# 20071018 Nelson - Modified for navigation at the bottom.
+# 20071017 Nelson - initial file.
+%{
+	<HTML> <HEAD> <!-- This HTML file has been created by a ruby servlet -->
+	<TITLE>Camera #{cameraName} Interface</TITLE>
+	</HEAD><CENTER>
+	<BODY LINK=#{LINK} ALINK=#{ALINK} VLINK=#{VLINK} BGCOLOR=#{BGCOLOR}>
+	<P>#{theDate}</P>
+	#{pageToBuild}
+	<BR><BR>
+	<A HREF="#{HOMELINK}" "target="_top">Home</A> | <A HREF="/monitor" "target="_top">Monitor</A> 
+	<P>wwwifetch.rb version #{VER}</P>
+	</CENTER>
+	</BODY>
+	</HTML>
+ }

@@ -1,0 +1,260 @@
+####################################################################################
+# ifetch-tools is a set of tools that can collect images from ip based cameras,
+# monitor collection process, and provide an interface to view collected history.
+# Copyright (C) 2005-2009 Richard Nelson
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+
+####################################################################################
+# Changlog for milestone operations
+####################################################################################
+20090130 Nelson
+- Moving to ifetch-tools-0.15.0
+-- ifetch 0.14.0
+-- wwwifetch 0.8.0
+- Added info for IPCam P1000 from Plustek in examples/cameras/camera_number.conf
+20090126 Nelson
+- Added to default not to run ifetch or wwwifetch until line remarked out in
+/etc/ifetch-tools/ifetch-tools.conf
+20090125 Nelson
+- Cleaning out notes onf conf files since all operations now in this file.
+- All references to PATHTOROOT now removed. 
+20090124 Nelson
+- More cleanup for debian setup. 
+20090122 Nelson
+- Removing ifetch-startup and ifetch-shutdown examples since moving to /etc/init.d/ifetch-tools
+- Removing lock folder since now will be using /var/lock/ifetch-tools
+20090121 Nelson
+- Changes to get code in the form that will be ready for .deb building
+- Rename ifetch.rb to ifetch
+- Rename wwwifetch.rb to wwwifetch
+- chmod 755 ifetch and wwwifetch
+- Expect upon .deb install that ifetch and wwwifetch will be in /usr/bin
+- Expect static htdocs data to be in /usr/share/ifetch-tools/htdocs
+- Rename template folder to templates
+- Expect static templates data to be in /usr/share/ifetch-tools/templates
+- Expect user data to be created dynamic in /var/lib/ifetch-tools and test for it 
+- Expect config files to be in /etc/ifetch-tools/ifetch-tools.conf
+- Modified README.txt to reflect the move to using a .deb for installing.
+20081213 Nelson
+- Minor change on ifetch.rb to attempt to close Logging handle upon exit.
+- Update ifetch image.
+- Release ifetch-tools-0.14.2
+-- ifetch.rb 0.12.1
+-- wwwifetch.rb 0.7.0
+20081105 Nelson
+- Changed log extension from .log to .txt
+- Minor bug fixes and typo corrections.
+- Minor presentation modifications.
+- Minor feature adds.
+- Release ifetch-tools-0.14.0
+-- ifetch.rb 0.12.0
+-- wwwifetch.rb 0.7.0
+20081101 Nelson
+- Minor tuning on the mdpp testing for performance
+- Release ifetch-tools-0.12.4
+-- ifetch.rb 0.11.5
+-- wwwifetch.rb 0.6.9
+20081007 Nelson
+- Minor tuning on images on first page
+- Release ifetch-tools-0.12.3
+-- ifetch.rb 0.11.4
+-- wwwifetch.rb 0.6.9
+- Minor security adjustments
+- Minor last page display removal
+- Release ifetch-tools-0.12.2
+-- ifetch.rb 0.11.4
+-- wwwifetch.rb 0.6.8
+20080920 Nelson
+- Fixed bug on ifetch.rb and bumped to 0.11.4
+- Releasing ifetch-tools-0.12.1
+-- ifetch.rb 0.11.4
+-- wwwifetch.rb 0.6.6
+20080806 Nelson
+- Added support for motion detection on camera recording with a motion_sleep for a burst of images.
+- You will need to have librmagick-ruby installed for the the application to start since I require it.
+- Releasing ifetch-tools-0.12.0
+-- ifetch.rb 0.11.3
+-- wwwifetch.rb 0.6.6
+-- You will need to merge in existing configs with new variables at least in the global ifetch.conf file.
+20080701 Nelson
+- Added support for image_addr_port for cameras or users who want to use a non stanard port.
+- Releasing ifetch-tools-0.11.5
+-- ifetch.rb 0.10.17
+-- wwwifetch.rb 0.6.5
+20080319 Nelson
+- Fixed bug in data_location code for global usage if desired.
+- Releasing ifetch-tools-0.11.4
+-- ifetch.rb 0.10.16
+-- wwwifetch.rb 0.6.5
+20080225 Nelson
+- Added data_location variable for global usage if desired.
+- Releasing ifetch-tools-0.11.3
+-- ifetch.rb 0.10.15
+-- wwwifetch.rb 0.6.5
+20080127 Nelson
+- Minor comments modification in ./conf/example.conf.example
+- Corrected a bug in day_image_sleep operations in ifetch.rb
+- Modified the ifetch.png image to relect changes on the logo for fyeox.com
+- Releasing ifetch-tools-0.11.2
+-- ifetch.rb 0.10.14
+-- wwwifetch.rb 0.6.5
+20080120 Nelson
+- Modified ./template/Monitor for correct image display when garbage added after.
+20080106 Nelson
+- Setup logging capture for wwwifetch.rb in ./htdocs/log
+- Added a sample wwwifetch-logrotate.conf for log rotation of wwwifetch.rb logs
+- Centralized system defaults for camera confs and ifetch.rb in ifetch.conf
+- Modified remarks in ./conf/example.conf.example
+- Releasing ifetch-tools-0.11.1
+-- ifetch.rb 0.10.13
+-- wwwifetch.rb 0.6.5
+20071129 Nelson
+- Formating cleanup on ifetch.conf.example and conf/example.conf.example
+- Releasing 0.10.2
+- ifetch.rb 0.10.11
+- wwwifetch.rb 0.6.3
+20071128 Nelson
+- Modified templates
+- Modified ifetch.conf.example for new variable
+- Minor code cleanup on wwwifetch.rb 0.6.3
+20071125 Nelson
+- Released ifetch-tools-0.10.1
+- Minor typo bugs corrected.
+- ifetch.rb 0.10.11
+- wwwifetch.rb 0.6.2
+20071103 Nelson
+- Released ifetch-tools-0.10.0-pre-1
+- ifetch.rb 0.10.11
+- wwwifetch.rb 0.6.1
+20071101 Nelson
+- Released ifetch-tools-0.10.0-pre-1
+- ifetch.rb 0.10.11
+- wwwifetch.rb 0.6.0
+20071006 Nelson
+- Released ifetch-tools-0.9.19
+- ifetch.rb 0.10.10
+- wwwifetch.rb 0.5.19
+20071005 Nelson
+- Released ifetch-tools-0.9.18
+- ifetch.rb 0.10.10
+- wwwifetch.rb 0.5.18
+20071002 Nelson
+- Released ifetch-tools-0.9.16
+- ifetch.rb 0.10.10
+- wwwifetch.rb 0.5.16
+20071001 Nelson
+- Released ifetch-tools-0.9.15
+- ifetch.rb 0.10.9
+- wwwifetch.rb 0.5.16
+20070927 Nelson
+- Released ifetch-tools-0.9.14
+- ifetch.rb 0.10.7
+- wwwifetch.rb 0.5.15
+20070710 Nelson
+- Released ifetch-tools-0.9.13
+- ifetch.rb 0.10.6
+- wwwifetch.rb 0.5.12
+20070627 Nelson
+- Released ifetch-tools-0.9.12
+- ifetch.rb 0.10.4
+- wwwifetch.rb 0.5.9
+20070618 Nelson
+- Released ifetch-tools-0.9.11
+- ifetch.rb 0.10.4
+- wwwifetch.rb 0.5.6
+20070615 Nelson
+- Released ifetch-tools-0.9.10
+- ifetch.rb 0.10.4
+- wwwifetch.rb 0.5.5
+20070615 Nelson
+- Released ifetch-tools-0.9.9
+- ifetch.rb 0.10.4
+- wwwifetch.rb 0.5.2
+20070610 Nelson
+- Released ifetch-tools-0.9.8
+- ifetch.rb 0.10.3
+- wwwifetch.rb 0.5.1
+20070325 Nelson
+- Released ifetch-tools-0.9.7
+- wwwifetch.rb 0.5.1
+20070316 Nelson
+- Released ifetch-tools-0.9.6
+- ifetch.rb 0.10.1
+20070203 Nelson
+- Released ifetch-tools-0.9.5
+- ifetch.rb 0.10.0
+- wwwifetch.rb 0.5.0
+20061207 Nelson
+- Fixed bug 6970 in wwwifetch.rb
+- Fixed bug 6961 in ifetch.conf.example
+- Released ifetch-tools-0.9.3
+- ifetch.rb 0.9.5
+- wwwifetch.rb 0.4.4
+20061024 Nelson
+- Initial work on authentication for security.
+- Cleanup on address history other minor cleanup.
+- Released ifetch-tools-0.9.2
+- ifetch.rb 0.9.4
+- wwwifetch.rb 0.4.1 
+20061019 Nelson
+- Initial work to echange data between iftech and wwwifetch processes for performance.
+- Expecting to have camera.conf files to be a int >= 0.
+- Released ifetch-tools-0.9.0 
+- ifetch.rb 0.9.0
+- wwwifetch.rb 0.4.0
+20060705 Nelson
+- Small cleanup in remarks in wwwifetch.rb.
+- Sort cameras based on prefix in wwwifetch.rb.
+- Removed image_prefix var in all areas and standardized on prefix of the cameras .conf as the prefix for all files.
+- ifetch.rb 0.8.6
+- wwwifetch.rb 0.3.2
+20060318 Nelson
+- Small cleanup on information in all files and cleanup for putting at web site.
+- Included web site in source information with dir of ifetch-tools.rubyforge.org
+- Bump release verstion to ifetch-tools-0.8.3 and included web page release by iso date:
+- ifetch.rb 0.8.5
+- wwwifetch.rb 0.3.1
+- ifetch-tools.rubyforge.org 20060318
+20060312 Nelson
+- Small cleanup on default index.html to include that the code is GPL
+20060311 Nelson
+- Getting docs ready for ue with http://rubyforge.org/projects/ifetch-tools
+- Bumped file versions on ifetch-tools-0.8.2 tool set to: 
+- ifetch.rb 0.8.5
+- wwwifetch.rb 0.3.1
+20060219 Nelson
+- Completed initial work on web monitor of camera status.
+- Bumped file versions on ifetch-tools-0.8.1 tool set to:
+- ifetch.rb 0.8.4
+- wwwifetch.rb 0.3.0
+- I am sure there are bugs but in general I think the code is ready to ship out for beta.
+- I elected to use a backtick operation on part of the new monitoring operation and I would put this on a todo as a clean up in prue ruby. But it was just to clean and easy to make the backtick call for what I needed. This call expects that the system is running Linux.
+20060201 Nelson
+- Change variable of version to VER in ifetch.rb
+- Start work on ifetch-tools-0.8.1 tool set.
+20060120 Nelson
+- Removed images folder and elected to use htdocs as default parent dir for camera
+image folders on default tarball. i.e. each camera will have a folder under htdocs
+- wwwifetch.rb phase 2 appears to be at a stable point.
+- Starting to use a ifetch-tools release stamp of 0.8.0 with file versions are as follows:
+- ifetch.rb 0.8.3
+- wwwifetch.rb 0.2.1
+
+20060105 Nelson 
+- Started this file since we are getting close to first production release.
+- Cleaned up the images some on the servlet operations.
+- Verified the GPL to all files.

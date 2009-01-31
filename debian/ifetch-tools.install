@@ -1,0 +1,4 @@
+htdocs				/usr/share/ifetch-tools
+templates			/usr/share/ifetch-tools
+ifetch				/usr/bin
+wwwifetch			/usr/bin

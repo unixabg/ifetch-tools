@@ -1,0 +1,17 @@
+# 20071017 Nelson
+%{
+	<HTML> <HEAD> <!-- This HTML file has been created by a ruby servlet -->
+	<TITLE>Start All Cameras</TITLE>
+	<SCRIPT type="text/javascript">
+	<!--
+	function redirecter(){
+		window.location = "/monitor"
+	}
+	//-->
+	</SCRIPT>
+	</HEAD>
+	<BODY onLoad="setTimeout('redirecter()', 5000)">
+	<H2>The servlet is attempting to start all cameras. You will be redirected in just a moment or you may <A HREF="/monitor"> click this link</A>.</H2>
+	</BODY>
+	</HTML>
+}
