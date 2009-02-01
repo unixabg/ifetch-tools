@@ -22,7 +22,7 @@
 ##############################################################################################
 # Set the current version information.
 ##############################################################################################
-VER = "0.14.0"
+VER = "0.14.1"
 
 ##############################################################################################
 # The below should daemonize this code.
@@ -493,11 +493,11 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 		end
 	end
 
-###############################################################
-# Try to close the lock file and the Logger.
-lock_file.close
-log.close
-
+	###############################################################
+	# Try to close the lock file and the Logger.
+	lock_file.close
+	log.close
+	DRb.stop_service() # Stop the DRb on the ifetch session
 else
 	###############################################################
 	# If we get here we already have a running ifetch.rb

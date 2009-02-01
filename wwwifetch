@@ -23,7 +23,7 @@
 # Set some variables.
 ##############################################################################################
 # Version number
-VER = "0.8.0"
+VER = "0.8.1"
 # Max number of cams to show and work with for all creation operations.
 
 ##############################################################################################
@@ -88,8 +88,9 @@ class CameraHistory < HTTPServlet::AbstractServlet
 		myTempRespond = "" # Set a local var to null.
 		navigation = /[0-9]+/.match(req.query['navigation'])[0] # Crop out all the bad stuff.
 
+		# 20090201 Nelson - I am now starting this on startup and only do the new object here.
 		# Here is the performance boost for exchange of data between the collection daemon and the web interface
-		DRb.start_service(nil,nil,{:load_limit => LOADLIMIT})
+		#DRb.start_service(nil,nil,{:load_limit => LOADLIMIT})
 		drb_port = "druby://localhost:"+(BASEPORT+cameraName.to_i).to_s
 		#obj = DRbObject.new(nil, 'druby://localhost:9000')
 		obj = DRbObject.new(nil, drb_port)
@@ -99,7 +100,8 @@ class CameraHistory < HTTPServlet::AbstractServlet
 
 		# Now use obj, imgSorted is not as descriptive but remember that we expect the sequence to be pre sorted so in fact name is ok.
 		imgSorted = obj.xchange_array
-		DRb.stop_service() # Stop the DRb on the webrick session
+		# 20090201 Nelson - I am now stoping this on trap of close here.
+		#DRb.stop_service() # Stop the DRb on the webrick session
 
 		imgSortedLength = imgSorted.length
 		totalPages = imgSortedLength / IMAGESPERPAGE # Get the total number of pages.
@@ -441,6 +443,10 @@ authenticate_history = Proc.new do |req, res|
 	end
 end
 
+##############################################################################################
+# Start the DRb service for use later.
+##############################################################################################
+DRb.start_service(nil,nil,{:load_limit => LOADLIMIT})
 
 
 ##############################################################################################
@@ -481,6 +487,7 @@ s.mount('/data/', WEBrick::HTTPServlet::FileHandler, '/var/lib/ifetch-tools/')
 
 # Catch the INT sig to shutdown
 trap("INT"){ 
+	DRb.stop_service() # Stop the DRb on the webrick session
 	s.shutdown
 }
 

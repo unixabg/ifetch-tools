@@ -1,5 +1,5 @@
-ifetch-tools (0.15.0-1) unstable; urgency=low
+ifetch-tools (0.15.1-1) unstable; urgency=low
 
   * Initial release.
 
- -- Richard Nelson <unixabg@gmail.com>  Wed, 25 Jan 2009 10:00:00 -0600
+ -- Richard Nelson <unixabg@gmail.com>  Sun, 02 Feb 2009 16:00:00 -0600

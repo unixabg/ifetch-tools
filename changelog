@@ -21,6 +21,13 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20090201 Nelson
+- Added some performance improvements with making better use of DRb
+- Moving to ifetch-tools-0.15.1
+-- ifetch 0.14.1
+-- wwwifetch 0.8.1
+20090130 Nelson
+- Added info for IP Camera 510 and some general camera info for the project web page.
 20090130 Nelson
 - Moving to ifetch-tools-0.15.0
 -- ifetch 0.14.0
