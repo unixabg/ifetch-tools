@@ -24,7 +24,7 @@ binary-indep:
 	dh_installdirs
 	dh_install
 	dh_installinit
-	dh_installlogrotate wwwifetch-logrotate.conf
+	dh_installlogrotate
 	dh_strip
 	dh_compress -Xifetch-tools.conf -Xcamera_number.conf
 	dh_fixperms
