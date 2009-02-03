@@ -26,6 +26,7 @@
 -- ifetch 0.14.1
 -- wwwifetch 0.8.1
 - Added fix for log-rotate
+- Added other minor format issues.
 20090201 Nelson
 - Added some performance improvements with making better use of DRb
 - Moving to ifetch-tools-0.15.1
