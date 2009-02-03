@@ -1,17 +1,15 @@
 #! /bin/sh
-#
 
 ### BEGIN INIT INFO
-# Provides:          ifetch-tools
-# Required-Start:    $remote_fs $network $syslog
-# Required-Stop:     $remote_fs $network $syslog
-# Should-Start:      $local_fs 
-# Default-Start:     2 3 4 5
-# Default-Stop:      1
-# Short-Description: Tools to collect IP Camera images. 
-# Description:       Tools to collect, monitor, and view images from IP Cameras 
+# Provides:		ifetch-tools
+# Required-Start:	$remote_fs $network $syslog
+# Required-Stop:	$remote_fs $network $syslog
+# Should-Start:		$local_fs
+# Default-Start:	2 3 4 5
+# Default-Stop:		1
+# Short-Description:	Tools to collect IP Camera images.
+# Description:		Tools to collect, monitor, view images from IP Cameras.
 ### END INIT INFO
-
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/bin/wwwifetch
@@ -20,19 +18,18 @@ NAME=ifetch-tools
 DESC=ifetch-tools
 _UID=ifetch-tools
 
-# Test the the DAEMON 
+# Test the the DAEMON
 test -x $DAEMON || exit 0
 
 # Test for the ifetch-tools.conf
 test -f $DAEMON_CONFIG || exit 0
 
-
 LOGDIR=/var/log/ifetch-tools
 PIDFILE=/var/run/$NAME.pid
-DODTIME=10                   # Time to wait for the server to die, in seconds
-                            # If this value is set too low you might not
-                            # let some servers to die gracefully and
-                            # 'restart' will not work
+DODTIME=10		# Time to wait for the server to die, in seconds
+			# If this value is set too low you might not
+			# let some servers to die gracefully and
+			# 'restart' will not work
 
 set -e
 
@@ -65,8 +62,7 @@ running()
 start_daemon()
 {
     echo -n "Starting $DESC: "
-    start-stop-daemon --start --chuid $_UID --quiet --background --make-pidfile --pidfile $PIDFILE \
-        --exec $DAEMON 
+    start-stop-daemon --start --chuid $_UID --quiet --background --make-pidfile --pidfile $PIDFILE --exec $DAEMON
     [ -n "$DODTIME" ] && sleep "$DODTIME"s
     echo -n "$NAME, "
     if running ;  then
@@ -149,7 +145,6 @@ case "$1" in
     ;;
   *)
     N=/etc/init.d/$NAME
-    # echo "Usage: $N {start|stop|restart|reload|force-reload}" >&2
     echo "Usage: $N {start|stop|restart|force-reload|status|force-stop}" >&2
     exit 1
     ;;

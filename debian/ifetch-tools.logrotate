@@ -1,4 +1,7 @@
-/var/log/ifetch-tools/wwwifetch*.txt {
+/var/log/ifetch-tools/wwwifetch*.txt
+{
+	create 640 root adm
+
 	weekly
 	missingok
 	rotate 52
