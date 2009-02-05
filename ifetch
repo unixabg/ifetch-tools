@@ -135,6 +135,8 @@ begin
 	eval(File.open("/etc/ifetch-tools/ifetch-tools.conf") {|fh| fh.read})
 rescue
 	puts "Error encountered reading the ifetch-tools.conf file of: "+$!
+	# Stop after the error feedback.
+	exit
 end
 
 ###############################################################
