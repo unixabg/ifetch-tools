@@ -21,6 +21,11 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20090205 Nelson
+- Moving to ifetch-tools-0.15.4 for new .deb operations
+-- ifetch 0.14.2
+-- wwwifetch 0.8.2
+- Trap for config files and when to die better.
 20090203 Nelson
 - Moving to ifetch-tools-0.15.3 for new .deb operations
 -- ifetch 0.14.1
