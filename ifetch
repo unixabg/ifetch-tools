@@ -145,6 +145,8 @@ begin
 	eval(File.open(ARGV[0]) {|fh| fh.read})
 rescue
 	puts "Encountered reading the camera.conf file of: "+$!
+	# Stop after the error feedback.
+	exit
 end
 
 ###############################################################
