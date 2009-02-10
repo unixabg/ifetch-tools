@@ -19,11 +19,13 @@
 
 
 ####################################################################################
-# Changlog for README.txt
+# Notes for README.txt
 ####################################################################################
-# 20090121 Nelson - As of ifetch-tools-0.15.0 you need to install via the .deb and
-# start and stop from /etc/init.d/ifetch-tools
-# - Please read the /etc/ifetch-tools/ifetch-tools.conf.example file.
+# - As of ifetch-tools-0.15.0 you need to install via the .deb and start and stop 
+#   from /etc/init.d/ifetch-tools
+# - ifetch-tools will not start until you edit the /etc/ifetch-tools/ifetch-tools.conf
+# - Please read the available options in the /etc/ifetch-tools/ifetch-tools.conf file.
+
 To access a camera history once configured try something like the following URL:
 
 http://localhost:2000/camera?cameraName=camera#

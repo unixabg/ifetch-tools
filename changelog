@@ -21,6 +21,8 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20090210 Nelson
+- README.txt cleanup.
 20090205 Nelson
 - Moving to ifetch-tools-0.15.4 for new .deb operations
 -- ifetch 0.14.2
