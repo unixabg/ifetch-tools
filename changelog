@@ -22,8 +22,11 @@
 # Changlog for milestone operations
 ####################################################################################
 20090417 Nelson
- - Cleanup of ifetch on trap errors with bad images.
- - Whitespace cleanup started on all files.
+- Cleanup of ifetch on trap errors with bad images.
+- Whitespace cleanup started on all files.
+- Building ifetch-tools-0.15.5
+-- ifetch 0.14.3
+-- wwwifetch 0.8.2
 20090205 Nelson
 - Moving to ifetch-tools-0.15.4 for new .deb operations
 -- ifetch 0.14.2
