@@ -22,7 +22,7 @@
 ##############################################################################################
 # Set the current version information.
 ##############################################################################################
-VER = "0.14.2"
+VER = "0.14.3"
 
 ##############################################################################################
 # The below should daemonize this code.
@@ -49,7 +49,7 @@ require 'time'
 require 'RMagick'
 
 ##############################################################################################
-# Initialize the array for the image access info with all nil values.
+# Initialize the global array for the image access info with all nil values.
 ##############################################################################################
 $image_array = Array.new
 
@@ -170,7 +170,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 	end
 
 	###############################################################
-	# Setup for logging.
+	# Setup for log.ing.
 	log = Logger.new(log_name, 5, log_size*1024)
 
 	###############################################################
@@ -405,17 +405,21 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 					GC.start
 					puts "Images tested resulted with mdpp of #{mdpp}"
 					#puts "Images tested resulted with mdpp of #{mdpp} and mdpp2 of #{mdpp2}"
-					if mdpp > motion_mdpp then
-						puts "Motion detected!"
-						log.info("Motion detected: mdpp=#{mdpp} and motion_mdpp=#{motion_mdpp}!")
-						motion_sentry = image_count_on_motion
-					else
-						# Here drop the count back and just keep writing out the same image number
-						# until we detect sufficient mdpp.
-						# I suppose count could equal 0.
-						if count != 0 then
-							count=count-1
+					if mdpp.is_a?(Numeric) then
+						if mdpp > motion_mdpp then
+							puts "Motion detected!"
+							log.info("Motion detected: mdpp=#{mdpp} and motion_mdpp=#{motion_mdpp}!")
+							motion_sentry = image_count_on_motion
+						else
+							# Here drop the count back and just keep writing out the same image number
+							# until we detect sufficient mdpp.
+							# I suppose count could equal 0.
+							if count != 0 then
+								count=count-1
+							end
 						end
+					else
+						log.info("The mdpp call did not return a numbe: mdpp=#{mdpp}!")
 					end
 				else
 					# Here we are taking the number of images without testing.
@@ -440,35 +444,35 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 				log.warn("Encountered an error during image file output of: "+$!)
 			end
 
-		###############################################################
-		# Now throttle the program back if need be.
-		# First test to see if which sleep we need to use.
-		# Use the motion burst as first option if triggered.
-		if motion_sentry > 0 then
-			puts "Performing motion_sleep of #{motion_sleep}."
-			sleep motion_sleep
-		else
-			# Set the daily sleep modification specified in each camera conf.
-			sleep_test_data = day_image_sleep[Time.now.strftime("%w").to_i].split(",")
-			if Time.now.strftime("%H:%M") >= sleep_test_data[0] && Time.now.strftime("%H:%M") <= sleep_test_data[1]
-	 			# If we are here we are in a modified time in the day for sleep change
-				#puts true
-				sleep sleep_test_data[2].to_f
+			###############################################################
+			# Now throttle the program back if need be.
+			# First test to see if which sleep we need to use.
+			# Use the motion burst as first option if triggered.
+			if motion_sentry > 0 then
+				puts "Performing motion_sleep of #{motion_sleep}."
+				sleep motion_sleep
 			else
-				#puts false
-				sleep image_sleep
+				# Set the daily sleep modification specified in each camera conf.
+				sleep_test_data = day_image_sleep[Time.now.strftime("%w").to_i].split(",")
+				if Time.now.strftime("%H:%M") >= sleep_test_data[0] && Time.now.strftime("%H:%M") <= sleep_test_data[1]
+		 			# If we are here we are in a modified time in the day for sleep change
+					#puts true
+					sleep sleep_test_data[2].to_f
+				else
+					#puts false
+					sleep image_sleep
+				end
 			end
-		end
 
-		###############################################################
-		# If we encounter an issue that raised the rescue Exception and set the sentry_check = 1
-		# then we are just listenting here if we get to this point to let the log file know that
-		# we are ok again. This is used to determine the health of a running script to a camera for
-		# for problems. I am sure there are better ways but this seems KISS.
-		if sentry_check != 0
-			log.info("Sentry clear hit and appears to be operating again ok! ifetch version - #{VER}!")
-			sentry_check = 0
-		end
+			###############################################################
+			# If we encounter an issue that raised the rescue Exception and set the sentry_check = 1
+			# then we are just listenting here if we get to this point to let the log file know that
+			# we are ok again. This is used to determine the health of a running script to a camera for
+			# for problems. I am sure there are better ways but this seems KISS.
+			if sentry_check != 0
+				log.info("Sentry clear hit and appears to be operating again ok! ifetch version - #{VER}!")
+				sentry_check = 0
+			end
 		###############################################################
 		# Rescue out for all errors.
 		rescue Exception
@@ -476,7 +480,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 			# First things is notify there is an error.
 			#puts "Encountered an error: "+$!
 			#log.warn("Encountered an error from the Net::HTTP work of: "+$!)
-			log.warn("Encountered an error on collection of: "+$!)
+			log.warn("Encountered an error in collection operations of: "+$!)
 			# Sleep a bit when error is raised for this process.
 			sleep ERRORSLEEP
 
@@ -494,6 +498,10 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 			# we are still alive and well. Setting the sentry to 1 will force an information
 			# output to logging that we are back to ok status.
 			sentry_check = 1
+
+			# Write image2 to image1, since image1 is what we write and image2 is latest.
+			# We swap here in case we get a bad image as image1 and this should flush out.
+			image1 = image2
 		end
 	end
 
