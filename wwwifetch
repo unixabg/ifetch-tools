@@ -9,12 +9,12 @@
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
 # of the License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -55,7 +55,7 @@ end
 ##############################################################################################
 
 ##############################################################################################
-# Camera generates two frames and calls CameraHistory on the left frame of the system. 
+# Camera generates two frames and calls CameraHistory on the left frame of the system.
 ##############################################################################################
 class Camera < HTTPServlet::AbstractServlet
 	def do_GET(req, res)
@@ -113,7 +113,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 		# Note, that the way we display images will cause drift in respect to amount of images and the time at the interface.
 		#if totalPages != 0
 		#totalPagesCounter = totalPages - 1
-		#end 
+		#end
 
 		# Ok here we are getting a number to reference so we do not have time drift.
 		tmpIndex = index.to_i
@@ -130,13 +130,13 @@ class CameraHistory < HTTPServlet::AbstractServlet
 			else
 				lastImgOnPage = tmpIndex+IMAGESPERPAGE - 1
 			end
-		else 
+		els 
 			lastImgOnPage = 0
 			totalPages = -1
 		end
 
 		# This just keeps us from populating the navigation frame on the initial login to history and if no history collected yet.
-		if navigation.to_i == 1 && imgSortedLength > 0 
+		if navigation.to_i == 1 && imgSortedLength > 0
 		# Ok now actually populate the page with the lastImgOnPage
 			index.to_i.upto(lastImgOnPage) do |imgIndex|
 				#imgTime, imgFile = imgSorted[5].to_s.split(/,/)
@@ -149,7 +149,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 				myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'" target="showframe"><IMG SRC="/data/'+imgFile+'" width='+HISTORYIMAGEWIDTH+' heigth='+HISTORYIMAGEHEIGTH+'></A><BR>'+"\n"
 			end
 			# 20081007 Nelson - removing this block to leave last page possibly short.
-			### Now finish starting back at 0 on the page that ran over the end of the array 
+			### Now finish starting back at 0 on the page that ran over the end of the array
 			if imgSortedLength >= IMAGESPERPAGE
 				0.to_i.upto(indexSentry) do |imgIndex|
 					#imgTime, imgFile = imgSorted[5].to_s.split(/,/)
@@ -194,7 +194,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 
 		# Ok here is where we handle the < Previous | Next >" navigation.
 		# Here is the code for a sinle page of images only or if this is the first time the user hits the hitsory.
-		if index.to_i-IMAGESPERPAGE < 0 && index.to_i+IMAGESPERPAGE > imgSortedLength-1 || navigation.to_i == 0 
+		if index.to_i-IMAGESPERPAGE < 0 && index.to_i+IMAGESPERPAGE > imgSortedLength-1 || navigation.to_i == 0
 			myNavigation = %{<FORM NAME="myform">
 				<SELECT name="mylist" onChange="disp_text();"
 				#{myJumpNavigation}
@@ -329,7 +329,7 @@ class Monitor < HTTPServlet::AbstractServlet
 				}
 
 				#tempForLastLine.each{|e| print e}
-				logFileLastLine = tempForLastLine[0].split(/,/) 
+				logFileLastLine = tempForLastLine[0].split(/,/)
 
 				# Below is for diagnostics
 				#myTempRespond = myTempRespond+logFileLastLine[0]+logFileName
@@ -346,7 +346,7 @@ class Monitor < HTTPServlet::AbstractServlet
 end
 
 ##############################################################################################
-# Display an image and a time stamp. of the system. 
+# Display an image and a time stamp. of the system.
 ##############################################################################################
 class ShowImage < HTTPServlet::AbstractServlet
 	def do_GET(req, res)
@@ -456,8 +456,8 @@ DRb.start_service(nil,nil,{:load_limit => LOADLIMIT})
 ##############################################################################################
 s = WEBrick::HTTPServer.new(
 	:Port => 2000,
-	#:DocumentRoot => "/usr/share/ifetch-tools/htdocs", 
-	:DocumentRoot => "/dev/null", 
+	#:DocumentRoot => "/usr/share/ifetch-tools/htdocs",
+	:DocumentRoot => "/dev/null",
 	:Logger         => server_log,
 	:AccessLog      => [
 	[ access_log, WEBrick::AccessLog::COMMON_LOG_FORMAT  ],
@@ -488,7 +488,7 @@ s.mount('/log/', WEBrick::HTTPServlet::FileHandler, '/var/log/ifetch-tools/')
 s.mount('/data/', WEBrick::HTTPServlet::FileHandler, '/var/lib/ifetch-tools/')
 
 # Catch the INT sig to shutdown
-trap("INT"){ 
+trap("INT"){
 	DRb.stop_service() # Stop the DRb on the webrick session
 	s.shutdown
 }
