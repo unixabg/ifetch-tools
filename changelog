@@ -7,12 +7,12 @@
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
 # of the License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -21,8 +21,9 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
-20090210 Nelson
-- README.txt cleanup.
+20090417 Nelson
+ - Cleanup of ifetch on trap errors with bad images.
+ - Whitespace cleanup started on all files.
 20090205 Nelson
 - Moving to ifetch-tools-0.15.4 for new .deb operations
 -- ifetch 0.14.2
@@ -51,9 +52,9 @@
 /etc/ifetch-tools/ifetch-tools.conf
 20090125 Nelson
 - Cleaning out notes onf conf files since all operations now in this file.
-- All references to PATHTOROOT now removed. 
+- All references to PATHTOROOT now removed.
 20090124 Nelson
-- More cleanup for debian setup. 
+- More cleanup for debian setup.
 20090122 Nelson
 - Removing ifetch-startup and ifetch-shutdown examples since moving to /etc/init.d/ifetch-tools
 - Removing lock folder since now will be using /var/lock/ifetch-tools
@@ -66,7 +67,7 @@
 - Expect static htdocs data to be in /usr/share/ifetch-tools/htdocs
 - Rename template folder to templates
 - Expect static templates data to be in /usr/share/ifetch-tools/templates
-- Expect user data to be created dynamic in /var/lib/ifetch-tools and test for it 
+- Expect user data to be created dynamic in /var/lib/ifetch-tools and test for it
 - Expect config files to be in /etc/ifetch-tools/ifetch-tools.conf
 - Modified README.txt to reflect the move to using a .deb for installing.
 20081213 Nelson
@@ -229,11 +230,11 @@
 - Cleanup on address history other minor cleanup.
 - Released ifetch-tools-0.9.2
 - ifetch.rb 0.9.4
-- wwwifetch.rb 0.4.1 
+- wwwifetch.rb 0.4.1
 20061019 Nelson
 - Initial work to echange data between iftech and wwwifetch processes for performance.
 - Expecting to have camera.conf files to be a int >= 0.
-- Released ifetch-tools-0.9.0 
+- Released ifetch-tools-0.9.0
 - ifetch.rb 0.9.0
 - wwwifetch.rb 0.4.0
 20060705 Nelson
@@ -253,7 +254,7 @@
 - Small cleanup on default index.html to include that the code is GPL
 20060311 Nelson
 - Getting docs ready for ue with http://rubyforge.org/projects/ifetch-tools
-- Bumped file versions on ifetch-tools-0.8.2 tool set to: 
+- Bumped file versions on ifetch-tools-0.8.2 tool set to:
 - ifetch.rb 0.8.5
 - wwwifetch.rb 0.3.1
 20060219 Nelson
