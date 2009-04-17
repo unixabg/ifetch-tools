@@ -9,12 +9,12 @@
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
 # of the License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -109,7 +109,7 @@ end
 # <http://www.gnu.org/copyleft/gpl.html>.
 ##############################################################################################
 ##############################################################################################
-# Define process(image) 
+# Define process(image)
 # massage an image to be suitable for comparison
 # here we compute the luminosity channel since rmagick's builtin doesn't work
 # and scale it down to half/quarter-size to remove tiny transient errors.
@@ -162,7 +162,7 @@ log_name = "/var/log/ifetch-tools/#{prefix}.txt"
 # Set the singleton so we can be the only one with this config.
 lock_file = File::open("/var/lock/ifetch-tools/#{prefix}.lock", 'w')
 if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
-	# Do stuff on singleton if clean singleton established. 
+	# Do stuff on singleton if clean singleton established.
 	###############################################################
 	# Just drop our PID out for multi camera monitoring and operations.
 	File.open(pid_name,'w') do |f|
@@ -178,7 +178,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 	# Funny on the rescue where this shows up. Please see the rescue where we
 	# are watching the HTTP:: stuff that I seem to have to make a clause for
 	# exit.
-	trap("INT"){ 
+	trap("INT"){
 		puts "Caught INT so attempting to exit!"
 		log.warn("Caught INT so attempting to exit!")
 		exit
@@ -255,7 +255,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 	end
 
 	###############################################################
-	# We will use info here because we will sniff for all ok later with entry on the log 
+	# We will use info here because we will sniff for all ok later with entry on the log
 	# and a simple sentry on success after trouble.
 	log.info("Please wait for history to initialize before attempting to access the history!")
 
@@ -265,19 +265,19 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 	tmp_history_array = Array.new
 	# Get a listing of all the images in the history
 	history_files = Dir["/var/lib/ifetch-tools/#{prefix}/*/*.jpg"]
-	# Unremark the below lines for diagnostic 
+	# Unremark the below lines for diagnostic
 	#puts history_files
 	#puts history_files.length
 	0.upto(history_files.length - 1) do |count|
 		# Pop off the index from the image name for the array index, time stamp the file, recreate array.
 		##################### Bug fix 6960 #############################################
-		# Remarking out the line changed for reference. This bug also required a change in 
+		# Remarking out the line changed for reference. This bug also required a change in
 		# the code on the image time stamp in the array for exchange.
 		#tmp_history_array[File.basename(history_files[count], ".jpg").split(/_/)[1].to_i] = File.new(history_files[count]).mtime.to_s+","+history_files[count]
 		# Get the acutal file number:
 		temp_fn = File.basename(history_files[count], ".jpg").split(/_/)[1].to_i
 		tmp_history_array[temp_fn] = Time.parse(File.mtime(history_files[count]).to_s).strftime("%Y-%m-%d %H:%M:%S")+","+[prefix,temp_fn.divmod(MODPRIME)[1].to_s,File.basename(history_files[count])].join('/')
-		#Unremark for below for diag on the actual number being split out. 
+		#Unremark for below for diag on the actual number being split out.
 		#puts File.basename(history_files[count], ".jpg").split(/_/)[1]
 	end
 
@@ -286,15 +286,15 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 		log.info("Starting history generation with history count normal!")
 		0.upto(history_files.length - 1) do |count|
 			# 20070316 Nelson: Well we have an issue if images are missing from an array.
-			# We need to watch out for null entries since we base a lot of logic on the expectation 
-			# of a set of images in sequence. So before we do a 1 to 1 transfer lets make sure the 
-			# transfer is not nil. 
+			# We need to watch out for null entries since we base a lot of logic on the expectation
+			# of a set of images in sequence. So before we do a 1 to 1 transfer lets make sure the
+			# transfer is not nil.
 			# One issue that would appear later in the code is the sorting for latest image recorded
 			# and needing to start writing again after most recent images. So the below modification
 			# should address the issue.
 			if tmp_history_array[count] != nil then
-				#puts tmp_history_array[count] 
-				$image_array[count] = tmp_history_array[count] 
+				#puts tmp_history_array[count]
+				$image_array[count] = tmp_history_array[count]
 			else
 				$image_array[count] = "19000101 00:00:01,/ifetch.png"
 			end
@@ -303,7 +303,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 		#puts "History is more than desired count."
 		log.info("Starting history generation with history count over set collection!")
 		0.upto(image_count - 1) do |count|
-			$image_array[count] = tmp_history_array[count] 
+			$image_array[count] = tmp_history_array[count]
 		end
 		log.info("Dumping history count over set collection from disk!")
 		image_count.upto(history_files.length - 1) do |count|
@@ -314,7 +314,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 
 	# 20070108 Nelson: We need to bump the image count to the next correct number.
 	# Set the counter up for starting at correct location.
-	if history_files.length > 1 then 
+	if history_files.length > 1 then
 		#puts image_count
 		#puts $image_array.max
 		#puts $image_array.index($image_array.max)
@@ -349,10 +349,10 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 	#puts "Hello!"
 	#DRb.thread.join # Don't exit just yet!
 
-	# Set a sentry to a value of 0 to skip clean operation logging. This is the 
+	# Set a sentry to a value of 0 to skip clean operation logging. This is the
 	# default behavior.
 	sentry_check = 0
-	
+
 
 	###############################################################
 	# Here is where we add a couple of things for the motion detection operations.
@@ -390,7 +390,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 			# recovery area is changed for .mtime on file.
 			#$image_array[count] = DateTime.now.to_s+","+image_name
 			$image_array[count] = Time.now.strftime("%Y-%m-%d %H:%M:%S")+","+image_name_DRB_exchange
-			
+
 			################################################################################
 			# Now we test to see if we are doing motion detection and if so then we need two
 			# images and we will now compare for difference unless asked to skip
@@ -462,10 +462,10 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 
 		###############################################################
 		# If we encounter an issue that raised the rescue Exception and set the sentry_check = 1
-		# then we are just listenting here if we get to this point to let the log file know that 
+		# then we are just listenting here if we get to this point to let the log file know that
 		# we are ok again. This is used to determine the health of a running script to a camera for
 		# for problems. I am sure there are better ways but this seems KISS.
-		if sentry_check != 0 
+		if sentry_check != 0
 			log.info("Sentry clear hit and appears to be operating again ok! ifetch version - #{VER}!")
 			sentry_check = 0
 		end
@@ -481,7 +481,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 			sleep ERRORSLEEP
 
 			###############################################################
-			# Try to setup catching a clean interrupt. This seems to be odd that I have to 
+			# Try to setup catching a clean interrupt. This seems to be odd that I have to
 			# do this. It is for the trap("INT") form comman line testing.
 			if ""+$! == 'exit'
 				log.warn('Exiting now!')
@@ -490,7 +490,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 				exit
 			end
 			###############################################################
-			# If we encounter an issue lets set a sentry to let the program know that 
+			# If we encounter an issue lets set a sentry to let the program know that
 			# we are still alive and well. Setting the sentry to 1 will force an information
 			# output to logging that we are back to ok status.
 			sentry_check = 1
