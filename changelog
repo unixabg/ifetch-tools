@@ -21,6 +21,12 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20090420 Nelson
+- Bug I introduced when cleaning whitespace I believe. So just updating file 
+  with no version changes.
+- Building ifetch-tools-0.15.5a
+-- ifetch 0.14.3
+-- wwwifetch 0.8.2
 20090417 Nelson
 - Cleanup of ifetch on trap errors with bad images.
 - Whitespace cleanup started on all files.
