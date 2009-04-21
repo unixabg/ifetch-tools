@@ -130,7 +130,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 			else
 				lastImgOnPage = tmpIndex+IMAGESPERPAGE - 1
 			end
-		els 
+		else
 			lastImgOnPage = 0
 			totalPages = -1
 		end
