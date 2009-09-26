@@ -506,6 +506,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 			# If we encounter a bad image while using motion and pulling a sequence of images
 			# we need to dump the bad pull and pull again.
 			if  motion_enable == 0 && motion_sentry > 0 then
+				log.info("Backing image count down by 1 during motion sequence pull from rescue!")
 				if count != 0 then
 					count=count-1
 				end
