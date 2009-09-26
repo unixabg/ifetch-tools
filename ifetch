@@ -419,7 +419,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 							end
 						end
 					else
-						log.info("The mdpp call did not return a numbe: mdpp=#{mdpp}!")
+						log.info("The mdpp call did not return a number: mdpp=#{mdpp}!")
 					end
 				else
 					# Here we are taking the number of images without testing.
