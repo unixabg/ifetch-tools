@@ -21,8 +21,14 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20090925 Nelson
+- Fix bug on image jump when motion enabled and bad image pull on sequence of images
+  after motion detection.
+- Building ifetch-tools-0.15.6
+-- ifetch 0.14.4
+-- wwwifetch 0.8.2
 20090420 Nelson
-- Bug I introduced when cleaning whitespace I believe. So just updating file 
+- Bug I introduced when cleaning whitespace I believe. So just updating file
   with no version changes.
 - Building ifetch-tools-0.15.5a
 -- ifetch 0.14.3
