@@ -17,7 +17,7 @@
 	<TBODY>
 	<TD>
 		<A HREF="#{HOMELINK}"><img src="/ifetch.png" width=100 heigth=100 ></A>
-		<BR>wwwifetch ver. - #{VER} 
+		<BR>wwwifetch ver. - #{VER}
 	</TD>
 	<TD>
 		<CENTER><FONT size=+2>Operation & Action Legend</FONT></Center>
@@ -27,7 +27,7 @@
 			<IMG src="/start.jpg" border="0"> - Start collection
 			<BR><IMG src="/stop.jpg" border="0"> - Stop collection
 			<BR><IMG src="/log.jpg" border="0"> - View log
-			<BR><A HREF="/startallcameras"><IMG src="/restart.jpg" border="0"></A> - Start all cameras 
+			<BR><A HREF="/startallcameras"><IMG src="/restart.jpg" border="0"></A> - Start all cameras
 			<BR>
 		</TD>
 		<TD>

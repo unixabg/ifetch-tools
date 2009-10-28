@@ -1,3 +1,9 @@
+ifetch-tools (0.15.X-1) unstable; urgency=low
+
+  * Started actually keeping change log and will still include ifetch-tools/changelog.
+
+ -- Richard Nelson <unixabg@gmail.com>  Fri, 25 Sep 2009 21:00:00 -0600
+
 ifetch-tools (0.15.6-1) unstable; urgency=low
 
   * Initial release.

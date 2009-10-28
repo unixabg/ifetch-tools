@@ -9,7 +9,7 @@
 	<P>#{theDate}</P>
 	#{pageToBuild}
 	<BR><BR>
-	<A HREF="#{HOMELINK}" "target="_top">Home</A> | <A HREF="/monitor" "target="_top">Monitor</A> 
+	<A HREF="#{HOMELINK}" "target="_top">Home</A> | <A HREF="/monitor" "target="_top">Monitor</A>
 	<P>wwwifetch.rb version #{VER}</P>
 	</CENTER>
 	</BODY>
