@@ -1,6 +1,3 @@
-# 20080120 Nelson - Modified for images to load correct if garbage added after /monitor call.
-# 20071128 Nelson - Modified for HOMELINK navigation.
-# 20071017 Nelson
 %{
 	<HTML> <HEAD> <!-- This HTML file has been created by a ruby servlet -->
 	<TITLE>Camera Monitor Interface</TITLE>
