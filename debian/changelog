@@ -1,4 +1,4 @@
-ifetch-tools (0.15.6-2) unstable; urgency=low
+ifetch-tools (0.15.7-1) unstable; urgency=low
 
   * Bumped version of ifetch to 0.14.5
   * Modified ifetch.png on missed images to a missed.jpg image.
