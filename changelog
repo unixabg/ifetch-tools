@@ -21,6 +21,13 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20091113 Nelson
+- Comments from debian/changelog
+  * Bumped version of ifetch to 0.14.5
+  * Modified ifetch.png on missed images to a missed.jpg image.
+  * Started actually keeping change log and will still include ifetch-tools/changelog.
+
+
 20090925 Nelson
 - Fix bug on image jump when motion enabled and bad image pull on sequence of images
   after motion detection.
