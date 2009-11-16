@@ -296,7 +296,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 				#puts tmp_history_array[count]
 				$image_array[count] = tmp_history_array[count]
 			else
-				$image_array[count] = "19000101 00:00:01,images/missed.jpg"
+				$image_array[count] = "19000101 00:00:01,/missed.jpg"
 			end
 		end
 	else

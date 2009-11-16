@@ -362,7 +362,7 @@ class ShowImage < HTTPServlet::AbstractServlet
 		if imgFile == "/data/images/ifetch.png" || imgFile == "/data/images/missed.jpg"
 			tmpIndex = 0
 			theDate = "Welcome to camera number #{cameraName} history."
-			pageToBuild = %{<IMG SRC=/data/images/"#{imgFile}">}
+			pageToBuild = %{<IMG SRC="#{imgFile}">}
 		else
 			# tmpIndex will hold the index position of the page we are on.
 			tmpIndex = File.basename(imgFile, ".jpg").split(/_/)[1].to_i

@@ -4,7 +4,7 @@
 	</HEAD>
 	<FRAMESET cols="25%,75%">
 		<FRAME src="/camerahistory?cameraName=#{cameraName}&index=0&navigation=0" name="shownav">
-		<FRAME src="/showimage?cameraName=#{cameraName}&imageName=/data/images/ifetch.png" name="showframe">
+		<FRAME src="/showimage?cameraName=#{cameraName}&imageName=ifetch.png" name="showframe">
 	</FRAMESET>
 	</HTML>
  }
