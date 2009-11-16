@@ -21,6 +21,11 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20091115 Nelson
+  * Bumped version of ifetch to 0.14.6
+  * Fixed nil entries when image count is reduced and image missing.
+  * Bumped version of wwwifetch to 0.8.3
+
 20091113 Nelson
 - Comments from debian/changelog
   * Bumped version of ifetch to 0.14.5

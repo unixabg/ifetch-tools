@@ -1,3 +1,11 @@
+ifetch-tools (0.15.8-1) unstable; urgency=low
+
+  * Bumped version of ifetch to 0.14.6
+  * Fixed nil entries when image count is reduced and image missing.
+  * Bumped version of wwwifetch to 0.8.3
+
+ -- Richard Nelson <unixabg@gmail.com>  Sun, 15 Nov 2009 20:00:00 -0600
+
 ifetch-tools (0.15.7-1) unstable; urgency=low
 
   * Bumped version of ifetch to 0.14.5
