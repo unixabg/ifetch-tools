@@ -303,7 +303,12 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 		#puts "History is more than desired count."
 		log.info("Starting history generation with history count over set collection!")
 		0.upto(image_count - 1) do |count|
-			$image_array[count] = tmp_history_array[count]
+			# This is the same as the above logic for images missing from the array.
+			if tmp_history_array[count] != nil then
+				$image_array[count] = tmp_history_array[count]
+			else
+				$image_array[count] = "19000101 00:00:01,images/missed.jpg"
+			end
 		end
 		log.info("Dumping history count over set collection from disk!")
 		image_count.upto(history_files.length - 1) do |count|
