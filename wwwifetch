@@ -23,7 +23,7 @@
 # Set some variables.
 ##############################################################################################
 # Version number
-VER = "0.8.2"
+VER = "0.8.3"
 # Max number of cams to show and work with for all creation operations.
 
 ##############################################################################################
@@ -359,15 +359,15 @@ class ShowImage < HTTPServlet::AbstractServlet
 		cameraName = /[A-Za-z0-9_]+/.match(req.query['cameraName'])[0] # Crop out all the bad stuff.
 		imgFile = /[\/A-Za-z0-9_+(.jpg)]+/.match(req.query['imageName'])[0] # Crop out all the bad stuff.
 
-		if imgFile != "ifetch.png"
+		if imgFile == "ifetch.png" || imgFile == "missed.jpg"
+			tmpIndex = 0
+			theDate = "Welcome to camera number #{cameraName} history."
+			pageToBuild = %{<IMG SRC=/data/images/"#{imgFile}">}
+		else
 			# tmpIndex will hold the index position of the page we are on.
 			tmpIndex = File.basename(imgFile, ".jpg").split(/_/)[1].to_i
 			theDate = File.mtime("/var/lib/ifetch-tools/#{imgFile}")
 			pageToBuild = %{<A HREF="/camerahistory?cameraName=#{cameraName}&index=#{tmpIndex}&navigation=1 "target="shownav"><IMG SRC="/data/#{imgFile}"></A>}
-		else
-			tmpIndex = 0
-			theDate = "Welcome to camera number #{cameraName} history."
-			pageToBuild = %{<IMG SRC="#{imgFile}">}
 		end
 		res.body = eval(File.open("/usr/share/ifetch-tools/templates/ShowImage") {|fh| fh.read})
 	end
@@ -486,6 +486,8 @@ s.mount('/', HTTPServlet::FileHandler, "/usr/share/ifetch-tools/htdocs",
 # The below is for .deb operations and good locations.
 s.mount('/log/', WEBrick::HTTPServlet::FileHandler, '/var/log/ifetch-tools/')
 s.mount('/data/', WEBrick::HTTPServlet::FileHandler, '/var/lib/ifetch-tools/')
+# Added the below in an attempt to refer default images.
+s.mount('/data/images/', WEBrick::HTTPServlet::FileHandler, '/usr/share/ifetch-tools/htdocs/')
 
 # Catch the INT sig to shutdown
 trap("INT"){
