@@ -359,7 +359,7 @@ class ShowImage < HTTPServlet::AbstractServlet
 		cameraName = /[A-Za-z0-9_]+/.match(req.query['cameraName'])[0] # Crop out all the bad stuff.
 		imgFile = /[\/A-Za-z0-9_+(.jpg)]+/.match(req.query['imageName'])[0] # Crop out all the bad stuff.
 
-		if imgFile == "ifetch.png" || imgFile == "missed.jpg"
+		if imgFile == "/data/images/ifetch.png" || imgFile == "/data/images/missed.jpg"
 			tmpIndex = 0
 			theDate = "Welcome to camera number #{cameraName} history."
 			pageToBuild = %{<IMG SRC=/data/images/"#{imgFile}">}
