@@ -350,12 +350,12 @@ end
 ##############################################################################################
 class ShowImage < HTTPServlet::AbstractServlet
 	def do_GET(req, res)
-	HTTPAuth.basic_auth(req, res, 'Camera History Realm') {|user, pass|
-		# this block returns true if
-		# authentication token is valid
-		user == HISTORYUSER && pass == HISTORYPASS
-	}
-	res['Content-Type'] = "text/html" # Tell the browser how we are talking
+		HTTPAuth.basic_auth(req, res, 'Camera History Realm') {|user, pass|
+			# this block returns true if
+			# authentication token is valid
+			user == HISTORYUSER && pass == HISTORYPASS
+		}
+		res['Content-Type'] = "text/html" # Tell the browser how we are talking
 		cameraName = /[A-Za-z0-9_]+/.match(req.query['cameraName'])[0] # Crop out all the bad stuff.
 		imgFile = /([\/A-Za-z0-9_]+)+(.jpg|.png)/.match(req.query['imageName'])[0] # Crop out all the bad stuff.
 
