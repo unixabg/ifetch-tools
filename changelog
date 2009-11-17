@@ -21,6 +21,10 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20091117 Nelson
+  * Bumped version of wwwifetch to 0.8.4
+  -- More strict image pass to ShowImage
+
 20091115 Nelson
   * Bumped version of ifetch to 0.14.6
   * Fixed nil entries when image count is reduced and image missing.
