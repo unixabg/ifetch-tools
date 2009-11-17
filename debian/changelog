@@ -3,7 +3,7 @@ ifetch-tools (0.15.9-1) unstable; urgency=low
   * Bumped version of wwwifetch to 0.8.4
   -- More strict image pass to ShowImage
 
- -- Richard Nelson <unixabg@gmail.com>  Sun, 15 Nov 2009 20:00:00 -0600
+ -- Richard Nelson <unixabg@gmail.com>  Tue, 17 Nov 2009 16:00:00 -0600
 
 ifetch-tools (0.15.8-1) unstable; urgency=low
 
