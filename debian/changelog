@@ -1,3 +1,10 @@
+ifetch-tools (0.15.10-1) unstable; urgency=low
+
+  * Bumped version of ifetch to 0.14.7
+  -- Remarked out some diag puts.
+
+ -- Richard Nelson <unixabg@gmail.com>  Fri, 04 Dec 2009 16:00:00 -0600
+
 ifetch-tools (0.15.9-1) unstable; urgency=low
 
   * Bumped version of wwwifetch to 0.8.4
