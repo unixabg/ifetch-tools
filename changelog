@@ -21,6 +21,10 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20091204 Nelson
+  * Bumped version of ifetch to 0.14.7
+  -- Remarked out some diag puts.
+
 20091117 Nelson
   * Bumped version of wwwifetch to 0.8.4
   -- More strict image pass to ShowImage
