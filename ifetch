@@ -408,11 +408,11 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 					mdpp = difference(process(image2),process(image1))
 					#mdpp2 = difference(process2(image2),process2(image1))
 					GC.start
-					puts "Images tested resulted with mdpp of #{mdpp}"
+					#puts "Images tested resulted with mdpp of #{mdpp}"
 					#puts "Images tested resulted with mdpp of #{mdpp} and mdpp2 of #{mdpp2}"
 					if mdpp.is_a?(Numeric) then
 						if mdpp > motion_mdpp then
-							puts "Motion detected!"
+							#puts "Motion detected!"
 							log.info("Motion detected: mdpp=#{mdpp} and motion_mdpp=#{motion_mdpp}!")
 							motion_sentry = image_count_on_motion
 						else
@@ -454,7 +454,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 			# First test to see if which sleep we need to use.
 			# Use the motion burst as first option if triggered.
 			if motion_sentry > 0 then
-				puts "Performing motion_sleep of #{motion_sleep}."
+				#puts "Performing motion_sleep of #{motion_sleep}."
 				sleep motion_sleep
 			else
 				# Set the daily sleep modification specified in each camera conf.
