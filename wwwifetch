@@ -23,7 +23,7 @@
 # Set some variables.
 ##############################################################################################
 # Version number
-VER = "0.8.4"
+VER = "0.8.5"
 # Max number of cams to show and work with for all creation operations.
 
 ##############################################################################################
@@ -145,8 +145,8 @@ class CameraHistory < HTTPServlet::AbstractServlet
 				# Ok here we are getting a number to reference so we do not have time drift based on our new navigation.
 				#imgTime, imgFile = imgSorted[imgIndex].to_s.split(/,/)
 				# 20090122 Nelson - Added small fix for .deb and user data expected in different location.
-				# myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'" target="showframe"><IMG SRC="'+imgFile+'" width='+HISTORYIMAGEWIDTH+' heigth='+HISTORYIMAGEHEIGTH+'></A><BR>'+"\n"
-				myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'" target="showframe"><IMG SRC="/data/'+imgFile+'" width='+HISTORYIMAGEWIDTH+' heigth='+HISTORYIMAGEHEIGTH+'></A><BR>'+"\n"
+				# myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'" target="showframe"><IMG SRC="'+imgFile+'" width='+HISTORYIMAGEWIDTH+' height='+HISTORYIMAGEHEIGTH+'></A><BR>'+"\n"
+				myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'" target="showframe"><IMG SRC="/data/'+imgFile+'" width='+HISTORYIMAGEWIDTH+' height='+HISTORYIMAGEHEIGTH+'></A><BR>'+"\n"
 			end
 			# 20081007 Nelson - removing this block to leave last page possibly short.
 			### Now finish starting back at 0 on the page that ran over the end of the array
@@ -157,7 +157,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 					#puts imgFile
 					# Ok here we are getting a number to reference so we do not have time drift based on our new navigation.
 					imgTime, imgFile = imgSorted[imgIndex].to_s.split(/,/)
-					myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'" target="showframe"><IMG SRC="/data/'+imgFile+'" width='+HISTORYIMAGEWIDTH+' heigth='+HISTORYIMAGEHEIGTH+'></A><BR>'+"\n"
+					myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'" target="showframe"><IMG SRC="/data/'+imgFile+'" width='+HISTORYIMAGEWIDTH+' height='+HISTORYIMAGEHEIGTH+'></A><BR>'+"\n"
 				end
 			end
 		end
