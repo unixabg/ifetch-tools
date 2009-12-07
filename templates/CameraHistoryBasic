@@ -1,0 +1,13 @@
+%{
+<HTML> <HEAD> <!-- This HTML file has been created by a ruby servlet -->
+<TITLE>Camera #{cameraName} History Interface</TITLE>
+</HEAD><CENTER>
+<BODY LINK=#{LINK} ALINK=#{ALINK} VLINK=#{VLINK} BGCOLOR=#{BGCOLOR} >
+<!-- ********************************************************* -->
+<!-- *** End of the javascript for floating menu left as is from site *** -->
+	<BR><BR><BR><BR>
+	#{myTempRespond}
+	</CENTER>
+	</BODY>
+	</HTML>
+}

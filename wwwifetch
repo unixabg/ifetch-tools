@@ -90,6 +90,9 @@ class CameraHistory < HTTPServlet::AbstractServlet
 		myTempRespond = "" # Set a local var to null.
 		navigation = /[0-9]+/.match(req.query['navigation'])[0] # Crop out all the bad stuff.
 
+		# Expect this in the page url now.
+		basicView = /[0-1]+/.match(req.query['basicView'])[0]
+
 		# 20090201 Nelson - I am now starting this on startup and only do the new object here.
 		# Here is the performance boost for exchange of data between the collection daemon and the web interface
 		#DRb.start_service(nil,nil,{:load_limit => LOADLIMIT})
@@ -184,7 +187,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 
 			# This is the elements in the jumping list. This could be sorted but for now I am leaving since I sort of like how if shows the scroll of image count in an abstract way.
 			#myJumpNavigation = myJumpNavigation+'<OPTION value="/camerahistory?cameraName='+cameraName+'&index='+tmpIndex.to_s+'&navigation=1">'+imgTime+"\n"
-			myJumpHash[imgTime] = '<OPTION value="/camerahistory?cameraName='+cameraName+'&index='+tmpIndex.to_s+'&navigation=1">'+imgTime+"\n"
+			myJumpHash[imgTime] = '<OPTION value="/camerahistory?cameraName='+cameraName+'&index='+tmpIndex.to_s+'&navigation=1&basicView=0">'+imgTime+"\n"
 		end
 
 		# Now that we have built it lets prep it to display it like we want (sorted in this case).
@@ -228,8 +231,18 @@ class CameraHistory < HTTPServlet::AbstractServlet
 			end
 		end
 
-	# Now generate the page with the correct substitution.
-	res.body = eval(File.open("/usr/share/ifetch-tools/templates/CameraHistory") {|fh| fh.read})
+		if basicView.to_i == 1
+			# If we are here we are asking to build a page with images only.
+			myTempRespond.gsub!(/(<img\b[^>]*)width=\d+ height=\d+/i, '\\1')
+			myTempRespond.gsub!(/(<a) href="[^"]+"/i, '\\1')
+			# FIXME - This one is ugly and depends on the output from the above. But it does appear to work.
+			myTempRespond.gsub!(/a><br>/i,"A><p style=\"page-break-before: always\">")
+			# Now generate the page with the correct substitution.
+			res.body = eval(File.open("/usr/share/ifetch-tools/templates/CameraHistoryBasic") {|fh| fh.read})
+		else
+			# Now generate the page with the correct substitution.
+			res.body = eval(File.open("/usr/share/ifetch-tools/templates/CameraHistory") {|fh| fh.read})
+		end
 	end
 end
 
@@ -363,11 +376,13 @@ class ShowImage < HTTPServlet::AbstractServlet
 			tmpIndex = 0
 			theDate = "Welcome to camera number #{cameraName} history."
 			pageToBuild = %{<IMG SRC=/data/#{imgFile}>}
+			pageToBuildBasic = %{/data/#{imgFile}}
 		elsif imgFile != nil
 			# tmpIndex will hold the index position of the page we are on.
 			tmpIndex = File.basename(imgFile, ".jpg").split(/_/)[1].to_i
 			theDate = File.mtime("/var/lib/ifetch-tools/#{imgFile}")
-			pageToBuild = %{<A HREF="/camerahistory?cameraName=#{cameraName}&index=#{tmpIndex}&navigation=1 "target="shownav"><IMG SRC="/data/#{imgFile}"></A>}
+			pageToBuild = %{<A HREF="/camerahistory?cameraName=#{cameraName}&index=#{tmpIndex}&navigation=1&basicView=0" target="shownav"><IMG SRC="/data/#{imgFile}"></A>}
+			pageToBuildBasic = %{/camerahistory?cameraName=#{cameraName}&index=#{tmpIndex}&navigation=1&basicView=1}
 		else
 			pageToBuild = %{Error in image passing to ShowImage could be a security issue.}
 		end
