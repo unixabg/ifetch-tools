@@ -1,4 +1,4 @@
-ifetch-tools (0.15.12-1) unstable; urgency=low
+ifetch-tools (0.15.12a-1) unstable; urgency=low
 
   * Bumped version of wwwifetch to 0.8.6
   -- Corrected spelling on variable name.
