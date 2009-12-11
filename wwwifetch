@@ -186,7 +186,6 @@ class CameraHistory < HTTPServlet::AbstractServlet
 			tmpIndex = File.basename(imgFile, ".jpg").split(/_/)[1].to_i
 
 			# This is the elements in the jumping list. This could be sorted but for now I am leaving since I sort of like how if shows the scroll of image count in an abstract way.
-			#myJumpNavigation = myJumpNavigation+'<OPTION value="/camerahistory?cameraName='+cameraName+'&index='+tmpIndex.to_s+'&navigation=1">'+imgTime+"\n"
 			myJumpHash[imgTime] = '<OPTION value="/camerahistory?cameraName='+cameraName+'&index='+tmpIndex.to_s+'&navigation=1&basicView=0">'+imgTime+"\n"
 		end
 
@@ -211,22 +210,22 @@ class CameraHistory < HTTPServlet::AbstractServlet
 					<SELECT name="mylist" onChange="disp_text();">
 					#{myJumpNavigation}
 					</SELECT></FORM>
-					<A HREF="/camerahistory?cameraName=#{cameraName}&index=#{index.to_i-IMAGESPERPAGE}&navigation=1"> < Previous </A>
+					<A HREF="/camerahistory?cameraName=#{cameraName}&index=#{index.to_i-IMAGESPERPAGE}&navigation=1&basicView=0"> < Previous </A>
 				}
 			else
 				myNavigation = %{<FORM NAME="myform">
 					<SELECT name="mylist" onChange="disp_text();">
 					#{myJumpNavigation}
 					</SELECT></FORM>
-					<A HREF="/camerahistory?cameraName=#{cameraName}&index=#{index.to_i-IMAGESPERPAGE+imgSortedLength-1}&navigation=1"> < Previous </A>
+					<A HREF="/camerahistory?cameraName=#{cameraName}&index=#{index.to_i-IMAGESPERPAGE+imgSortedLength-1}&navigation=1&basicView=0"> < Previous </A>
 				}
 			end
 			# Here is the move forward between page code
 			if index.to_i+IMAGESPERPAGE <= imgSortedLength-1
-				myNavigation = %{#{myNavigation}| <A HREF="/camerahistory?cameraName=#{cameraName}&index=#{index.to_i+IMAGESPERPAGE}&navigation=1"> Next > </A><BR>
+				myNavigation = %{#{myNavigation}| <A HREF="/camerahistory?cameraName=#{cameraName}&index=#{index.to_i+IMAGESPERPAGE}&navigation=1&basicView=0"> Next > </A><BR>
 				}
 			else
-				myNavigation = %{#{myNavigation}| <A HREF="/camerahistory?cameraName=#{cameraName}&index=#{indexSentry}&navigation=1"> Next > </A><BR>
+				myNavigation = %{#{myNavigation}| <A HREF="/camerahistory?cameraName=#{cameraName}&index=#{indexSentry}&navigation=1&basicView=0"> Next > </A><BR>
 				}
 			end
 		end
