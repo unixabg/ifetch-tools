@@ -1,3 +1,11 @@
+ifetch-tools (0.15.12-1) unstable; urgency=low
+
+  * Bumped version of wwwifetch to 0.8.6
+  -- Corrected spelling on variable name.
+  -- Bumped versions in man pages and web page.
+
+ -- Richard Nelson <unixabg@gmail.com>  Fri, 07 Dec 2009 14:30:00 -0600
+
 ifetch-tools (0.15.11-1) unstable; urgency=low
 
   * Bumped version of wwwifetch to 0.8.5

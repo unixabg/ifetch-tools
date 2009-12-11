@@ -21,6 +21,11 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20091211 Nelson
+  * Bumped version of wwwifetch to 0.8.6
+  -- Corrected spelling on variable name.
+  -- Bumped versions in man pages and web page.
+
 20091207 Nelson
   * Bumped version of wwwifetch to 0.8.5
   -- Add basicView on images for various purposes.
