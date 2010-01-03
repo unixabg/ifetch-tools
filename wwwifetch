@@ -140,7 +140,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 
 		# This just keeps us from populating the navigation frame on the initial login to history and if no history collected yet.
 		if navigation.to_i == 1 && imgSortedLength > 0
-		# Ok now actually populate the page with the lastImgOnPage
+			# Ok now actually populate the page with the lastImgOnPage
 			index.to_i.upto(lastImgOnPage) do |imgIndex|
 				#imgTime, imgFile = imgSorted[5].to_s.split(/,/)
 				imgTime, imgFile = imgSorted[imgIndex].split(/,/)
