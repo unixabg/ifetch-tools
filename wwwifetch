@@ -83,16 +83,23 @@ class CameraHistory < HTTPServlet::AbstractServlet
 			user == HISTORYUSER && pass == HISTORYPASS
 		}
 		res['Content-Type'] = "text/html" # Tell the browser how we are talking
+		# cameraName we are to work with.
 		raise HTTPServerError, 'Error: cameraName parameter not passed correctly.' if req.query['cameraName'] == nil || /[0-9]+/.match(req.query['cameraName']) == nil
 		cameraName = /[0-9]+/.match(req.query['cameraName']).to_s
+
+		# index is a page reference to where we are in the view.
 		raise HTTPServerError, 'Error: index parameter not passed correctly.' if req.query['index'] == nil || /[0-9]+/.match(req.query['index']) == nil
 		index = /[0-9]+/.match(req.query['index']).to_s # Crop out all the bad stuff.
+
+		# navigation is to determine whether we populate the viewing pane of first view.
 		raise HTTPServerError, 'Error: navigation parameter not passed correctly.' if req.query['navigation'] == nil || /[0-9]+/.match(req.query['navigation']) == nil
 		navigation = /[0-1]/.match(req.query['navigation']).to_s # Crop out all the bad stuff.
 
 		# basicView is for the Basic Archive View.
 		raise HTTPServerError, 'Error: basicView parameter not passed correctly.' if req.query['basicView'] == nil || /[0-1]/.match(req.query['basicView']) == nil
 		basicView = /[0-1]/.match(req.query['basicView']).to_s 
+
+		# Initialize some vars.
 		myJumpNavigation = "" # Jump navigation string.
 		myNavigation = "" # General navigation string.
 		myTempRespond = "" # Set a local var to null.
