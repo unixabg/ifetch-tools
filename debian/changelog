@@ -1,3 +1,12 @@
+ifetch-tools (0.15.13-1) unstable; urgency=low
+
+  * Bumped version of wwwifetch to 0.8.7
+  -- Error testing on passed params.
+  * Bumped versions in man pages and web page.
+  * Updated Copyright years.
+
+ -- Richard Nelson <unixabg@gmail.com>  Sun, 03 Jan 2010 22:15:00 -0600
+
 ifetch-tools (0.15.12a-1) unstable; urgency=low
 
   * Bumped version of wwwifetch to 0.8.6
