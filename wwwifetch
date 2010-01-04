@@ -90,8 +90,9 @@ class CameraHistory < HTTPServlet::AbstractServlet
 		myTempRespond = "" # Set a local var to null.
 		navigation = /[0-9]+/.match(req.query['navigation'])[0] # Crop out all the bad stuff.
 
-		# Expect this in the page url now.
-		basicView = /[0-1]+/.match(req.query['basicView'])[0]
+		# basicView is for the Basic Archive View.
+		raise HTTPServerError, 'Error: basicView parameter not passed correctly.' if req.query['basicView'] == nil || /[0-1]/.match(req.query['basicView']) == nil
+		basicView = /[0-1]/.match(req.query['basicView']).to_s
 
 		# 20090201 Nelson - I am now starting this on startup and only do the new object here.
 		# Here is the performance boost for exchange of data between the collection daemon and the web interface
