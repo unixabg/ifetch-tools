@@ -65,7 +65,8 @@ class Camera < HTTPServlet::AbstractServlet
 			user == HISTORYUSER && pass == HISTORYPASS
 		}
 		res['Content-Type'] = "text/html" # Tell the browser how we are talking
-		cameraName = /[A-Za-z0-9_]+/.match(req.query['cameraName'])[0] # Crop out all the bad stuff.
+		raise HTTPServerError, 'Error: cameraName parameter not passed correctly.' if req.query['cameraName'] == nil || /[0-9]+/.match(req.query['cameraName']) == nil
+		cameraName = /[0-9]+/.match(req.query['cameraName']).to_s
 		res.body = eval(File.open("/usr/share/ifetch-tools/templates/Camera") {|fh| fh.read})
 	end
 end
@@ -82,8 +83,8 @@ class CameraHistory < HTTPServlet::AbstractServlet
 			user == HISTORYUSER && pass == HISTORYPASS
 		}
 		res['Content-Type'] = "text/html" # Tell the browser how we are talking
-		cameraName = /[A-Za-z0-9_]+/.match(req.query['cameraName'])[0] # Crop out all the bad stuff.
-		#  page = /[0-9]+/.match(req.query['page'])[0] # Crop out all the bad stuff.
+		raise HTTPServerError, 'Error: cameraName parameter not passed correctly.' if req.query['cameraName'] == nil || /[0-9]+/.match(req.query['cameraName']) == nil
+		cameraName = /[0-9]+/.match(req.query['cameraName']).to_s
 		index = /[0-9]+/.match(req.query['index'])[0] # Crop out all the bad stuff.
 		myJumpNavigation = "" # Jump navigation string.
 		myNavigation = "" # General navigation string.
@@ -92,7 +93,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 
 		# basicView is for the Basic Archive View.
 		raise HTTPServerError, 'Error: basicView parameter not passed correctly.' if req.query['basicView'] == nil || /[0-1]/.match(req.query['basicView']) == nil
-		basicView = /[0-1]/.match(req.query['basicView']).to_s
+		basicView = /[0-1]/.match(req.query['basicView']).to_s 
 
 		# 20090201 Nelson - I am now starting this on startup and only do the new object here.
 		# Here is the performance boost for exchange of data between the collection daemon and the web interface
@@ -141,7 +142,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 
 		# This just keeps us from populating the navigation frame on the initial login to history and if no history collected yet.
 		if navigation.to_i == 1 && imgSortedLength > 0
-			# Ok now actually populate the page with the lastImgOnPage
+		# Ok now actually populate the page with the lastImgOnPage
 			index.to_i.upto(lastImgOnPage) do |imgIndex|
 				#imgTime, imgFile = imgSorted[5].to_s.split(/,/)
 				imgTime, imgFile = imgSorted[imgIndex].split(/,/)
@@ -257,7 +258,8 @@ class CameraStartStop < HTTPServlet::AbstractServlet
 			user == MONITORUSER && pass == MONITORPASS
 		}
 		res['Content-Type'] = "text/html" # Tell the browser how we are talking
-		cameraName = /[A-Za-z0-9_]+/.match(req.query['cameraName'])[0] # Crop out all the bad stuff.
+		raise HTTPServerError, 'Error: cameraName parameter not passed correctly.' if req.query['cameraName'] == nil || /[0-9]+/.match(req.query['cameraName']) == nil
+		cameraName = /[0-9]+/.match(req.query['cameraName']).to_s
 		# Now test for the status of the cameras lock file. If running we stop and if not we start.
 		myTempRespond = ""
 		lock_file = File::open("/var/lock/ifetch-tools/"+cameraName.to_s+".lock", 'w')
@@ -369,7 +371,8 @@ class ShowImage < HTTPServlet::AbstractServlet
 			user == HISTORYUSER && pass == HISTORYPASS
 		}
 		res['Content-Type'] = "text/html" # Tell the browser how we are talking
-		cameraName = /[A-Za-z0-9_]+/.match(req.query['cameraName'])[0] # Crop out all the bad stuff.
+		raise HTTPServerError, 'Error: cameraName parameter not passed correctly.' if req.query['cameraName'] == nil || /[0-9]+/.match(req.query['cameraName']) == nil
+		cameraName = /[0-9]+/.match(req.query['cameraName']).to_s
 		imgFile = /([\/A-Za-z0-9_]+)+(.jpg|.png)/.match(req.query['imageName'])[0] # Crop out all the bad stuff.
 
 		if imgFile == "images/ifetch.png" || imgFile == "images/missed.jpg"
