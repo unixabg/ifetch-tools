@@ -85,7 +85,8 @@ class CameraHistory < HTTPServlet::AbstractServlet
 		res['Content-Type'] = "text/html" # Tell the browser how we are talking
 		raise HTTPServerError, 'Error: cameraName parameter not passed correctly.' if req.query['cameraName'] == nil || /[0-9]+/.match(req.query['cameraName']) == nil
 		cameraName = /[0-9]+/.match(req.query['cameraName']).to_s
-		index = /[0-9]+/.match(req.query['index'])[0] # Crop out all the bad stuff.
+		raise HTTPServerError, 'Error: index parameter not passed correctly.' if req.query['index'] == nil || /[0-9]+/.match(req.query['index']) == nil
+		index = /[0-9]+/.match(req.query['index']).to_s # Crop out all the bad stuff.
 		myJumpNavigation = "" # Jump navigation string.
 		myNavigation = "" # General navigation string.
 		myTempRespond = "" # Set a local var to null.
