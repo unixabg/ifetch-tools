@@ -21,6 +21,9 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20100105 Nelson
+  * Attempt to prevent cached pages on templates.
+
 20100103 Nelson
   * Bumped version of wwwifetch to 0.8.7
   -- Error testing on passed params.
