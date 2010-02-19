@@ -21,6 +21,10 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20100218 Nelson
+  * Bumped version of ifetch to 0.14.8
+  * Attempt to avoid nil split errors in Drb exchanges.
+
 20100105 Nelson
   * Attempt to prevent cached pages on templates.
 
