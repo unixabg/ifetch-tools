@@ -21,6 +21,10 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20100525 Nelson
+  * Bumped version of wwwifetch to 0.8.8
+  * Added ability for custom htdocs folder.
+
 20100218 Nelson
   * Bumped version of ifetch to 0.14.8
   * Attempt to avoid nil split errors in Drb exchanges.

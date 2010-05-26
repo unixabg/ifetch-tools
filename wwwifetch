@@ -23,7 +23,7 @@
 # Set some variables.
 ##############################################################################################
 # Version number
-VER = "0.8.7"
+VER = "0.8.8"
 # Max number of cams to show and work with for all creation operations.
 
 ##############################################################################################
@@ -508,7 +508,16 @@ s.mount("/startallcameras", StartAllCameras)
 s.mount("/camera", Camera)
 s.mount("/camerahistory", CameraHistory)
 s.mount("/showimage", ShowImage)
-s.mount('/', HTTPServlet::FileHandler, "/usr/share/ifetch-tools/htdocs",
+# Below creates symlink to default area if no custom /var/lib/ifetch-tools/htdocs folder or symlink is found.
+if File.exist?("/var/lib/ifetch-tools/htdocs") then
+	puts "Symlink or folder exists for /var/lib/ifetch-tools/htdocs."
+else
+	puts "No symlink or folder exists for /var/lib/ifetch-tools/htdocs."
+	puts "Attempting to create symlink to /usr/share/ifetch-tools/htdocs."
+	File.symlink("/usr/share/ifetch-tools/htdocs", "/var/lib/ifetch-tools/htdocs")
+end
+
+s.mount('/', HTTPServlet::FileHandler, "/var/lib/ifetch-tools/htdocs/",
 	:FancyIndexing => true,
 	:HandlerCallback => authenticate_history # Hook up the authentication proc.
 )

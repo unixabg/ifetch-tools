@@ -1,3 +1,10 @@
+ifetch-tools (0.15.16-1) unstable; urgency=low
+
+  * Bumped version of wwwifetch to 0.8.8
+  * Added ability for custom htdocs folder.
+
+ -- Richard Nelson <unixabg@gmail.com>  Thu, 25 May 2010 22:06:00 -0600
+
 ifetch-tools (0.15.15-1) unstable; urgency=low
 
   * Bumped version of ifetch to 0.14.8
