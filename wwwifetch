@@ -103,7 +103,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 		myJumpNavigation = "" # Jump navigation string.
 		myNavigation = "" # General navigation string.
 		myTempRespond = "" # Set a local var to null.
-	
+
 		# 20090201 Nelson - I am now starting this on startup and only do the new object here.
 		# Here is the performance boost for exchange of data between the collection daemon and the web interface
 		#DRb.start_service(nil,nil,{:load_limit => LOADLIMIT})
