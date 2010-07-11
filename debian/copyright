@@ -1,5 +1,5 @@
-Author: Richard Nelson <unixabg@gmail.com>
-Download: http://ifetch-tools.rubyforge.org/
+Upstream-Contact: Richard Nelson <unixabg@gmail.com>
+Upstream-Homepage: http://ifetch-tools.rubyforge.org/
 
 Files: *
 Copyright: (C) 2005-2010 Richard Nelson <unixabg@gmail.com>
@@ -20,4 +20,3 @@ License: GPL-2+
  .
  On Debian systems, the complete text of the GNU General Public License
  can be found in /usr/share/common-licenses/GPL-2 file.
-

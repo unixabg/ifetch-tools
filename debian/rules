@@ -1,35 +1,7 @@
 #!/usr/bin/make -f
 
-clean:
-	dh_testdir
-	dh_testroot
+%:
+	dh ${@}
 
-	dh_clean
-
-build:
-
-install:
-
-binary: binary-indep
-
-binary-arch:
-
-binary-indep:
-	dh_testdir
-	dh_testroot
-	dh_installchangelogs changelog
-	dh_installdocs
-	dh_installexamples
-	dh_installdirs
-	dh_install
-	dh_installman
-	dh_installinit
-	dh_installlogrotate
+override_dh_compress:
 	dh_compress -Xifetch-tools.conf -Xcamera_number.conf
-	dh_fixperms
-	dh_installdeb
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-.PHONY: clean build install binary binary-arch binary-indep

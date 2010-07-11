@@ -4,7 +4,16 @@ set -e
 
 case "${1}" in
 	configure)
-		adduser --system --shell /bin/sh --disabled-password --no-create-home --gecos 'ifetch-tools account' --group ifetch-tools
+		if ! getent passwd | grep -q "^ifetch-tools"
+		then
+			# Add new user account
+			adduser --system --shell /bin/sh --disabled-password --no-create-home --gecos 'ifetch-tools account' --group --quiet ifetch-tools
+		elif ! getent group | grep -q "^ifetch-tools"
+		then
+			# Add existing user to new new group
+			addgroup --system --quiet ifetch-tools
+			gpasswd -a ifetch-tools ifetch-tools
+		fi
 
 		mkdir -p /var/lib/ifetch-tools
 		chown ifetch-tools:ifetch-tools /var/run/ifetch-tools /var/lock/ifetch-tools /var/log/ifetch-tools /etc/ifetch-tools /var/lib/ifetch-tools -R
