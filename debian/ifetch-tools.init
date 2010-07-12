@@ -106,8 +106,9 @@ stop_daemon()
 
 case "$1" in
 	start)
-		mkdir -p /var/lock/ifetch-tools
 		mkdir -p /var/run/ifetch-tools
+		mkdir -p /var/lock/ifetch-tools
+		chown ifetch-tools:ifetch-tools /var/run/ifetch-tools /var/lock/ifetch-tools
 		if running
 		then
 			echo "$NAME appears to be already running."
