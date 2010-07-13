@@ -25,6 +25,8 @@
   * Move to common version number to match debian version.
   * Correct lintian errors.
   * Release ifetch-tools-0.15.17
+  * Move directory creation from .dirs to .postinst.
+  * Release ifetch-tools-0.15.18
 
 20100525 Nelson
   * Bumped version of wwwifetch to 0.8.8
