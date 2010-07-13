@@ -15,7 +15,10 @@ case "${1}" in
 			gpasswd -a ifetch-tools ifetch-tools
 		fi
 
+		mkdir -p /etc/ifetch-tools/cameras
+		mkdir -p /var/log/ifetch-tools
 		mkdir -p /var/lib/ifetch-tools
+
 		chown ifetch-tools:ifetch-tools /var/log/ifetch-tools /etc/ifetch-tools /var/lib/ifetch-tools -R
 		chmod 700 /etc/ifetch-tools /etc/ifetch-tools/cameras
 
