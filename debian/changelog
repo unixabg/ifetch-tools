@@ -1,3 +1,9 @@
+ifetch-tools (0.15.19-1) unstable; urgency=low
+
+  * Set Default-Stop to 0 1 6 in .init.
+
+ -- Richard Nelson <unixabg@gmail.com>  DayOfWeek, DayOfMonth Jul 2010 HH:MM:SS -0600
+
 ifetch-tools (0.15.18-1) unstable; urgency=low
 
   * Move directory creation from .dirs to .postinst.
