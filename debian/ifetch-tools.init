@@ -6,7 +6,7 @@
 # Required-Stop:	$remote_fs $network $syslog
 # Should-Start:		$local_fs
 # Default-Start:	2 3 4 5
-# Default-Stop:		1
+# Default-Stop:		0 1 6
 # Short-Description:	Tools to collect IP Camera images.
 # Description:		Tools to collect, monitor, view images from IP Cameras.
 ### END INIT INFO
