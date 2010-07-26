@@ -1,0 +1,41 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: ifetch-tools@packages.debian.org\n"
+"POT-Creation-Date: 2010-07-26 07:08+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: boolean
+#. Description
+#: ../ifetch-tools.templates:1001
+msgid "Remove all ifetch-tools data files?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../ifetch-tools.templates:1001
+msgid ""
+"The /var/lib/ifetch-tools directory which contains the ifetch-tools data "
+"files is about to be removed."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../ifetch-tools.templates:1001
+msgid ""
+"If you're removing the ifetch-tools package in order to later install a more "
+"recent version or if a different ifetch-tools package is already using it, "
+"the data should be kept."
+msgstr ""

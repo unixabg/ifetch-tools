@@ -1,0 +1,10 @@
+Template: ifetch-tools/purge
+Type: boolean
+Default: false
+_Description: Remove all ifetch-tools data files?
+ The /var/lib/ifetch-tools directory which contains the ifetch-tools data
+ files is about to be removed.
+ .
+ If you're removing the ifetch-tools package in order to later install a
+ more recent version or if a different ifetch-tools package is already
+ using it, the data should be kept.

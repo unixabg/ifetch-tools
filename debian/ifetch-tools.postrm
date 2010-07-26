@@ -2,6 +2,11 @@
 
 set -e
 
+if [ -e /usr/share/debconf/confmodule ]
+then
+	. /usr/share/debconf/confmodule
+fi
+
 case "${1}" in
 	remove)
 		if ! getent passwd | grep -q "^ifetch-tools"
@@ -18,6 +23,15 @@ case "${1}" in
 			then
 				delgroup --system ifetch-tools
 			fi
+		fi
+
+		db_input high ifetch-tools/purge || true
+		db_go || true
+		db_get ifetch-tools/purge || true
+
+		if [ "${RET}" = "true" ]
+		then
+			rm -f /var/lib/ifetch-tools
 		fi
 		;;
 
