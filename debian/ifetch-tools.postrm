@@ -31,7 +31,9 @@ case "${1}" in
 
 		if [ "${RET}" = "true" ]
 		then
-			rm -f /var/lib/ifetch-tools
+			rm -rf /var/lib/ifetch-tools
+			rm -rf /var/log/ifetch-tools
+			rm -rf /etc/ifetch-tools
 		fi
 		;;
 
