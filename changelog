@@ -21,6 +21,9 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20100727 Nelson
+  * Adding debconf question for purge by Daniel Baumann <daniel@debian.org>.
+  * Set Default-Stop to 0 1 6 in .init.
 20100712 Nelson
   * Move to common version number to match debian version.
   * Correct lintian errors.
