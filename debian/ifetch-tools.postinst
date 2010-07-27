@@ -2,6 +2,11 @@
 
 set -e
 
+if [ -e /usr/share/debconf/confmodule ]
+then
+	. /usr/share/debconf/confmodule
+fi
+
 case "${1}" in
 	configure)
 		if ! getent passwd | grep -q "^ifetch-tools"
