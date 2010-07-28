@@ -22,6 +22,7 @@
 # Changlog for milestone operations
 ####################################################################################
 20100727 Nelson
+  * Release 0.15.19
   * Adding debconf question for purge by Daniel Baumann <daniel@debian.org>.
   * Add purge of data, logs, and settings as configured from debconf question.
   * Set Default-Stop to 0 1 6 in .init.
