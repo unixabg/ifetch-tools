@@ -25,6 +25,9 @@ case "${1}" in
 			fi
 		fi
 
+		# Clean up init.d
+		update-rc.d ifetch-tools remove
+
 		db_input high ifetch-tools/purge || true
 		db_go || true
 		db_get ifetch-tools/purge || true
