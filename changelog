@@ -21,6 +21,10 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20100729 Nelson
+  * Release 0.15.20
+  * Changing debconf question to be ran each time.
+
 20100727 Nelson
   * Release 0.15.19
   * Adding debconf question for purge by Daniel Baumann <daniel@debian.org>.
