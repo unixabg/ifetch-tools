@@ -7,6 +7,9 @@ then
 	. /usr/share/debconf/confmodule
 fi
 
+# Set the prompt to remove data, logs, and settings each removal.
+db_fset ifetch-tools/purge seen false
+
 case "${1}" in
 	configure)
 		if ! getent passwd | grep -q "^ifetch-tools"
