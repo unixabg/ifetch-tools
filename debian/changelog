@@ -1,5 +1,7 @@
 ifetch-tools (0.15.21-1) unstable; urgency=low
 
+  * Adding Russian debconf translation from Yuri Kozlov
+    <yuray@komyakino.ru> (Closes: #593494).
   * Adding Portuguese debconf translation from Américo Monteiro
     <a_monteiro@netcabo.pt> (Closes: #593649).
 
