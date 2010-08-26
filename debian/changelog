@@ -1,7 +1,5 @@
 ifetch-tools (0.15.21-1) unstable; urgency=low
 
-  * Adding Swedish debconf translation from Martin Bagge
-    <brother@bsnet.se> (Closes: #594080).
   * Adding Russian debconf translation from Yuri Kozlov
     <yuray@komyakino.ru> (Closes: #593494).
   * Adding Portuguese debconf translation from Américo Monteiro
