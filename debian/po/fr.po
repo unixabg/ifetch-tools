@@ -1,0 +1,51 @@
+# french translation of ifetch-tools debconf templates
+# Copyright (C) 2010 Debian French l10n team <debian-l10n-french@lists.debian.org>
+# This file is distributed under the same license as the ifetch-tools package.
+#
+# Translators:
+# Christian Perrier <bubulle@debian.org>, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: ifetch-tools@packages.debian.org\n"
+"POT-Creation-Date: 2010-08-14 17:43-0500\n"
+"PO-Revision-Date: 2010-08-25 10:00+0200\n"
+"Last-Translator: Christian Perrier <bubulle@debian.org>\n"
+"Language-Team: French <debian-l10n-french@lists.debian.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.0\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. Type: boolean
+#. Description
+#: ../ifetch-tools.templates:1001
+msgid "Remove all ifetch-tools data, logs, and settings files?"
+msgstr "Faut-il supprimer les données, journaux et réglages de ifetch-tools ?"
+
+#. Type: boolean
+#. Description
+#: ../ifetch-tools.templates:1001
+msgid ""
+"The /var/lib/ifetch-tools, /var/log/ifetch-tools, and /etc/ifetch-tools "
+"directories which contain the ifetch-tools data, logs, and settings files "
+"are about to be removed."
+msgstr ""
+"Les répertoires /var/lib/ifetch-tools, /var/log/ifetch-tools et /etc/ifetch-"
+"tools, qui contiennent respectivement les données, les journaux et les "
+"réglages de ifetch-tools vont être supprimés."
+
+#. Type: boolean
+#. Description
+#: ../ifetch-tools.templates:1001
+msgid ""
+"If you're removing the ifetch-tools package in order to later install a more "
+"recent version or if a different ifetch-tools package is already using the "
+"data, logs, and settings, they should be kept."
+msgstr ""
+"Si vous êtes en train de supprimer le paquet ifetch-tools dans le but "
+"d'installer plus tard une nouvelle version ou si un autre paquet ifetch-"
+"tools est susceptible d'utiliser ces données, vous pouvez souhaiter les "
+"conserver."

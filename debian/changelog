@@ -1,7 +1,9 @@
 ifetch-tools (0.15.21-1) unstable; urgency=low
 
+  * Adding French debconf translation from Christian Perrier
+    <bubulle@debian.org> (Closes: #594848).
   * Adding Swedish debconf translation from Martin Bagge
-    <brother@bsnet.se> (Closes: #594080)
+    <brother@bsnet.se> (Closes: #594080).
   * Adding Russian debconf translation from Yuri Kozlov
     <yuray@komyakino.ru> (Closes: #593494).
   * Adding Portuguese debconf translation from Américo Monteiro
