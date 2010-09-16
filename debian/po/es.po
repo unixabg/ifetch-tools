@@ -1,0 +1,60 @@
+# ifetch-tools po-debconf translation to Spanish
+# Copyright (C) 2010 Software in the Public Interest
+# This file is distributed under the same license as the ifetch-tools package.
+#
+# Changes:
+# - Initial translation
+# Camaleón <noelamac@gmail.com>, 2010
+#
+# - Updates
+#
+#
+# Traductores, si no conocen el formato PO, merece la pena leer la
+# documentación de gettext, especialmente las secciones dedicadas a este
+# formato, por ejemplo ejecutando:
+# info -n '(gettext)PO Files'
+# info -n '(gettext)Header Entry'
+#
+# Equipo de traducción al español, por favor lean antes de traducir
+# los siguientes documentos:
+#
+# - El proyecto de traducción de Debian al español
+# http://www.debian.org/intl/spanish/
+# especialmente las notas y normas de traducción en
+# http://www.debian.org/intl/spanish/notas
+#
+# - La guía de traducción de po's de debconf:
+# /usr/share/doc/po-debconf/README-trans
+# o http://www.debian.org/intl/l10n/po-debconf/README-trans
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ifetch-tools_0.15.21-1\n"
+"Report-Msgid-Bugs-To: ifetch-tools@packages.debian.org\n"
+"POT-Creation-Date: 2010-08-14 17:43-0500\n"
+"PO-Revision-Date: 2010-08-22 15:56+0100\n"
+"Last-Translator: Camaleón <noelamac@gmail.com>\n"
+"Language-Team: Debian Spanish <debian-l10n-spanish@lists.debian.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: boolean
+#. Description
+#: ../ifetch-tools.templates:1001
+msgid "Remove all ifetch-tools data, logs, and settings files?"
+msgstr "¿Desea eliminar todos los datos de ifetch-tools, registros y archivos de configuración?"
+
+#. Type: boolean
+#. Description
+#: ../ifetch-tools.templates:1001
+msgid "The /var/lib/ifetch-tools, /var/log/ifetch-tools, and /etc/ifetch-tools directories which contain the ifetch-tools data, logs, and settings files are about to be removed."
+msgstr "Se eliminarán los directorios que contienen los datos de ifetch-tools, «/var/lib/ifetch-tools», «/var/log/ifetch-tools» y «/etc/ifetch-tools» así como los registros y archivos de configuración."
+
+#. Type: boolean
+#. Description
+#: ../ifetch-tools.templates:1001
+msgid "If you're removing the ifetch-tools package in order to later install a more recent version or if a different ifetch-tools package is already using the data, logs, and settings, they should be kept."
+msgstr "No debería eliminarlos si piensa instalar más delante una versión más reciente del paquete ifetch-tools o si alguna versión diferente del paquete ifetch-tools está utilizando actualmente los datos, registros y archivos de configuración."
+

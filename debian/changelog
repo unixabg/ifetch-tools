@@ -1,3 +1,10 @@
+ifetch-tools (0.15.22-1) unstable; urgency=low
+
+  * Adding Spanish debconf translation from Camaleón
+    <noelamac@gmail.com> (Closes: #596788).
+
+ -- Richard Nelson <unixabg@gmail.com>  Mon-Sun, DD MMM 2010 hh:mm:00 -0600
+
 ifetch-tools (0.15.21-1) unstable; urgency=low
 
   * Adding French debconf translation from Christian Perrier
