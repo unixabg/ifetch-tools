@@ -2,6 +2,8 @@ ifetch-tools (0.15.22-1) unstable; urgency=low
 
   * Adding Spanish debconf translation from Camaleón
     <noelamac@gmail.com> (Closes: #596788).
+  * Adding Czech debconf translation from Michal Simunek
+    <michal.simunek@gmail.com> (Closes: #596813).
 
  -- Richard Nelson <unixabg@gmail.com>  Mon-Sun, DD MMM 2010 hh:mm:00 -0600
 
