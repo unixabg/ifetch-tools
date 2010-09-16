@@ -21,6 +21,17 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20100902
+  * Release 0.15.21
+  * Adding French debconf translation from Christian Perrier
+    <bubulle@debian.org> (Closes: #594848).
+  * Adding Swedish debconf translation from Martin Bagge
+    <brother@bsnet.se> (Closes: #594080).
+  * Adding Russian debconf translation from Yuri Kozlov
+    <yuray@komyakino.ru> (Closes: #593494).
+  * Adding Portuguese debconf translation from Américo Monteiro
+    <a_monteiro@netcabo.pt> (Closes: #593649).
+
 20100729 Nelson
   * Release 0.15.20
   * Changing debconf question to be ran each time.
