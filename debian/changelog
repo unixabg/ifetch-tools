@@ -7,7 +7,7 @@ ifetch-tools (0.15.22-1) unstable; urgency=low
   * Adding German debconf translation from Chris Leick
     <c.leick@vollbio.de> (Closes: #597497).
 
- -- Richard Nelson <unixabg@gmail.com>  Mon-Sun, DD MMM 2010 hh:mm:00 -0600
+ -- Richard Nelson <unixabg@gmail.com>  Wed, 29 Sep 2010 16:40:00 -0600
 
 ifetch-tools (0.15.21-1) unstable; urgency=low
 
