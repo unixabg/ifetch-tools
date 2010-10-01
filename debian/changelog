@@ -1,3 +1,10 @@
+ifetch-tools (0.15.22a-1) unstable; urgency=low
+
+  * Adding Danish debconf translation from Joe Dalton
+    <joedalton2@yahoo.dk> (Closes: #598775).
+
+ -- Richard Nelson <unixabg@gmail.com>  Fri, 01 Oct 2010 16:10:00 -0600
+
 ifetch-tools (0.15.22-1) unstable; urgency=low
 
   * Adding Spanish debconf translation from Camaleón
