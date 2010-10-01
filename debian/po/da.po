@@ -1,0 +1,49 @@
+# Danish translation ifetch-tools.
+# Copyright (C) 2010 ifetch-tools & nedenstående oversættere.
+# This file is distributed under the same license as the ifetch-tools package.
+# Joe Hansen <joedalton2@yahoo.dk>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ifetch-tools\n"
+"Report-Msgid-Bugs-To: ifetch-tools@packages.debian.org\n"
+"POT-Creation-Date: 2010-08-14 17:43-0500\n"
+"PO-Revision-Date: 2010-10-01 19:21+0100\n"
+"Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
+"Language-Team: Danish <debian-l10n-danish@lists.debian.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: boolean
+#. Description
+#: ../ifetch-tools.templates:1001
+msgid "Remove all ifetch-tools data, logs, and settings files?"
+msgstr "Fjern alle ifetch-tools-data, log og opsætningsfiler?"
+
+#. Type: boolean
+#. Description
+#: ../ifetch-tools.templates:1001
+msgid ""
+"The /var/lib/ifetch-tools, /var/log/ifetch-tools, and /etc/ifetch-tools "
+"directories which contain the ifetch-tools data, logs, and settings files "
+"are about to be removed."
+msgstr ""
+"Mapperne /var/lib/ifetch-tools, /var/log/ifetch-tools og /etc/ifetch-tools "
+"som indeholder ifetch-tools-data, log og opsætningsfiler er ved at blive "
+"fjernet."
+
+#. Type: boolean
+#. Description
+#: ../ifetch-tools.templates:1001
+msgid ""
+"If you're removing the ifetch-tools package in order to later install a more "
+"recent version or if a different ifetch-tools package is already using the "
+"data, logs, and settings, they should be kept."
+msgstr ""
+"Hvis du fjerner pakken ifetch-tools for senere at installere en nyere "
+"version, eller hvis en anden ifetch-tools-pakke allerede bruger dataene, "
+"loggene og opsætningen, bør de blive gemt."
+
+
