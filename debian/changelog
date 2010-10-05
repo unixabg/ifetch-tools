@@ -1,3 +1,12 @@
+ifetch-tools (0.15.22b-1) unstable; urgency=low
+
+  * Adding Italian debconf translation from Vincenzo Campanella
+    <vinz65@gmail.com> (Closes: #599178).
+  * Adding Vietnamese debconf translation from Clytie Siddall
+    <clytie@riverland.net.au> (Closes: #598907).
+
+ -- Richard Nelson <unixabg@gmail.com>  Tue, 05 Oct 2010 14:10:00 -0600
+
 ifetch-tools (0.15.22a-1) unstable; urgency=low
 
   * Adding Danish debconf translation from Joe Dalton
