@@ -1,3 +1,10 @@
+ifetch-tools (0.15.22c-1) unstable; urgency=low
+
+  * Adding Brazilian Portuguese debconf translation from Adriano Rafael Gomes
+    <adrianorg@gmail.com> (Closes: #602030).
+
+ -- Richard Nelson <unixabg@gmail.com>  Thu, 04 Nov 2010 15:00:00 -0600
+
 ifetch-tools (0.15.22b-1) unstable; urgency=low
 
   * Adding Italian debconf translation from Vincenzo Campanella
