@@ -1,0 +1,50 @@
+# Debconf translations for ifetch-tools.
+# Copyright (C) 2010 THE ifetch-tools'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the ifetch-tools package.
+# Adriano Rafael Gomes <adrianorg@gmail.com>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ifetch-tools 0.15.21-1\n"
+"Report-Msgid-Bugs-To: ifetch-tools@packages.debian.org\n"
+"POT-Creation-Date: 2010-08-14 17:43-0500\n"
+"PO-Revision-Date: 2010-10-23 10:38-0200\n"
+"Last-Translator: Adriano Rafael Gomes <adrianorg@gmail.com>\n"
+"Language-Team: Brazilian Portuguese <debian-l10n-portuguese@lists.debian."
+"org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"pt_BR utf-8\n"
+
+#. Type: boolean
+#. Description
+#: ../ifetch-tools.templates:1001
+msgid "Remove all ifetch-tools data, logs, and settings files?"
+msgstr ""
+"Remover todos os arquivos de dados, logs e configuração do ifetch-tools?"
+
+#. Type: boolean
+#. Description
+#: ../ifetch-tools.templates:1001
+msgid ""
+"The /var/lib/ifetch-tools, /var/log/ifetch-tools, and /etc/ifetch-tools "
+"directories which contain the ifetch-tools data, logs, and settings files "
+"are about to be removed."
+msgstr ""
+"Os diretórios /var/lib/ifetch-tools, /var/log/ifetch-tools e /etc/ifetch-"
+"tools, que contêm os arquivos de dados, logs e configuração do ifetch-tools, "
+"estão prestes a serem removidos."
+
+#. Type: boolean
+#. Description
+#: ../ifetch-tools.templates:1001
+msgid ""
+"If you're removing the ifetch-tools package in order to later install a more "
+"recent version or if a different ifetch-tools package is already using the "
+"data, logs, and settings, they should be kept."
+msgstr ""
+"Se você está removendo o pacote ifetch-tools para depois instalar uma versão "
+"mais recente ou se um pacote ifetch-tools diferente já está usando os "
+"dados, logs e configurações, eles deveriam ser mantidos."
