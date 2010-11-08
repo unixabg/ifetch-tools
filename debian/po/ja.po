@@ -1,0 +1,38 @@
+# Copyright (C) 2010 Nobuhiro Iwamatsu <iwamatsu@debian.org>
+# This file is distributed under the 2-clause BSD license.
+# Nobuhiro Iwamatsu <iwamatsu@debian.org>, 2010.
+#
+
+msgid ""
+msgstr ""
+"Project-Id-Version: ifetch-tools_0.15.22b-\n"
+"Report-Msgid-Bugs-To: ifetch-tools@packages.debian.org\n"
+"POT-Creation-Date: 2010-08-14 17:43-0500\n"
+"PO-Revision-Date: 2010-11-04 09:01+0900\n"
+"Last-Translator: Nobuhiro Iwamatsu <iwamatsu@nigauri.org>\n"
+"Language-Team: Japanese <debian-japanese@lists.debian.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Japanese\n"
+"X-Poedit-Country: JAPAN\n"
+
+#. Type: boolean
+#. Description
+#: ../ifetch-tools.templates:1001
+msgid "Remove all ifetch-tools data, logs, and settings files?"
+msgstr "全ての ifetch-tools データ、ログ、設定ファイルを削除しますか?"
+
+#. Type: boolean
+#. Description
+#: ../ifetch-tools.templates:1001
+msgid "The /var/lib/ifetch-tools, /var/log/ifetch-tools, and /etc/ifetch-tools directories which contain the ifetch-tools data, logs, and settings files are about to be removed."
+msgstr "ifetch-tools データ、ログ、設定ファイルを含む /var/lib/ifetch-tools、/var/log/ifetch-tools および /etc/ifetch-tools ディレクトリが削除されようとしています。"
+
+#. Type: boolean
+#. Description
+#: ../ifetch-tools.templates:1001
+msgid "If you're removing the ifetch-tools package in order to later install a more recent version or if a different ifetch-tools package is already using the data, logs, and settings, they should be kept."
+msgstr "もっと新しいバージョンをインストールするために ifetch-tools パッケージを削除している、あるいは異なる ifetch-tools パッケージがデータ、ログ、設定ファイルを既に使っているなら、これらは削除すべきではありません。"
+
