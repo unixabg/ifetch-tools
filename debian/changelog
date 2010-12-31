@@ -3,7 +3,7 @@ ifetch-tools (0.15.22d-1) unstable; urgency=low
   * Adding Japanease debconf translation from Nobuhiro Iwamats
     <iwamatsu@nigauri.org> (Closes: #602467).
 
- -- Richard Nelson <unixabg@gmail.com>  DOW, dd Nov 2010 15:00:00 -0600
+ -- Richard Nelson <unixabg@gmail.com>  Fri, 31 Dec 2010 14:30:00 -0600
 
 ifetch-tools (0.15.22c-1) unstable; urgency=low
 
