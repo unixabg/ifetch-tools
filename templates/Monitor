@@ -14,7 +14,7 @@
 	<TBODY>
 	<TD>
 		<A HREF="#{HOMELINK}"><img src="/ifetch.png" width=100 heigth=100 ></A>
-		<BR>wwwifetch ver. - #{VER}
+		<BR>ifetch-tools version: #{VER}
 	</TD>
 	<TD>
 		<CENTER><FONT size=+2>Operation & Action Legend</FONT></Center>
@@ -48,7 +48,7 @@
 	</TR>
 	#{myTempRespond}
 	</TBODY></TABLE>
-	<P>Monitor page of wwwifetch ver. - #{VER}</P>
+	<P>ifetch-tools version: #{VER}</P>
 	</BODY>
 	</HTML>
 }
