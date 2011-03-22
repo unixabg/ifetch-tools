@@ -1,3 +1,9 @@
+# Call to get uptime info for template.
+_UPTIME = %x[uptime]
+# Call to get current date for template.
+_DATE =%x[date +%Y-%m-%d]
+
+# Main page.
 %{
 	<HTML> <HEAD> <!-- This HTML file has been created by a ruby servlet -->
 	<TITLE>Camera Monitor Interface</TITLE>
@@ -12,9 +18,8 @@
 	<BODY LINK=#{LINK} ALINK=#{ALINK} VLINK=#{VLINK} BGCOLOR=#{BGCOLOR}  onLoad="setTimeout('redirecter()', 30000)">
 	<TABLE border="1" cellpadding="5" >
 	<TBODY>
-	<TD>
+	<TD align="center">
 		<A HREF="#{HOMELINK}"><img src="/ifetch.png" width=100 heigth=100 ></A>
-		<BR>ifetch-tools version: #{VER}
 	</TD>
 	<TD>
 		<CENTER><FONT size=+2>Operation & Action Legend</FONT></Center>
@@ -36,6 +41,10 @@
 		</TBODY></TABLE>
 	</TD>
 	</TR>
+	<TD align="center" colspan="2" >
+		#{_DATE} #{_UPTIME}
+	</TD>
+
 	</TBODY></TABLE>
 	<TABLE border="1" cellpadding="5" >
 	<TBODY>
