@@ -1,3 +1,11 @@
+ifetch-tools (0.15.22e-1) unstable; urgency=low
+
+  * Added date and uptime info to Monitor template.
+  * Made version references consistent in templates.
+  * Added prerm to ensure stop of running process on package removal.
+
+ -- Richard Nelson <unixabg@gmail.com>  Sun, 27 Mar 2011 15:00:00 -0600
+
 ifetch-tools (0.15.22d-1) unstable; urgency=low
 
   * Adding Japanease debconf translation from Nobuhiro Iwamats

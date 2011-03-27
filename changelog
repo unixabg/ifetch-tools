@@ -21,6 +21,12 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20110327
+  * Release 0.15.22e no change to core just translation bugs.
+  * Added date and uptime info to Monitor template.
+  * Made version references consistent in templates.
+  * Added prerm to ensure stop of running process on package removal.
+
 20101231
   * Release 0.15.22d no change to core just translation bugs.
 
