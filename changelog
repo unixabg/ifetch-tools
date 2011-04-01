@@ -21,8 +21,12 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20110401
+  * Release 0.15.22f see below.
+  * Remove modulate call on difference prep due to high cpu utilization.
+
 20110327
-  * Release 0.15.22e see below. 
+  * Release 0.15.22e see below.
   * Added date and uptime info to Monitor template.
   * Made version references consistent in templates.
   * Added prerm to ensure stop of running process on package removal.
