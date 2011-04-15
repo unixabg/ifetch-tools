@@ -21,6 +21,15 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+
+20110415
+  * Release 0.15.23 see below.
+  * Add timeout for execution on pullimage call.
+  * Cleanup on mdpp inclusion for monitor page.
+  * Initial add of logging for mdpp tests.
+  * Initial add of mdpplog.jpg image.
+  * Initial add of mdpp log access from monitor page.
+
 20110401
   * Release 0.15.22f see below.
   * Remove modulate call on difference prep due to high cpu utilization.

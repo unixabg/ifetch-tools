@@ -1,3 +1,13 @@
+ifetch-tools (0.15.23-1) unstable; urgency=low
+
+  * Add timeout for execution on pullimage call.
+  * Cleanup on mdpp inclusion for monitor page.
+  * Initial add of logging for mdpp tests.
+  * Initial add of mdpplog.jpg image.
+  * Initial add of mdpp log access from monitor page.
+
+ -- Richard Nelson <unixabg@gmail.com>  Fri, 15 Apr 2011 15:35:00 -0600
+
 ifetch-tools (0.15.22f-1) unstable; urgency=low
 
   * Remove modulate call on difference prep due to high cpu utilization.
