@@ -155,8 +155,9 @@ prefix=File.basename(ARGV[0], ".conf")
 
 ###############################################################
 # Set on varialbe names for file operations.
-pid_name = "/var/run/ifetch-tools/#{prefix}.pid"
 log_name = "/var/log/ifetch-tools/#{prefix}.txt"
+mdpp_log_name = "/var/log/ifetch-tools/#{prefix}.mdpp"
+pid_name = "/var/run/ifetch-tools/#{prefix}.pid"
 
 ################################################################
 # Set the singleton so we can be the only one with this config.
@@ -170,8 +171,12 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 	end
 
 	###############################################################
-	# Setup for log.ing.
+	# Setup for logging general output.
 	log = Logger.new(log_name, 5, log_size*1024)
+
+	###############################################################
+	# Setup for logging mdpp output.
+	mdpp_log = Logger.new(mdpp_log_name, 1, 1024)
 
 	###############################################################
 	# Lets trap here to ensure we can close clean with the signal of INT
@@ -406,10 +411,10 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 					# Here we are asked to listen for testing again.
 					#puts "Before"
 					mdpp = difference(process(image2),process(image1))
-					#mdpp2 = difference(process2(image2),process2(image1))
 					GC.start
 					#puts "Images tested resulted with mdpp of #{mdpp}"
-					#puts "Images tested resulted with mdpp of #{mdpp} and mdpp2 of #{mdpp2}"
+					# Log out all mdpp tests to log file.
+					mdpp_log.info("Images tested resulted with mdpp of #{mdpp}")
 					if mdpp.is_a?(Numeric) then
 						if mdpp > motion_mdpp then
 							#puts "Motion detected!"
@@ -522,6 +527,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 	# Try to close the lock file and the Logger.
 	lock_file.close
 	log.close
+	mdpp_log.close
 	DRb.stop_service() # Stop the DRb on the ifetch session
 else
 	###############################################################
