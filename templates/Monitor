@@ -36,6 +36,7 @@ _DATE =%x[date +%Y-%m-%d]
 			<IMG src="/grey.jpg" border="0"> - Collection offline
 			<BR><IMG src="/green.jpg" border="0"> - Collection working
 			<BR><IMG src="/red.jpg" border="0"> - Collection in alarm mode
+			<BR><IMG src="/mdpplog.jpg" border="0"> - View mdpp
 		</TD>
 		</TR>
 		</TBODY></TABLE>
@@ -53,6 +54,7 @@ _DATE =%x[date +%Y-%m-%d]
 	<TD>Actions</TD>
 	<TD>Status</TD>
 	<TD>Logs</TD>
+	<TD>mdpp</TD>
 	<TD>Information</TD>
 	</TR>
 	#{myTempRespond}

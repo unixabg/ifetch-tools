@@ -358,9 +358,9 @@ class Monitor < HTTPServlet::AbstractServlet
 				# Below is for diagnostics
 				#myTempRespond = myTempRespond+logFileLastLine[0]+logFileName
 				if logFileLastLine[0] == "I" then
-					myTempRespond = myTempRespond+'<TD><CENTER><IMG SRC="/green.jpg"></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></A></CENTER></TD><TD> '+logFileLastLine[1]+" </TD></TR>"
+					myTempRespond = myTempRespond+'<TD><CENTER><IMG SRC="/green.jpg"></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></A></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.mdpp" target="_blank"><CENTER><IMG SRC="/mdpplog.jpg"></A></CENTER></TD><TD> '+logFileLastLine[1]+" </TD></TR>"
 				else
-					myTempRespond = myTempRespond+'<TD><CENTER><IMG SRC="/red.jpg"></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></A><CENTER></TD><TD> '+logFileLastLine[1]+" </TD></TR>"
+					myTempRespond = myTempRespond+'<TD><CENTER><IMG SRC="/red.jpg"></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></A><CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.mdpp" target="_blank"><CENTER><IMG SRC="/mdpplog.jpg"></A></CENTER></TD><TD> '+logFileLastLine[1]+" </TD></TR>"
 				end
 			end
 		end
