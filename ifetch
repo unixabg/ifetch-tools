@@ -87,17 +87,19 @@ end
 # This def will pull the image from the cam now and return the response.
 ##############################################################################################
 def pullimage(address,port,url,uid,pwd)
-	Net::HTTP.start(address, port) do |http|
-		req_img = Net::HTTP::Get.new(url)
-		#req_img.basic_auth 'username', 'password'
-		req_img.basic_auth uid, pwd
-		response = http.request(req_img)
-		#puts "Code = #{response.code}"
-		#puts "Message = #{response.message}"
-		#response.each {|key, val| printf "%14s = %40.40s\n", key, val }
-		## Nelson working		f.write(response.body)
-		#Magick::Image.from_blob(response.body)[0];
-		response.body
+	timeout(10) do 
+		Net::HTTP.start(address, port) do |http|
+			req_img = Net::HTTP::Get.new(url)
+			#req_img.basic_auth 'username', 'password'
+			req_img.basic_auth uid, pwd
+			response = http.request(req_img)
+			#puts "Code = #{response.code}"
+			#puts "Message = #{response.message}"
+			#response.each {|key, val| printf "%14s = %40.40s\n", key, val }
+			## Nelson working		f.write(response.body)
+			#Magick::Image.from_blob(response.body)[0];
+			response.body
+		end
 	end
 end
 
