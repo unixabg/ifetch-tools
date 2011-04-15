@@ -156,7 +156,7 @@ prefix=File.basename(ARGV[0], ".conf")
 ###############################################################
 # Set on varialbe names for file operations.
 log_name = "/var/log/ifetch-tools/#{prefix}.txt"
-mdpp_log_name = "/var/log/ifetch-tools/#{prefix}.mdpp"
+mdpp_log_name = "/var/log/ifetch-tools/#{prefix}.mdpp.txt"
 pid_name = "/var/run/ifetch-tools/#{prefix}.pid"
 
 ################################################################
@@ -176,7 +176,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 
 	###############################################################
 	# Setup for logging mdpp output.
-	mdpp_log = Logger.new(mdpp_log_name, 1, 1024)
+	mdpp_log = Logger.new(mdpp_log_name, 1, 5*1024)
 
 	###############################################################
 	# Lets trap here to ensure we can close clean with the signal of INT

@@ -331,7 +331,7 @@ class Monitor < HTTPServlet::AbstractServlet
 			# Table entry 1 is the camera number, entry 2 is the PID, entry 3 is the status, and entry 4 is Information
 			if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 				# Table entry one is the camera number, entry 2 is the status, and entry 3 is Information
-				myTempRespond =	 myTempRespond+'<TR><TD><CENTER>'+camera_num.to_s+'</CENTER></TD><TD><A HREF="/camerastartstop?cameraName='+camera_num.to_s+'"><CENTER><IMG SRC="/start.jpg"></A></CENTER></TD><TD><CENTER><IMG SRC="/grey.jpg"></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></CENTER></A></TD><TD>Camera ifetch is not running. </TD></TR>'
+				myTempRespond =	 myTempRespond+'<TR><TD><CENTER>'+camera_num.to_s+'</CENTER></TD><TD><A HREF="/camerastartstop?cameraName='+camera_num.to_s+'"><CENTER><IMG SRC="/start.jpg"></A></CENTER></TD><TD><CENTER><IMG SRC="/grey.jpg"></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></CENTER></A></TD><TD><A HREF="/log/'+camera_num.to_s+'.mdpp.txt" target="_blank"><CENTER><IMG SRC="/mdpplog.jpg"></A></CENTER></TD><TD>Camera ifetch is not running. </TD></TR>'
 				# Really important here to close the file or you will get confused!
 				lock_file.close
 			else
@@ -358,9 +358,9 @@ class Monitor < HTTPServlet::AbstractServlet
 				# Below is for diagnostics
 				#myTempRespond = myTempRespond+logFileLastLine[0]+logFileName
 				if logFileLastLine[0] == "I" then
-					myTempRespond = myTempRespond+'<TD><CENTER><IMG SRC="/green.jpg"></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></A></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.mdpp" target="_blank"><CENTER><IMG SRC="/mdpplog.jpg"></A></CENTER></TD><TD> '+logFileLastLine[1]+" </TD></TR>"
+					myTempRespond = myTempRespond+'<TD><CENTER><IMG SRC="/green.jpg"></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></A></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.mdpp.txt" target="_blank"><CENTER><IMG SRC="/mdpplog.jpg"></A></CENTER></TD><TD> '+logFileLastLine[1]+" </TD></TR>"
 				else
-					myTempRespond = myTempRespond+'<TD><CENTER><IMG SRC="/red.jpg"></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></A><CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.mdpp" target="_blank"><CENTER><IMG SRC="/mdpplog.jpg"></A></CENTER></TD><TD> '+logFileLastLine[1]+" </TD></TR>"
+					myTempRespond = myTempRespond+'<TD><CENTER><IMG SRC="/red.jpg"></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></A><CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.mdpp.txt" target="_blank"><CENTER><IMG SRC="/mdpplog.jpg"></A></CENTER></TD><TD> '+logFileLastLine[1]+" </TD></TR>"
 				end
 			end
 		end
