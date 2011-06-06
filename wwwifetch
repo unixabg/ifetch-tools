@@ -209,7 +209,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 		# Here is the code for a sinle page of images only or if this is the first time the user hits the hitsory.
 		if index.to_i-IMAGESPERPAGE < 0 && index.to_i+IMAGESPERPAGE > imgSortedLength-1 || navigation.to_i == 0
 			myNavigation = %{<FORM NAME="myform">
-				<SELECT name="mylist" onChange="disp_text();"
+				<SELECT name="mylist" onChange="disp_text();">
 				#{myJumpNavigation}
 				</SELECT></FORM>Please select a time.<BR>
 			}
