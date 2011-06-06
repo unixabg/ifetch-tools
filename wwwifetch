@@ -179,7 +179,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 		# Ok here we do the Jump List as an array for just a bit.
 		#myJumpNavigation = myJumpNavigation+'<OPTION STYLE="color : #ff6666" selected > *-- Navigation Jump --* '+"\n"
 		myJumpHash = Hash.new
-		myJumpHash["0"] = '<OPTION STYLE="color : #ff6666" selected > *-- Navigation Jump --*'+"\n"
+		myJumpHash["0"] = '<OPTION STYLE="color : #ff6666" selected > *-- Navigation Jump --*'+"</OPTION>\n"
 
 		# Build the navi
 		0.upto(totalPages) do |count|
@@ -197,7 +197,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 			tmpIndex = File.basename(imgFile, ".jpg").split(/_/)[1].to_i
 
 			# This is the elements in the jumping list. This could be sorted but for now I am leaving since I sort of like how if shows the scroll of image count in an abstract way.
-			myJumpHash[imgTime] = '<OPTION value="/camerahistory?cameraName='+cameraName+'&index='+tmpIndex.to_s+'&navigation=1&basicView=0">'+imgTime+"\n"
+			myJumpHash[imgTime] = '<OPTION value="/camerahistory?cameraName='+cameraName+'&index='+tmpIndex.to_s+'&navigation=1&basicView=0">'+imgTime+"</OPTION>\n"
 		end
 
 		# Now that we have built it lets prep it to display it like we want (sorted in this case).
