@@ -1,3 +1,10 @@
+ifetch-tools (0.15.23a-1) unstable; urgency=low
+
+  * Fix missing > on navigation default.
+  * Close option tag on navigation.
+
+ -- Richard Nelson <unixabg@gmail.com>  Mon, 6 Jun 2011 14:06:00 -0600
+
 ifetch-tools (0.15.23-1) unstable; urgency=low
 
   * Add timeout for execution on pullimage call.

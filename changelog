@@ -21,6 +21,10 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20110606
+  * Release 0.15.23a see below.
+  * Fix missing > on navigation default.
+  * Close option tag on navigation.
 
 20110415
   * Release 0.15.23 see below.
