@@ -3,7 +3,7 @@ Section: web
 Priority: optional
 Maintainer: Richard Nelson <unixabg@gmail.com>
 Build-Depends: debhelper (>= 7.0.50~)
-Standards-Version: 3.9.2
+Standards-Version: 3.9.3
 Homepage: http://ifetch-tools.rubyforge.org/
 
 Package: ifetch-tools
