@@ -9,7 +9,7 @@ fi
 
 case "${1}" in
 	remove)
-		if ! getent passwd | grep -q "^ifetch-tools"
+		if getent passwd | grep -q "^ifetch-tools"
 		then
 			if [ -x /usr/sbin/deluser ]
 			then
@@ -17,13 +17,15 @@ case "${1}" in
 			fi
 		fi
 
-		if ! getent group | grep -q "^ifetch-tools"
+		if getent group | grep -q "^ifetch-tools"
 		then
 			if [ -x /usr/sbin/delgroup ]
 			then
 				delgroup --system ifetch-tools
 			fi
 		fi
+
+		rm -rf /var/run/ifetch-tools*
 
 		db_input high ifetch-tools/purge || true
 		db_go || true
@@ -38,7 +40,9 @@ case "${1}" in
 		;;
 
 	purge|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
-
+		rm -rf /var/lib/ifetch-tools
+		rm -rf /var/log/ifetch-tools
+		rm -rf /etc/ifetch-tools
 		;;
 
 	*)
