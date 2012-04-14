@@ -21,6 +21,10 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20120414
+  * Release 0.15.23b see below.
+  * Updated Copyright years.
+
 20110606
   * Release 0.15.23a see below.
   * Fix missing > on navigation default.
