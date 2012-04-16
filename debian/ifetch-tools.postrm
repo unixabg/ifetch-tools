@@ -9,20 +9,14 @@ fi
 
 case "${1}" in
 	remove)
-		if getent passwd | grep -q "^ifetch-tools"
+		if [ -x /usr/sbin/deluser ]
 		then
-			if [ -x /usr/sbin/deluser ]
-			then
-				deluser --system ifetch-tools
-			fi
+			deluser --quiet --system ifetch-tools
 		fi
 
-		if getent group | grep -q "^ifetch-tools"
+		if [ -x /usr/sbin/delgroup ]
 		then
-			if [ -x /usr/sbin/delgroup ]
-			then
-				delgroup --system ifetch-tools
-			fi
+			delgroup --quiet --system --only-if-empty ifetch-tools || true
 		fi
 
 		rm -rf /var/run/ifetch-tools*
