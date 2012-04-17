@@ -18,8 +18,9 @@ case "${1}" in
 		then
 			delgroup --quiet --system --only-if-empty ifetch-tools || true
 		fi
+		;;
 
-		rm -rf /var/run/ifetch-tools*
+	purge|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
 
 		db_input high ifetch-tools/purge || true
 		db_go || true
@@ -31,12 +32,7 @@ case "${1}" in
 			rm -rf /var/log/ifetch-tools
 			rm -rf /etc/ifetch-tools
 		fi
-		;;
-
-	purge|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
-		rm -rf /var/lib/ifetch-tools
-		rm -rf /var/log/ifetch-tools
-		rm -rf /etc/ifetch-tools
+		rm -rf /var/run/ifetch-tools*
 		;;
 
 	*)
