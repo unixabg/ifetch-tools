@@ -2,11 +2,6 @@
 
 set -e
 
-if [ -e /usr/share/debconf/confmodule ]
-then
-	. /usr/share/debconf/confmodule
-fi
-
 case "${1}" in
 	remove)
 		if [ -x /usr/sbin/deluser ]
@@ -20,19 +15,30 @@ case "${1}" in
 		fi
 		;;
 
-	purge|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
-
-		db_input high ifetch-tools/purge || true
-		db_go || true
-		db_get ifetch-tools/purge || true
-
-		if [ "${RET}" = "true" ]
+	purge)
+		if [ -e /usr/share/debconf/confmodule ]
 		then
+			. /usr/share/debconf/confmodule
+
+			db_input high ifetch-tools/purge || true
+			db_go || true
+			db_get ifetch-tools/purge || true
+
+			PURGE="${RET}"
+		fi
+
+		if [ "${PURGE}" != "false" ]
+		then
+			rm -rf /etc/ifetch-tools
 			rm -rf /var/lib/ifetch-tools
 			rm -rf /var/log/ifetch-tools
-			rm -rf /etc/ifetch-tools
 		fi
+
 		rm -rf /var/run/ifetch-tools*
+		;;
+
+	upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+
 		;;
 
 	*)
