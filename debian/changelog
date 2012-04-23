@@ -1,10 +1,12 @@
 ifetch-tools (0.15.23b-1) unstable; urgency=low
 
   * Fix unowned files remaining after purge (Closes: #668748).
+  * Only prompt on purge in postrm.
+  * Cleanup of getent in postrm.
   * Updated Standards-Version to 3.9.3.
   * Updated Copyright years.
 
- -- Richard Nelson <unixabg@gmail.com>  Mon, 14 Apr 2012 16:10:00 -0600
+ -- Richard Nelson <unixabg@gmail.com>  Mon, 23 Apr 2012 16:57:00 -0600
 
 ifetch-tools (0.15.23a-1) unstable; urgency=low
 
