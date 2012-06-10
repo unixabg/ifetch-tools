@@ -467,7 +467,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 				# Set the daily sleep modification specified in each camera conf.
 				sleep_test_data = day_image_sleep[Time.now.strftime("%w").to_i].split(",")
 				if Time.now.strftime("%H:%M") >= sleep_test_data[0] && Time.now.strftime("%H:%M") <= sleep_test_data[1]
-		 			# If we are here we are in a modified time in the day for sleep change
+					# If we are here we are in a modified time in the day for sleep change
 					#puts true
 					sleep sleep_test_data[2].to_f
 				else
