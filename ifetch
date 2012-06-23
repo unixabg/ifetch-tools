@@ -87,7 +87,7 @@ end
 # This def will pull the image from the cam now and return the response.
 ##############################################################################################
 def pullimage(address,port,url,uid,pwd)
-	timeout(10) do 
+	timeout(10) do
 		Net::HTTP.start(address, port) do |http|
 			req_img = Net::HTTP::Get.new(url)
 			#req_img.basic_auth 'username', 'password'
