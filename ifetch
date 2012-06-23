@@ -118,7 +118,7 @@ end
 ##############################################################################################
 def process(image)
 	#image.colorize(0.25, 0.6, 0.15, 1, Magick::Pixel::from_color("grey")).modulate(1.25,0.01,1).scale(0.5)
-	image_temp=Magick::Image.from_blob(image)[0];
+	image_temp=Magick::Image.from_blob(image)[0]
 	#image_temp.colorize(0.25, 0.6, 0.15, 1, Magick::Pixel::from_color("grey")).modulate(1.25,0.01,1).scale(0.5)
 	#image_temp.modulate(1.25,0.01,1).scale(0.5)
 	#image_temp.modulate.scale(0.25)
@@ -129,7 +129,24 @@ def difference(a,b)
 	# see "mean difference per pixel" in the RMagick docs
 	a.difference(b)[1]
 end
+def timeStamp(image,textInfo)
+	mark = Magick::Image.new(300, 30) do
+		self.background_color = 'black'
+	end
 
+	gc = Magick::Draw.new
+	gc.annotate(mark, 0, 0, 0, 0, textInfo) do
+		self.gravity = Magick::CenterGravity
+		self.pointsize = 32
+		self.font_family = "Times"
+		self.fill = "white"
+		self.stroke = "none"
+	end
+
+	image_temp = image.watermark(mark, 0.15, 0, Magick::NorthWestGravity)
+	#image_temp.write("/tmp/annotatewatermark.jpg")
+	return image_temp.to_blob
+end
 
 ###############################################################
 # Eval in the ifetch-tools.conf file with error trap on this operation.
@@ -395,13 +412,15 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 		begin
 			# Get the current image
 			image2=pullimage(image_addr,image_addr_port,image_url,image_uid,image_pwd)
+			# Adding pullTime to timeStamp images.
+			pullTime = Time.now.strftime("%Y-%m-%d %H:%M:%S")
 			image_name_DRB_exchange = [prefix,count.divmod(MODPRIME)[1].to_s,prefix+"_"+count.to_s+".jpg"].join('/')
 			image_name = ["/var/lib/ifetch-tools",image_name_DRB_exchange].join('/')
 			##################### Bug fix 6960 #############################################
 			# Remarking out the line changed for reference. There is also a line in the history
 			# recovery area is changed for .mtime on file.
 			#$image_array[count] = DateTime.now.to_s+","+image_name
-			$image_array[count] = Time.now.strftime("%Y-%m-%d %H:%M:%S")+","+image_name_DRB_exchange
+			$image_array[count] = pullTime+","+image_name_DRB_exchange
 
 			################################################################################
 			# Now we test to see if we are doing motion detection and if so then we need two
@@ -450,6 +469,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 			#puts $image_array[count]
 			begin
 				File.open(image_name,'w') do |f|
+					image1=timeStamp(process(image1),pullTime)
 					f.write(image1)
 				end
 			rescue Exception
