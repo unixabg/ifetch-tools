@@ -31,6 +31,7 @@ VER = "0.15.23b"
 ##############################################################################################
 require 'webrick'
 require 'drb'
+require 'RMagick'
 #require 'logger'
 # Unremark the below two lines if you want to try with high-performance.
 #require 'rubygems'
@@ -96,8 +97,8 @@ class CameraHistory < HTTPServlet::AbstractServlet
 		navigation = /[0-1]/.match(req.query['navigation']).to_s # Crop out all the bad stuff.
 
 		# basicView is for the Basic Archive View.
-		raise HTTPServerError, 'Error: basicView parameter not passed correctly.' if req.query['basicView'] == nil || /[0-1]/.match(req.query['basicView']) == nil
-		basicView = /[0-1]/.match(req.query['basicView']).to_s 
+		raise HTTPServerError, 'Error: basicView parameter not passed correctly.' if req.query['basicView'] == nil || /[0-2]/.match(req.query['basicView']) == nil
+		basicView = /[0-2]/.match(req.query['basicView']).to_s 
 
 		# Initialize some vars.
 		myJumpNavigation = "" # Jump navigation string.
@@ -152,6 +153,8 @@ class CameraHistory < HTTPServlet::AbstractServlet
 		# This just keeps us from populating the navigation frame on the initial login to history and if no history collected yet.
 		if navigation.to_i == 1 && imgSortedLength > 0
 		# Ok now actually populate the page with the lastImgOnPage
+			# Keep track of image file names when building frame for video export
+			imgFileList = Array.new
 			index.to_i.upto(lastImgOnPage) do |imgIndex|
 				#imgTime, imgFile = imgSorted[5].to_s.split(/,/)
 				imgTime, imgFile = imgSorted[imgIndex].split(/,/)
@@ -161,6 +164,8 @@ class CameraHistory < HTTPServlet::AbstractServlet
 				# 20090122 Nelson - Added small fix for .deb and user data expected in different location.
 				# myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'" target="showframe"><IMG SRC="'+imgFile+'" width='+HISTORYIMAGEWIDTH+' height='+HISTORYIMAGEHEIGHT+'></A><BR>'+"\n"
 				myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'" target="showframe"><IMG SRC="/data/'+imgFile+'" width='+HISTORYIMAGEWIDTH+' height='+HISTORYIMAGEHEIGHT+'></A><BR>'+"\n"
+				# Push the image on the array where we are keeping image file names
+				imgFileList.push("/var/lib/ifetch-tools/#{imgFile}")
 			end
 			# 20081007 Nelson - removing this block to leave last page possibly short.
 			### Now finish starting back at 0 on the page that ran over the end of the array
@@ -170,8 +175,10 @@ class CameraHistory < HTTPServlet::AbstractServlet
 					imgTime, imgFile = imgSorted[imgIndex].split(/,/)
 					#puts imgFile
 					# Ok here we are getting a number to reference so we do not have time drift based on our new navigation.
-					imgTime, imgFile = imgSorted[imgIndex].to_s.split(/,/)
+					#imgTime, imgFile = imgSorted[imgIndex].to_s.split(/,/)
 					myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'" target="showframe"><IMG SRC="/data/'+imgFile+'" width='+HISTORYIMAGEWIDTH+' height='+HISTORYIMAGEHEIGHT+'></A><BR>'+"\n"
+					# Push the image on the array where we are keeping image file names
+					imgFileList.push("/var/lib/ifetch-tools/#{imgFile}")
 				end
 			end
 		end
@@ -249,6 +256,23 @@ class CameraHistory < HTTPServlet::AbstractServlet
 			myTempRespond.gsub!(/a><br>/i,"A><p style=\"page-break-before: always\">")
 			# Now generate the page with the correct substitution.
 			res.body = eval(File.open("/usr/share/ifetch-tools/templates/CameraHistoryBasic") {|fh| fh.read})
+		elsif basicView.to_i == 2
+			# If we are here we need to call rmagick with to make a vidoe of the frame of images starting with the selected image.
+			# FIXME
+			# Todo:
+			# __ Test for empty images
+			# __ set video download name
+			#
+			# Setup to make video from images
+			tempResponse = Magick::ImageList.new(*imgFileList) do
+				self.delay = 50
+			end
+			# Write out temp video to default directory and set mime_type for default launch.
+			tempResponse.write('/tmp/tmpVideo.mpeg')
+			mtype = WEBrick::HTTPUtils::mime_type('/tmp/tmpVideo.mpeg', WEBrick::HTTPUtils::DefaultMimeTypes)
+			res['Content-Type'] = mtype
+			puts mtype
+			res.body = File.open('/tmp/tmpVideo.mpeg',"rb") {|io| io.read}
 		else
 			# Now generate the page with the correct substitution.
 			res.body = eval(File.open("/usr/share/ifetch-tools/templates/CameraHistory") {|fh| fh.read})
