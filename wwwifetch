@@ -165,7 +165,9 @@ class CameraHistory < HTTPServlet::AbstractServlet
 				# myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'" target="showframe"><IMG SRC="'+imgFile+'" width='+HISTORYIMAGEWIDTH+' height='+HISTORYIMAGEHEIGHT+'></A><BR>'+"\n"
 				myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'" target="showframe"><IMG SRC="/data/'+imgFile+'" width='+HISTORYIMAGEWIDTH+' height='+HISTORYIMAGEHEIGHT+'></A><BR>'+"\n"
 				# Push the image on the array where we are keeping image file names
-				imgFileList.push("/var/lib/ifetch-tools/#{imgFile}")
+				if File.exist?("/var/lib/ifetch-tools/#{imgFile}") && File.size("/var/lib/ifetch-tools/#{imgFile}")>0 then
+					imgFileList.push("/var/lib/ifetch-tools/#{imgFile}")
+				end
 			end
 			# 20081007 Nelson - removing this block to leave last page possibly short.
 			### Now finish starting back at 0 on the page that ran over the end of the array
@@ -178,7 +180,9 @@ class CameraHistory < HTTPServlet::AbstractServlet
 					#imgTime, imgFile = imgSorted[imgIndex].to_s.split(/,/)
 					myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'" target="showframe"><IMG SRC="/data/'+imgFile+'" width='+HISTORYIMAGEWIDTH+' height='+HISTORYIMAGEHEIGHT+'></A><BR>'+"\n"
 					# Push the image on the array where we are keeping image file names
-					imgFileList.push("/var/lib/ifetch-tools/#{imgFile}")
+					if File.exist?("/var/lib/ifetch-tools/#{imgFile}") && File.size("/var/lib/ifetch-tools/#{imgFile}")>0 then
+						imgFileList.push("/var/lib/ifetch-tools/#{imgFile}")
+					end
 				end
 			end
 		end
@@ -260,7 +264,6 @@ class CameraHistory < HTTPServlet::AbstractServlet
 			# If we are here we need to call rmagick with to make a vidoe of the frame of images starting with the selected image.
 			# FIXME
 			# Todo:
-			# __ Test for empty images
 			# __ set video download name
 			#
 			# Setup to make video from images
