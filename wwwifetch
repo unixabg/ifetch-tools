@@ -274,6 +274,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 			tempResponse.write('/tmp/tmpVideo.mpeg')
 			mtype = WEBrick::HTTPUtils::mime_type('/tmp/tmpVideo.mpeg', WEBrick::HTTPUtils::DefaultMimeTypes)
 			res['Content-Type'] = mtype
+			res['Content-Disposition'] = 'inline; filename="video.mpeg"'
 			puts mtype
 			res.body = File.open('/tmp/tmpVideo.mpeg',"rb") {|io| io.read}
 			File.delete('/tmp/tmpVideo.mpeg')
