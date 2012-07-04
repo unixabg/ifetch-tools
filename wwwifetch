@@ -276,6 +276,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 			res['Content-Type'] = mtype
 			puts mtype
 			res.body = File.open('/tmp/tmpVideo.mpeg',"rb") {|io| io.read}
+			File.delete('/tmp/tmpVideo.mpeg')
 		else
 			# Now generate the page with the correct substitution.
 			res.body = eval(File.open("/usr/share/ifetch-tools/templates/CameraHistory") {|fh| fh.read})
