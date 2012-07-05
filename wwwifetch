@@ -418,12 +418,14 @@ class ShowImage < HTTPServlet::AbstractServlet
 			theDate = "Welcome to camera number #{cameraName} history."
 			pageToBuild = %{<IMG SRC=/data/#{imgFile}>}
 			pageToBuildBasic = %{/data/#{imgFile}}
+			pageToBuildVideo = %{/data/#{imgFile}}
 		elsif imgFile != nil
 			# tmpIndex will hold the index position of the page we are on.
 			tmpIndex = File.basename(imgFile, ".jpg").split(/_/)[1].to_i
 			theDate = File.mtime("/var/lib/ifetch-tools/#{imgFile}")
 			pageToBuild = %{<A HREF="/camerahistory?cameraName=#{cameraName}&index=#{tmpIndex}&navigation=1&basicView=0" target="shownav"><IMG SRC="/data/#{imgFile}"></A>}
 			pageToBuildBasic = %{/camerahistory?cameraName=#{cameraName}&index=#{tmpIndex}&navigation=1&basicView=1}
+			pageToBuildVideo = %{/camerahistory?cameraName=#{cameraName}&index=#{tmpIndex}&navigation=1&basicView=2}
 		else
 			pageToBuild = %{Error in image passing to ShowImage could be a security issue.}
 		end
