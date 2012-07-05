@@ -1,10 +1,10 @@
-ifetch-tools (0.15.24-1) unstable; urgency=low
+ifetch-tools (0.15.24-1) experimental; urgency=low
 
   * Watermark image with date on write.
   * Added feature to export images to a video download.
   * Added depends of ffmepg for video download feature.
 
- -- Richard Nelson <unixabg@gmail.com>  Wed, 5 Jul 2012 13:07:00 -0600
+ -- Richard Nelson <unixabg@gmail.com>  Wed, 5 Jul 2012 17:42:00 -0600
 
 ifetch-tools (0.15.23b-1) unstable; urgency=low
 
