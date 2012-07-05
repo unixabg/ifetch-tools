@@ -21,6 +21,11 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20120704
+  * Release 0.15.24 see below.
+  * Watermark image with date on write.
+  * Added feature to export images to a video download.
+
 20120414
   * Release 0.15.23b see below.
   * Updated Copyright years.
