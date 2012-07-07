@@ -66,6 +66,7 @@ image_pwd=nil
 image_sleep=nil
 image_uid=nil
 image_url=nil
+image_watermark=nil
 log_files=nil
 log_size=nil
 motion_enable=nil
@@ -462,6 +463,11 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 			# Write image2 to image1, since image1 is what we write and image2 is latest.
 			#puts "Swap images"
 			image1 = image2
+
+			# Here is where we watermark the image if enabled.
+			if image_watermark == 0 then
+				image1=timeStamp(process(image1),pullTime)
+			end
 			###############################################################
 			# Now put image in a file	Also let us do a quick error trap here.
 			#puts count
@@ -469,7 +475,6 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 			#puts $image_array[count]
 			begin
 				File.open(image_name,'w') do |f|
-					image1=timeStamp(process(image1),pullTime)
 					f.write(image1)
 				end
 			rescue Exception
