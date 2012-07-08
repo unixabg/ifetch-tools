@@ -37,6 +37,10 @@ require 'RMagick'
 #require 'webrick/highperformanceserver'
 include WEBrick
 
+##############################################################################################
+# Initialize some variables.
+##############################################################################################
+video_export_delay = 50
 
 ##############################################################################################
 # Suck in the config settings from the ifetch-tools.conf file.
@@ -263,7 +267,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 			# If we are here we need to call rmagick with to make a vidoe of the frame of images starting with the selected image.
 			# Setup to make video from images
 			tempResponse = Magick::ImageList.new(*imgFileList) do
-				self.delay = 50
+				self.delay = video_export_delay
 			end
 			# Write out temp video to default directory and set mime_type for default launch.
 			tempResponse.write('/tmp/tmpVideo.mpeg')
