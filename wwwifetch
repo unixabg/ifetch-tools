@@ -262,10 +262,6 @@ class CameraHistory < HTTPServlet::AbstractServlet
 			res.body = eval(File.open("/usr/share/ifetch-tools/templates/CameraHistoryBasic") {|fh| fh.read})
 		elsif basicView.to_i == 2
 			# If we are here we need to call rmagick with to make a vidoe of the frame of images starting with the selected image.
-			# FIXME
-			# Todo:
-			# __ set video download name
-			#
 			# Setup to make video from images
 			tempResponse = Magick::ImageList.new(*imgFileList) do
 				self.delay = 50
