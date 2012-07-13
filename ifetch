@@ -446,7 +446,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 							# Here drop the count back and just keep writing out the same image number
 							# until we detect sufficient mdpp.
 							# I suppose count could equal 0.
-							if count != 0 then
+							if count >= 0 then
 								count=count-1
 							end
 						end
