@@ -541,7 +541,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 			image1 = image2
 
 			# If we encounter a bad image we need to dump the bad pull and pull again.
-			log.info("Backing image count sequence down by 1 in an attempt to pull image again after rescue!")
+			log.warn("Backing image count sequence down by 1 in an attempt to pull image again after rescue!")
 			if count < image_count-1 && count > 0
 				count=count-1
 			else
