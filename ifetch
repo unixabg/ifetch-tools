@@ -417,11 +417,6 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 			pullTime = Time.now.strftime("%Y-%m-%d %H:%M:%S")
 			image_name_DRB_exchange = [prefix,count.divmod(MODPRIME)[1].to_s,prefix+"_"+count.to_s+".jpg"].join('/')
 			image_name = ["/var/lib/ifetch-tools",image_name_DRB_exchange].join('/')
-			##################### Bug fix 6960 #############################################
-			# Remarking out the line changed for reference. There is also a line in the history
-			# recovery area is changed for .mtime on file.
-			#$image_array[count] = DateTime.now.to_s+","+image_name
-			$image_array[count] = pullTime+","+image_name_DRB_exchange
 
 			################################################################################
 			# Now we test to see if we are doing motion detection and if so then we need two
@@ -464,21 +459,28 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 			#puts "Swap images"
 			image1 = image2
 
-			# Here is where we watermark the image if enabled.
-			if image_watermark == 0 then
-				image1=timeStamp(process(image1),pullTime)
-			end
 			###############################################################
-			# Now put image in a file	Also let us do a quick error trap here.
-			#puts count
-			#puts "#{image_name} - Image Name"
-			#puts $image_array[count]
-			begin
-				File.open(image_name,'w') do |f|
-					f.write(image1)
+			# Here we test to determine if motion is detected or if motion
+			# is off. If either case write file to disk.
+			if motion_sentry > 0 || motion_enable == 1 then
+				# Add to the image_array for DRB exchange
+				$image_array[count] = pullTime+","+image_name_DRB_exchange
+				# Here is where we watermark the image if enabled.
+				if image_watermark == 0 then
+					image1=timeStamp(process(image1),pullTime)
 				end
-			rescue Exception
-				log.warn("Encountered an error during image file output of: "+$!)
+				###############################################################
+				# Now put image in a file. Also let us do a quick error trap here.
+				#puts count
+				#puts "#{image_name} - Image Name"
+				#puts $image_array[count]
+				begin
+					File.open(image_name,'w') do |f|
+						f.write(image1)
+					end
+				rescue Exception
+					log.warn("Encountered an error during image file output of: "+$!)
+				end
 			end
 
 			###############################################################
