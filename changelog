@@ -21,11 +21,22 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20120713
+  * Release 0.15.24a see below.
+  * Add video_export_delay variable for tuning video delay speed.
+  * Added image_watermark variable so timestamp is optional on images.
+  * Change from info to warn on log messages when backing image count
+    down after rescue.
+  * Correct begin count number when no history and motion enabled.
+  * Only set DRB exchange data and write image when we need to.
+  * Add nicelevel on start-stop-daemon and set to 10.
+
 20120705
   * Release 0.15.24 see below.
   * Watermark image with date on write.
   * Added feature to export images to a video download.
   * Added depends of ffmepg for video download feature.
+
 20120414
   * Release 0.15.23b see below.
   * Updated Copyright years.

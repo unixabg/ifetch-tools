@@ -1,3 +1,15 @@
+ifetch-tools (0.15.24a-1) experimental; urgency=low
+
+  * Add video_export_delay variable for tuning video delay speed.
+  * Added image_watermark variable so timestamp is optional on images.
+  * Change from info to warn on log messages when backing image count
+    down after rescue.
+  * Correct begin count number when no history and motion enabled.
+  * Only set DRB exchange data and write image when we need to.
+  * Add nicelevel on start-stop-daemon and set to 10.
+
+ -- Richard Nelson <unixabg@gmail.com>  Fri, 13 Jul 2012 17:10:00 -0600
+
 ifetch-tools (0.15.24-1) experimental; urgency=low
 
   * Watermark image with date on write.
