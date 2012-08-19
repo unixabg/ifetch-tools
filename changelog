@@ -21,6 +21,10 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
+20120819
+  * Release 0.15.24b see below.
+  * Correcting when image count should be decremented.
+
 20120713
   * Release 0.15.24a see below.
   * Add video_export_delay variable for tuning video delay speed.
