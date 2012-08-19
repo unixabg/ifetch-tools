@@ -437,13 +437,6 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 							#puts "Motion detected!"
 							log.info("Motion detected: mdpp=#{mdpp} and motion_mdpp=#{motion_mdpp}!")
 							motion_sentry = image_count_on_motion
-						else
-							# Here drop the count back and just keep writing out the same image number
-							# until we detect sufficient mdpp.
-							# I suppose count could equal 0.
-							if count >= 0 then
-								count=count-1
-							end
 						end
 					else
 						log.info("The mdpp call did not return a number: mdpp=#{mdpp}!")
@@ -480,6 +473,13 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 					end
 				rescue Exception
 					log.warn("Encountered an error during image file output of: "+$!)
+				end
+			else
+				# Here drop the count back and just keep writing out the same image number
+				# until we detect sufficient mdpp.
+				# I suppose count could equal 0.
+				if count >= 0 then
+					count=count-1
 				end
 			end
 
