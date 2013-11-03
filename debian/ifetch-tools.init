@@ -10,6 +10,7 @@
 # Short-Description:	Tools to collect IP Camera images.
 # Description:		Tools to collect, monitor, view images from IP Cameras.
 ### END INIT INFO
+set -e
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/bin/wwwifetch
@@ -33,8 +34,6 @@ DODTIME=10	# Time to wait for the server to die, in seconds
 		# If this value is set too low you might not
 		# let some servers to die gracefully and
 		# 'restart' will not work
-
-set -e
 
 running_pid()
 {
