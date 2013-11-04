@@ -1,4 +1,4 @@
-#!/usr/bin/ruby1.8
+#!/usr/bin/ruby
 
 ####################################################################################
 # ifetch-tools is a set of tools in ruby that can collect images from ip based cameras,
