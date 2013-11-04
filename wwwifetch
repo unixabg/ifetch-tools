@@ -43,7 +43,7 @@ include WEBrick
 begin
 	eval(File.open("/etc/ifetch-tools/ifetch-tools.conf") {|fh| fh.read})
 rescue
-	puts "Error encountered reading the conf file of: "+$!
+	puts "Error encountered reading the conf file of: "+$!.to_s
 	# Stop after the error feedback.
 	exit
 end
