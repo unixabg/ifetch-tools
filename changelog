@@ -21,17 +21,19 @@
 ####################################################################################
 # Changlog for milestone operations
 ####################################################################################
-20131111
+
+20140203
   * Update version references to 0.15.24c.
+  * Address lintain issue of
+    maintainer-script-should-not-use-adduser-system-without-home .
+  * Drop depends of librmagick-ruby and now use ruby-rmagick (Closes: #731946).
   * Drop depends of ffmpeg and now use libav-tools (Closes: #728615).
   * Initial update on ifetch and wwwifetch for ruby1.9.x.
   * Dropping ruby1.8 support for current ruby.
   * Update init script with set -e at the top.
   * Update init script with call to /lib/lsb/init-functions.
   * Update debian/control to Build-Depends >=9.
-  * Update debian/control to Standards-Version 3.9.4.
-  * Specify ruby1.8 for ifetch and wwwifetch files.
-  * Specify ruby1.8 for depends in debian/control file.
+  * Update debian/control to Standards-Version 3.9.5.
   * Update edit date on ifetch-tools.rubyforge.org home page.
   * Add Wanscam IP Camera to ifetch-tools.rubyforge.org home page.
   * Add D-Link DCS-930L to ifetch-tools.rubyforge.org home page.
