@@ -18,8 +18,9 @@ ifetch-tools (0.15.24c-1) unstable; urgency=low
   * Adding image_url for D-Link DCS-930L Camera.
   * Adding image_url for Wanscam IP Camera.
   * Correcting Panasonic BL-C210A entry.
+  * Upload to unstable.
 
- -- Richard Nelson <unixabg@gmail.com>  Mon, 03 Feb 2014 22:14:00 -0600
+ -- Richard Nelson <unixabg@gmail.com>  Tue, 04 Feb 2014 14:30:00 -0600
 
 ifetch-tools (0.15.24b-1) experimental; urgency=low
 
