@@ -22,7 +22,7 @@
 # Changlog for milestone operations
 ####################################################################################
 
-20140203
+20140204
   * Update version references to 0.15.24c.
   * Address lintain issue of
     maintainer-script-should-not-use-adduser-system-without-home .
@@ -41,6 +41,7 @@
   * Adding image_url for D-Link DCS-930L Camera.
   * Adding image_url for Wanscam IP Camera.
   * Correcting Panasonic BL-C210A entry.
+  * Upload to unstable.
 
 20120819
   * Release 0.15.24b see below.
