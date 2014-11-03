@@ -1,0 +1,51 @@
+# Dutch translation of ifetch-tools debconf templates.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the ifetch-tools package.
+# Frans Spiesschaert <Frans.Spiesschaert@yucom.be>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ifetch-tools\n"
+"Report-Msgid-Bugs-To: ifetch-tools@packages.debian.org\n"
+"POT-Creation-Date: 2010-08-14 17:43-0500\n"
+"PO-Revision-Date: 2014-10-16 22:23+0200\n"
+"Last-Translator: Frans Spiesschaert <Frans.Spiesschaert@yucom.be>\n"
+"Language-Team: Debian Dutch l10n Team <debian-l10n-dutch@lists.debian.org>\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. Type: boolean
+#. Description
+#: ../ifetch-tools.templates:1001
+msgid "Remove all ifetch-tools data, logs, and settings files?"
+msgstr ""
+"Alle gegevensbestanden, logboekbestanden en instellingenbestanden van ifetch-"
+"tools verwijderen?"
+
+#. Type: boolean
+#. Description
+#: ../ifetch-tools.templates:1001
+msgid ""
+"The /var/lib/ifetch-tools, /var/log/ifetch-tools, and /etc/ifetch-tools "
+"directories which contain the ifetch-tools data, logs, and settings files "
+"are about to be removed."
+msgstr ""
+"De mappen /var/lib/ifetch-tools, /var/log/ifetch-tools, en /etc/ifetch-tools "
+"die de gegevensbestanden, logboekbestanden en instellingenbestanden van "
+"ifetch-tools bevatten, staan op het punt om verwijderd te worden."
+
+#. Type: boolean
+#. Description
+#: ../ifetch-tools.templates:1001
+msgid ""
+"If you're removing the ifetch-tools package in order to later install a more "
+"recent version or if a different ifetch-tools package is already using the "
+"data, logs, and settings, they should be kept."
+msgstr ""
+"Indien u het pakket ifetch-tools verwijdert om later een meer recente versie "
+"ervan te installeren, of als een ander pakket met ifetch-tools deze "
+"gegevensbestanden, logboekbestanden en instellingenbestanden reeds gebruikt, "
+"zouden ze behouden moeten blijven."
