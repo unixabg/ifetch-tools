@@ -22,6 +22,14 @@
 # Changlog for milestone operations
 ####################################################################################
 
+20141103
+  * Updating to standards version 3.9.6.
+  * Address postinst uses /usr/share/doc content, (Closes: #767859).
+  * Adding Dutch translation of debconf messages from Frans Spiesschaert
+    <Frans.Spiesschaert@yucom.be> (Closes: #767294).
+  * Update Homepage in debian/control.
+  * Update web page to remove rubyforge.org links.
+
 20140204
   * Update version references to 0.15.24c.
   * Address lintain issue of
