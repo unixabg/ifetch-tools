@@ -7,7 +7,7 @@ ifetch-tools (0.15.24d-1) unstable; urgency=low
   * Update Homepage in debian/control.
   * Update web page to remove rubyforge.org links.
 
- -- Richard Nelson <unixabg@gmail.com>  Mon, 03 Oct 2014 12:52:00 -0600
+ -- Richard Nelson <unixabg@gmail.com>  Mon, 03 Nov 2014 13:14:00 -0600
 
 ifetch-tools (0.15.24c-1) unstable; urgency=low
 
