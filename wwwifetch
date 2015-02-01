@@ -96,7 +96,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 
 		# basicView is for the Basic Archive View.
 		raise HTTPServerError, 'Error: basicView parameter not passed correctly.' if req.query['basicView'] == nil || /[0-2]/.match(req.query['basicView']) == nil
-		basicView = /[0-2]/.match(req.query['basicView']).to_s 
+		basicView = /[0-2]/.match(req.query['basicView']).to_s
 
 		# Initialize some vars.
 		myJumpNavigation = "" # Jump navigation string.
