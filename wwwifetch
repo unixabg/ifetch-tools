@@ -468,6 +468,20 @@ def start_all_cameras
 end
 
 ##############################################################################################
+# The below def should attempt to stop every camera pid it can find upon a shutdown request.
+##############################################################################################
+def stop_all_cameras
+	Dir["/etc/ifetch-tools/cameras/*.conf"].each do |cam_tmp|
+		cameraName = File.basename(cam_tmp, ".conf").to_i
+		# Camera running action here
+		# Set the camera_pid to hold the pid of the running camera process.
+		camera_pid = File.read("/var/run/ifetch-tools/"+cameraName.to_s+".pid").chomp
+		system_call = "kill -s 9 #{camera_pid} &"
+		Process.detach( fork { system(system_call) } )
+	end
+end
+
+##############################################################################################
 # The below should daemonize this code.
 # 20090124 Nelson - Remarking out since I want init.d to catch the pid correct.
 ##############################################################################################
@@ -555,6 +569,7 @@ s.mount('/data/images/', WEBrick::HTTPServlet::FileHandler, '/usr/share/ifetch-t
 
 # Catch the INT sig to shutdown
 trap("INT"){
+	stop_all_cameras # Stop all running camera collection processes
 	DRb.stop_service() # Stop the DRb on the webrick session
 	s.shutdown
 }
