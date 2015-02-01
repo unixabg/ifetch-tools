@@ -332,7 +332,7 @@ end
 # conf dir at the time of the servlet creation. The tool will use the listing of files with
 # the .conf extension.
 ##############################################################################################
-class Monitor < HTTPServlet::AbstractServlet
+class CMonitor < HTTPServlet::AbstractServlet
 	def do_GET(req, res)
 		HTTPAuth.basic_auth(req, res, 'Camera Monitor Realm') {|user, pass|
 			# this block returns true if
@@ -527,7 +527,7 @@ s = WEBrick::HTTPServer.new(
 # Create some mount points for servlet navigation
 ##############################################################################################
 # Monitor Operations
-s.mount("/monitor", Monitor)
+s.mount("/monitor", CMonitor)
 s.mount("/camerastartstop", CameraStartStop)
 s.mount("/startallcameras", StartAllCameras)
 
