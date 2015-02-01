@@ -302,12 +302,10 @@ class CameraStartStop < HTTPServlet::AbstractServlet
 			system_call = "/usr/bin/ifetch /etc/ifetch-tools/cameras/"+cameraName.to_s+".conf&"
 			pid = fork {
 				Process.setsid
-				(0...1024).each do |i|
+				(0...2).each do |i|
 					begin
-						# ruby1.9x claims IO.for_fd(3) and IO.for_fd(4) is not accessible because RubyVM reserves it.
-						if i != 3 && i != 4
-							IO.for_fd(i).close
-						end
+						#closing stdin, stdout and stderr 0,1,2
+						IO.for_fd(i).close
 					rescue Errno::EBADF
 					end
 				end
@@ -454,12 +452,10 @@ def start_all_cameras
 		cameraName = File.basename(cam_tmp, ".conf").to_i
 		pid = fork {
 			Process.setsid
-			(0...1024).each do |i|
+			(0...2).each do |i|
 				begin
-					# ruby1.9x claims IO.for_fd(3) and IO.for_fd(4) is not accessible because RubyVM reserves it.
-					if i != 3 && i != 4
-						IO.for_fd(i).close
-					end
+					#closing stdin, stdout and stderr 0,1,2
+					IO.for_fd(i).close
 				rescue Errno::EBADF
 				end
 			end
