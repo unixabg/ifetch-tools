@@ -447,7 +447,6 @@ end
 # The below def should attempt to start every camera conf it can find.
 ##############################################################################################
 def start_all_cameras
-	camera_array = Array.new
 	Dir["/etc/ifetch-tools/cameras/*.conf"].each do |cam_tmp|
 		cameraName = File.basename(cam_tmp, ".conf").to_i
 		pid = fork {
