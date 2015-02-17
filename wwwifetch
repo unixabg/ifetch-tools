@@ -265,13 +265,13 @@ class CameraHistory < HTTPServlet::AbstractServlet
 				self.delay = $video_export_delay
 			end
 			# Write out temp video to default directory and set mime_type for default launch.
-			tempResponse.write('/tmp/tmpVideo.mpeg')
-			mtype = WEBrick::HTTPUtils::mime_type('/tmp/tmpVideo.mpeg', WEBrick::HTTPUtils::DefaultMimeTypes)
+			tempResponse.write('/tmp/tmpVideo.mp4')
+			mtype = WEBrick::HTTPUtils::mime_type('/tmp/tmpVideo.mp4', WEBrick::HTTPUtils::DefaultMimeTypes)
 			res['Content-Type'] = mtype
-			res['Content-Disposition'] = 'inline; filename="video.mpeg"'
+			res['Content-Disposition'] = 'inline; filename="video.mp4"'
 			puts mtype
-			res.body = File.open('/tmp/tmpVideo.mpeg',"rb") {|io| io.read}
-			File.delete('/tmp/tmpVideo.mpeg')
+			res.body = File.open('/tmp/tmpVideo.mp4',"rb") {|io| io.read}
+			File.delete('/tmp/tmpVideo.mp4')
 		else
 			# Now generate the page with the correct substitution.
 			res.body = eval(File.open("/usr/share/ifetch-tools/templates/CameraHistory") {|fh| fh.read})
