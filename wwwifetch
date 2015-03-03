@@ -264,14 +264,17 @@ class CameraHistory < HTTPServlet::AbstractServlet
 			tempResponse = Magick::ImageList.new(*imgFileList) do
 				self.delay = $video_export_delay
 			end
-			# Write out temp video to default directory and set mime_type for default launch.
-			tempResponse.write('/tmp/tmpVideo.mp4')
-			mtype = WEBrick::HTTPUtils::mime_type('/tmp/tmpVideo.mp4', WEBrick::HTTPUtils::DefaultMimeTypes)
-			res['Content-Type'] = mtype
-			res['Content-Disposition'] = 'inline; filename="video.mp4"'
-			puts mtype
-			res.body = File.open('/tmp/tmpVideo.mp4',"rb") {|io| io.read}
-			File.delete('/tmp/tmpVideo.mp4')
+			# Write out temp video to a random directory in /tmp, set mime_type for default launch,
+			# then destroy said temp area upon return for security.
+			Dir.mktmpdir(nil, "/tmp") {|dir|
+				# use the directory...
+				tempResponse.write("#{dir}/tmpVideo.mp4")
+				mtype = WEBrick::HTTPUtils::mime_type("#{dir}/tmpVideo.mp4", WEBrick::HTTPUtils::DefaultMimeTypes)
+				res['Content-Type'] = mtype
+				res['Content-Disposition'] = 'inline; filename="video.mp4"'
+				puts mtype
+				res.body = File.open("#{dir}/tmpVideo.mp4","rb") {|io| io.read}
+			}
 		else
 			# Now generate the page with the correct substitution.
 			res.body = eval(File.open("/usr/share/ifetch-tools/templates/CameraHistory") {|fh| fh.read})
