@@ -1,3 +1,25 @@
+ifetch-tools (0.15.24d2-1) unstable; urgency=medium
+
+  * Closing only stdin, stdout and stderr 0,1,2 on IO.for_fd() on
+    wwwifetch (Closes: #779536).
+  * Adjust class Monitor name to CMonitor in wwwifetch (Closes: #779532).
+  * Adjusting VER for next release on wwwifetch.
+  * Update copyright from 2005-2012 to 2005-2015.
+  * Adjust Upstream-Homepage in debian/copyright (Closes: #779537).
+  * Remove trailing whitespace on wwwifetch.
+  * Remove unused array call in wwwifetch.
+  * Upon a shutdown request stop camera collection as well in
+    wwwifetch (Closes: #779539).
+  * Minor adjustment for stop_all_cameras in wwwifetch.
+  * Moving video export format from mpeg to mp4 in wwwifetch (Closes: #779538).
+  * Renamed ifetch-tools.rubyforge.org ifetch-tools-html-page.
+  * Updated url in ifetch-tools-html-pages/index.html.
+  * Unify version number for VER in ifetch and wwwifetch for service release.
+  * Improved video export for security of a more non deterministic structure
+    on wwwifetch (Closes: #779614).
+
+ -- Richard Nelson <unixabg@gmail.com>  Mon, 02 Mar 2015 22:18:41 -0600
+
 ifetch-tools (0.15.24d-1) unstable; urgency=low
 
   * Updating to standards version 3.9.6.
