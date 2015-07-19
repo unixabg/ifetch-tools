@@ -22,7 +22,7 @@
 ##############################################################################################
 # Set the current version information.
 ##############################################################################################
-VER = "0.15.24d2"
+VER = "0.15.24d3"
 
 ##############################################################################################
 # The below should daemonize this code.
@@ -119,10 +119,11 @@ end
 ##############################################################################################
 def process(image)
 	#image.colorize(0.25, 0.6, 0.15, 1, Magick::Pixel::from_color("grey")).modulate(1.25,0.01,1).scale(0.5)
-	image_temp=Magick::Image.from_blob(image)[0]
+	#image_temp=Magick::Image.from_blob(image)[0]
 	#image_temp.colorize(0.25, 0.6, 0.15, 1, Magick::Pixel::from_color("grey")).modulate(1.25,0.01,1).scale(0.5)
 	#image_temp.modulate(1.25,0.01,1).scale(0.5)
 	#image_temp.modulate.scale(0.25)
+	Magick::Image.from_blob(image)[0]
 end
 def difference(a,b)
 	#a.write("a.jpeg")
@@ -130,6 +131,10 @@ def difference(a,b)
 	# see "mean difference per pixel" in the RMagick docs
 	a.difference(b)[1]
 end
+
+##############################################################################################
+# timeStamp images with RMagick.
+##############################################################################################
 def timeStamp(image,textInfo)
 	mark = Magick::Image.new(300, 30) do
 		self.background_color = 'black'
@@ -144,9 +149,14 @@ def timeStamp(image,textInfo)
 		self.stroke = "none"
 	end
 
-	image_temp = image.watermark(mark, 0.15, 0, Magick::NorthWestGravity)
 	#image_temp.write("/tmp/annotatewatermark.jpg")
-	return image_temp.to_blob
+	# Now return the image
+	#image.to_blob
+	image_temp = image.watermark(mark, 0.15, 0, Magick::NorthWestGravity).to_blob
+	mark.destroy!
+	image.destroy!
+	GC.start
+	return image_temp
 end
 
 ###############################################################
@@ -417,6 +427,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 			pullTime = Time.now.strftime("%Y-%m-%d %H:%M:%S")
 			image_name_DRB_exchange = [prefix,count.divmod(MODPRIME)[1].to_s,prefix+"_"+count.to_s+".jpg"].join('/')
 			image_name = ["/var/lib/ifetch-tools",image_name_DRB_exchange].join('/')
+			GC.start
 
 			################################################################################
 			# Now we test to see if we are doing motion detection and if so then we need two
@@ -428,7 +439,6 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 					# Here we are asked to listen for testing again.
 					#puts "Before"
 					mdpp = difference(process(image2),process(image1))
-					GC.start
 					#puts "Images tested resulted with mdpp of #{mdpp}"
 					# Log out all mdpp tests to log file.
 					mdpp_log.info("Images tested resulted with mdpp of #{mdpp}")

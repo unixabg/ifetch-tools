@@ -23,7 +23,7 @@
 # Set some variables.
 ##############################################################################################
 # Version number
-VER = "0.15.24d2"
+VER = "0.15.24d3"
 
 ##############################################################################################
 # Do the require and include stuff we need for our operations.
@@ -355,17 +355,24 @@ class CMonitor < HTTPServlet::AbstractServlet
 		camera_array.sort.each do |camera_num|
 			# Now test for the status of the cameras lock file.
 			lock_file = File::open("/var/lock/ifetch-tools/"+camera_num.to_s+".lock", 'w')
-			# Table entry 1 is the camera number, entry 2 is the PID, entry 3 is the status, and entry 4 is Information
+			# Table col 1 camera number, 2 - pid / mem, 3 - actions, 4 - status, 5 - log file, 6 - mdpp, 7 - information
 			if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
-				# Table entry one is the camera number, entry 2 is the status, and entry 3 is Information
-				myTempRespond =	 myTempRespond+'<TR><TD><CENTER>'+camera_num.to_s+'</CENTER></TD><TD><A HREF="/camerastartstop?cameraName='+camera_num.to_s+'"><CENTER><IMG SRC="/start.jpg"></A></CENTER></TD><TD><CENTER><IMG SRC="/grey.jpg"></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></CENTER></A></TD><TD><A HREF="/log/'+camera_num.to_s+'.mdpp.txt" target="_blank"><CENTER><IMG SRC="/mdpplog.jpg"></A></CENTER></TD><TD>Camera ifetch is not running. </TD></TR>'
+				myTempRespond =	 myTempRespond+'<TR><TD><CENTER>'+camera_num.to_s+'</CENTER></TD>
+				<TD><CENTER> - / - </CENTER></TD>
+				<TD><A HREF="/camerastartstop?cameraName='+camera_num.to_s+'"><CENTER><IMG SRC="/start.jpg"></CENTER></A></TD>
+				<TD><CENTER><IMG SRC="/grey.jpg"></CENTER></TD>
+				<TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></CENTER></A></TD>
+				<TD><A HREF="/log/'+camera_num.to_s+'.mdpp.txt" target="_blank"><CENTER><IMG SRC="/mdpplog.jpg"></A></CENTER></TD>
+				<TD>Camera ifetch is not running. </TD></TR>'
 				# Really important here to close the file or you will get confused!
 				lock_file.close
 			else
 				# Set the camera_pid to hold the pid of the running camera process.
 				camera_pid = File.read("/var/run/ifetch-tools/"+camera_num.to_s+".pid").chomp
 				# Put the camera pid and camera number in the table
-				myTempRespond = myTempRespond+'<TD><CENTER><A HREF="/camera?cameraName='+camera_num.to_s+'"> '+camera_num.to_s+'</A> - '+camera_pid+'</CENTER></TD><TD><CENTER><A HREF="/camerastartstop?cameraName='+camera_num.to_s+'"><IMG SRC="/stop.jpg"></A></CENTER></TD>'
+				myTempRespond = myTempRespond+'<TD><CENTER><A HREF="/camera?cameraName='+camera_num.to_s+'"> '+camera_num.to_s+'</A></CENTER></TD>
+				<TD><CENTER>'+camera_pid+' - '+%x[pmap #{camera_pid} | tail -1][10,40].strip+'</CENTER></TD>
+				<TD><CENTER><A HREF="/camerastartstop?cameraName='+camera_num.to_s+'"><IMG SRC="/stop.jpg"></A></CENTER></TD>'
 			# Set the logFileName
 			logFileName = "/var/log/ifetch-tools/"+camera_num.to_s+".txt"
 			# Remarked out the backtick with tail for a pure ruby try. Not for sure about performance but want to try.

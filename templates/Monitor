@@ -50,7 +50,8 @@ _DATE =%x[date +%Y-%m-%d]
 	<TABLE border="1" cellpadding="5" >
 	<TBODY>
 	<TR>
-	<TD>Camera-PID</TD>
+	<TD>Camera</TD>
+	<TD>PID - Memory</TD>
 	<TD>Actions</TD>
 	<TD>Status</TD>
 	<TD>Logs</TD>
