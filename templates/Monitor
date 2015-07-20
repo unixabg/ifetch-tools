@@ -51,7 +51,7 @@ _DATE =%x[date +%Y-%m-%d]
 	<TBODY>
 	<TR>
 	<TD>Camera</TD>
-	<TD>PID - Memory</TD>
+	<TD>PID - (Memory) VIRT RES SHR</TD>
 	<TD>Actions</TD>
 	<TD>Status</TD>
 	<TD>Logs</TD>

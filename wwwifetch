@@ -371,7 +371,7 @@ class CMonitor < HTTPServlet::AbstractServlet
 				camera_pid = File.read("/var/run/ifetch-tools/"+camera_num.to_s+".pid").chomp
 				# Put the camera pid and camera number in the table
 				myTempRespond = myTempRespond+'<TD><CENTER><A HREF="/camera?cameraName='+camera_num.to_s+'"> '+camera_num.to_s+'</A></CENTER></TD>
-				<TD><CENTER>'+camera_pid+' - '+%x[pmap #{camera_pid} | tail -1][10,40].strip+'</CENTER></TD>
+				<TD><CENTER>'+camera_pid+' - '+%x[pmap -x #{camera_pid} | tail -1][10,40].strip+'</CENTER></TD>
 				<TD><CENTER><A HREF="/camerastartstop?cameraName='+camera_num.to_s+'"><IMG SRC="/stop.jpg"></A></CENTER></TD>'
 			# Set the logFileName
 			logFileName = "/var/log/ifetch-tools/"+camera_num.to_s+".txt"
