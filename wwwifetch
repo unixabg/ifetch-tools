@@ -26,6 +26,11 @@
 VER = "0.15.24d3"
 
 ##############################################################################################
+# Set some options to ensure memory management.
+##############################################################################################
+GC.enable
+
+##############################################################################################
 # Do the require and include stuff we need for our operations.
 ##############################################################################################
 require 'webrick'
@@ -161,7 +166,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 				#imgTime, imgFile = imgSorted[imgIndex].to_s.split(/,/)
 				# 20090122 Nelson - Added small fix for .deb and user data expected in different location.
 				# myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'" target="showframe"><IMG SRC="'+imgFile+'" width='+HISTORYIMAGEWIDTH+' height='+HISTORYIMAGEHEIGHT+'></A><BR>'+"\n"
-				myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'" target="showframe"><IMG SRC="/data/'+imgFile+'" width='+HISTORYIMAGEWIDTH+' height='+HISTORYIMAGEHEIGHT+'></A><BR>'+"\n"
+				myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'#'+imgTime+'" target="showframe"><IMG SRC="/data/'+imgFile+'#'+imgTime+'" width='+HISTORYIMAGEWIDTH+' height='+HISTORYIMAGEHEIGHT+'></A><BR>'+"\n"
 				# Push the image on the array where we are keeping image file names
 				if File.exist?("/var/lib/ifetch-tools/#{imgFile}") && File.size("/var/lib/ifetch-tools/#{imgFile}")>0 then
 					imgFileList.push("/var/lib/ifetch-tools/#{imgFile}")
@@ -176,7 +181,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 					#puts imgFile
 					# Ok here we are getting a number to reference so we do not have time drift based on our new navigation.
 					#imgTime, imgFile = imgSorted[imgIndex].to_s.split(/,/)
-					myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'" target="showframe"><IMG SRC="/data/'+imgFile+'" width='+HISTORYIMAGEWIDTH+' height='+HISTORYIMAGEHEIGHT+'></A><BR>'+"\n"
+					myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'" target="showframe"><IMG SRC="/data/'+imgFile+'#'+imgTime+'" width='+HISTORYIMAGEWIDTH+' height='+HISTORYIMAGEHEIGHT+'></A><BR>'+"\n"
 					# Push the image on the array where we are keeping image file names
 					if File.exist?("/var/lib/ifetch-tools/#{imgFile}") && File.size("/var/lib/ifetch-tools/#{imgFile}")>0 then
 						imgFileList.push("/var/lib/ifetch-tools/#{imgFile}")
@@ -276,6 +281,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 				res.body = File.open("#{dir}/tmpVideo.mp4","rb") {|io| io.read}
 			}
 		else
+			GC.start
 			# Now generate the page with the correct substitution.
 			res.body = eval(File.open("/usr/share/ifetch-tools/templates/CameraHistory") {|fh| fh.read})
 		end
@@ -398,7 +404,7 @@ class CMonitor < HTTPServlet::AbstractServlet
 				end
 			end
 		end
-
+		GC.start
 		res.body = eval(File.open("/usr/share/ifetch-tools/templates/Monitor") {|fh| fh.read})
 	end
 end
@@ -428,7 +434,7 @@ class ShowImage < HTTPServlet::AbstractServlet
 			# tmpIndex will hold the index position of the page we are on.
 			tmpIndex = File.basename(imgFile, ".jpg").split(/_/)[1].to_i
 			theDate = File.mtime("/var/lib/ifetch-tools/#{imgFile}")
-			pageToBuild = %{<A HREF="/camerahistory?cameraName=#{cameraName}&index=#{tmpIndex}&navigation=1&basicView=0" target="shownav"><IMG SRC="/data/#{imgFile}"></A>}
+			pageToBuild = %{<A HREF="/camerahistory?cameraName=#{cameraName}&index=#{tmpIndex}&navigation=1&basicView=0" target="shownav"><IMG SRC="/data/#{imgFile}##{theDate}"></A>}
 			pageToBuildBasic = %{/camerahistory?cameraName=#{cameraName}&index=#{tmpIndex}&navigation=1&basicView=1}
 			pageToBuildVideo = %{/camerahistory?cameraName=#{cameraName}&index=#{tmpIndex}&navigation=1&basicView=2}
 		else
