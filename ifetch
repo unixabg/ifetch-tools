@@ -60,6 +60,12 @@ require 'RMagick'
 $image_array = Array.new
 
 ##############################################################################################
+# Initialize the global variables to assist RMagick in memory help.
+##############################################################################################
+$image_temp = nil
+$mdpp = nil
+
+##############################################################################################
 # Initialize various variables that we intend to pull in with nil values.
 ##############################################################################################
 data_location=nil
@@ -78,6 +84,7 @@ log_size=nil
 motion_enable=nil
 motion_mdpp=nil
 motion_sleep=nil
+sentry_gc_count=0
 
 ##############################################################################################
 # Define a class for our DRB communications.
@@ -123,25 +130,31 @@ end
 # here we compute the luminosity channel since rmagick's builtin doesn't work
 # and scale it down to half/quarter-size to remove tiny transient errors.
 ##############################################################################################
-def process(image)
-	#image.colorize(0.25, 0.6, 0.15, 1, Magick::Pixel::from_color("grey")).modulate(1.25,0.01,1).scale(0.5)
-	#image_temp=Magick::Image.from_blob(image)[0]
-	#image_temp.colorize(0.25, 0.6, 0.15, 1, Magick::Pixel::from_color("grey")).modulate(1.25,0.01,1).scale(0.5)
-	#image_temp.modulate(1.25,0.01,1).scale(0.5)
-	#image_temp.modulate.scale(0.25)
-	Magick::Image.from_blob(image)[0]
-end
+#def process(image)
+#	#image.colorize(0.25, 0.6, 0.15, 1, Magick::Pixel::from_color("grey")).modulate(1.25,0.01,1).scale(0.5)
+#	#image_temp=Magick::Image.from_blob(image)[0]
+#	#image_temp.colorize(0.25, 0.6, 0.15, 1, Magick::Pixel::from_color("grey")).modulate(1.25,0.01,1).scale(0.5)
+#	#image_temp.modulate(1.25,0.01,1).scale(0.5)
+#	#image_temp.modulate.scale(0.25)
+#	Magick::Image.from_blob(image)[0]
+#end
 def difference(a,b)
 	#a.write("a.jpeg")
 	#b.write("b.jpeg")
 	# see "mean difference per pixel" in the RMagick docs
-	a.difference(b)[1]
+	a=Magick::Image.from_blob(a)[0]
+	b=Magick::Image.from_blob(b)[0]
+	$mdpp = a.difference(b)[1]
+	a.destroy!
+	b.destroy!
+	return $mdpp
 end
 
 ##############################################################################################
 # timeStamp images with RMagick.
 ##############################################################################################
 def timeStamp(image,textInfo)
+	#GC.start
 	mark = Magick::Image.new(300, 30) do
 		self.background_color = 'black'
 	end
@@ -158,11 +171,17 @@ def timeStamp(image,textInfo)
 	#image_temp.write("/tmp/annotatewatermark.jpg")
 	# Now return the image
 	#image.to_blob
-	image_temp = image.watermark(mark, 0.15, 0, Magick::NorthWestGravity).to_blob
+
+	# Convert to from_blob
+	image = Magick::Image.from_blob(image)[0]
+	# Watermark and to_blob
+	$image_temp = image.watermark(mark, 0.15, 0, Magick::NorthWestGravity).to_blob
+	# Try to cleanup things
 	mark.destroy!
 	image.destroy!
-	#GC.start
-	return image_temp
+	gc = nil
+	GC.start
+	return $image_temp
 end
 
 ###############################################################
@@ -428,14 +447,19 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 			count=0
 		end
 		begin
+			# Keep the GC in order
+			sentry_gc_count=sentry_gc_count+1
+			if sentry_gc_count%100 == 0
+				# For sanity run the GC in an effort to keep RMagick memory in check.
+				GC.start
+				sentry_gc_count = 0
+			end
 			# Get the current image
 			image2=pullimage(image_addr,image_addr_port,image_url,image_uid,image_pwd)
 			# Adding pullTime to timeStamp images.
 			pullTime = Time.now.strftime("%Y-%m-%d %H:%M:%S")
 			image_name_DRB_exchange = [prefix,count.divmod(MODPRIME)[1].to_s,prefix+"_"+count.to_s+".jpg"].join('/')
 			image_name = ["/var/lib/ifetch-tools",image_name_DRB_exchange].join('/')
-			# For sanity run the GC in an effort to keep RMagick memory in check.
-			GC.start
 
 			################################################################################
 			# Now we test to see if we are doing motion detection and if so then we need two
@@ -446,7 +470,8 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 				if motion_sentry < 1 then
 					# Here we are asked to listen for testing again.
 					#puts "Before"
-					mdpp = difference(process(image2),process(image1))
+					#mdpp = difference(process(image2),process(image1))
+					mdpp = difference(image2,image1)
 					#puts "Images tested resulted with mdpp of #{mdpp}"
 					# Log out all mdpp tests to log file.
 					mdpp_log.info("Images tested resulted with mdpp of #{mdpp}")
@@ -476,9 +501,13 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 			if motion_sentry > 0 || motion_enable == 1 then
 				# Add to the image_array for DRB exchange
 				$image_array[count] = pullTime+","+image_name_DRB_exchange
+				#puts $image_array.max
+				#puts $image_array.index($image_array.max)
+				#log.info("The $image_array.max="+$image_array.max.to_s+" and the $image_array.index($image_array.max)="+$image_array.index($image_array.max).to_s+"!")
 				# Here is where we watermark the image if enabled.
 				if image_watermark == 0 then
-					image1=timeStamp(process(image1),pullTime)
+					#image1=timeStamp(process(image1),pullTime)
+					image1=timeStamp(image1,pullTime)
 				end
 				###############################################################
 				# Now put image in a file. Also let us do a quick error trap here.
