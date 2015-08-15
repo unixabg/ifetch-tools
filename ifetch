@@ -52,7 +52,10 @@ require 'fileutils'
 require 'logger'
 require 'net/http'
 require 'time'
-require 'RMagick'
+#require 'RMagick'
+require "rubygems"
+gem "rmagick", "= 2.15.3"
+require "rmagick"
 
 ##############################################################################################
 # Initialize the global array for the image access info with all nil values.
