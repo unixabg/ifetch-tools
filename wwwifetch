@@ -337,6 +337,48 @@ class CameraStartStop < HTTPServlet::AbstractServlet
 end
 
 ##############################################################################################
+# CLive is dynamic to create a live view of each camera that is listed from the
+# conf dir at the time of the servlet creation. The tool will use the listing of files with
+# the .conf extension.
+##############################################################################################
+class CLive < HTTPServlet::AbstractServlet
+	def do_GET(req, res)
+		HTTPAuth.basic_auth(req, res, 'Camera History Realm') {|user, pass|
+			# this block returns true if
+			# authentication token is valid
+			user == HISTORYUSER && pass == HISTORYPASS
+		}
+		res['Content-Type'] = "text/html" # Tell the browser how we are talking
+		myTempRespond = ""
+
+		# 20061207 not as clean as I would like it but this seems to do the trick
+		camera_array = Array.new
+		cam_count = 0
+		image_uid='no_image_uid'
+		image_pwd='no_image_pwd'
+		image_addr='no_image_ip'
+		image_url='/no_image_url_defined'
+		Dir["/etc/ifetch-tools/cameras/*.conf"].sort.each do |cam_tmp|
+			###############################################################
+			# Eval in the conf file for the camera with error trap on this operation.
+			begin
+				eval(File.open(cam_tmp) {|fh| fh.read})
+			rescue
+				res.body = eval(puts "Encountered reading the camera.conf file of: "+$!.to_s)
+				# Stop after the error feedback.
+				break
+			end
+			cam_count = cam_count+1
+			# Put the camera pid and camera number in the table
+			myTempRespond = myTempRespond+'<a href="http://'+image_uid.to_s+':'+image_pwd.to_s+'@'+image_addr.to_s+''+image_url.to_s+'"><img src="http://'+image_uid.to_s+':'+image_pwd.to_s+'@'+image_addr.to_s+''+image_url.to_s+'" width='+HISTORYIMAGEWIDTH+' heigth='+HISTORYIMAGEHEIGHT+' ></a>
+			'
+		end
+		GC.start
+		res.body = eval(File.open("/usr/share/ifetch-tools/templates/Live") {|fh| fh.read})
+	end
+end
+
+##############################################################################################
 # Monitor will be used as the basis to check the status of each camera that is listed from the
 # conf dir at the time of the servlet creation. The tool will use the listing of files with
 # the .conf extension.
@@ -557,6 +599,7 @@ s = WEBrick::HTTPServer.new(
 # Create some mount points for servlet navigation
 ##############################################################################################
 # Monitor Operations
+s.mount("/live", CLive)
 s.mount("/monitor", CMonitor)
 s.mount("/camerastartstop", CameraStartStop)
 s.mount("/startallcameras", StartAllCameras)
@@ -578,6 +621,7 @@ s.mount('/', HTTPServlet::FileHandler, "/var/lib/ifetch-tools/htdocs/",
 	:FancyIndexing => true,
 	:HandlerCallback => authenticate_history # Hook up the authentication proc.
 )
+
 # The below is for .deb operations and good locations.
 s.mount('/log/', WEBrick::HTTPServlet::FileHandler, '/var/log/ifetch-tools/')
 s.mount('/data/', WEBrick::HTTPServlet::FileHandler, '/var/lib/ifetch-tools/')
