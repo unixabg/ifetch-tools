@@ -20,6 +20,7 @@ _DATE =%x[date +%Y-%m-%d]
 	<TBODY>
 	<TD align="center">
 		<A HREF="#{HOMELINK}"><img src="/ifetch.png" width=80 heigth=80 ></A>
+		<br>Archive View
 	<TD align="center">
 		<FONT size=+2><a href="/archive" >Archive</a> <a href="/live" >Live</a> <a href="/monitor" >Monitor</a></FONT>
 	</TD>
