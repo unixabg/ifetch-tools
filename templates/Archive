@@ -1,0 +1,36 @@
+# Call to get uptime info for template.
+_UPTIME = %x[uptime]
+# Call to get current date for template.
+_DATE =%x[date +%Y-%m-%d]
+
+# Main page.
+%{
+	<HTML> <HEAD> <!-- This HTML file has been created by a ruby servlet -->
+	<TITLE>Camera Archive View Interface</TITLE>
+	<SCRIPT type="text/javascript">
+	<!--
+	function redirecter(){
+		window.location = "/live"
+	}
+	//-->
+	</SCRIPT>
+	</HEAD>
+	<BODY LINK=#{LINK} ALINK=#{ALINK} VLINK=#{VLINK} BGCOLOR=#{BGCOLOR}  onLoad="setTimeout('redirecter()', 30000)">
+	<TABLE border="1" cellpadding="5" >
+	<TBODY>
+	<TD align="center">
+		<A HREF="#{HOMELINK}"><img src="/ifetch.png" width=80 heigth=80 ></A>
+version: #{VER}
+	<TD align="center">
+		<FONT size=+2><a href="/archive" >Archive</a> <a href="/live" >Live</a> <a href="/monitor" >Monitor</a></FONT>
+	</TD>
+	</TR>
+	<TD align="center" colspan="2" >
+		#{_DATE} #{_UPTIME}
+	</TD>
+
+	</TBODY></TABLE>
+	#{myTempRespond}
+	</BODY>
+	</HTML>
+}
