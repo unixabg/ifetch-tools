@@ -50,7 +50,9 @@ require 'English'
 require 'drb'
 require 'fileutils'
 require 'logger'
+require 'uri'
 require 'net/http'
+require 'net/http/digest_auth'
 require 'time'
 #require 'RMagick'
 require "rubygems"
@@ -75,6 +77,7 @@ data_location=nil
 day_image_sleep=nil
 image_addr=nil
 image_addr_port=nil
+image_auth_type=nil
 image_count=nil
 image_count_on_motion=nil
 image_pwd=nil
@@ -103,23 +106,43 @@ end
 #
 # This def will pull the image from the cam now and return the response.
 ##############################################################################################
-def pullimage(address,port,url,uid,pwd)
+def pullimage(address,port,url,uid,pwd,auth_type)
 	timeout(10) do
-		Net::HTTP.start(address, port) do |http|
-			req_img = Net::HTTP::Get.new(url)
-			#req_img.basic_auth 'username', 'password'
-			req_img.basic_auth uid, pwd
-			response = http.request(req_img)
-			#puts "Code = #{response.code}"
-			#puts "Message = #{response.message}"
-			#response.each {|key, val| printf "%14s = %40.40s\n", key, val }
-			## Nelson working		f.write(response.body)
-			#Magick::Image.from_blob(response.body)[0];
-			response.body
+		# Here we determine if we need to handle as basic auth or digest
+		if auth_type == 'digest' then
+			uri = URI.parse('http://'+address.to_s+':'+port.to_s+''+url.to_s)
+			uri.user = uid
+			uri.password = pwd
+			Net::HTTP.start(address, port) do |http|
+				req_img = Net::HTTP::Get.new uri.request_uri
+				digest_auth = Net::HTTP::DigestAuth.new
+				response = http.request(req_img)
+				# response is a 401 response with a WWW-Authenticate header
+				auth = digest_auth.auth_header uri, response['www-authenticate'], 'GET'
+				# create a new request with the Authorization header
+				req_img = Net::HTTP::Get.new uri.request_uri
+				req_img.add_field 'Authorization', auth
+				# re-issue request with Authorization
+				response = http.request req_img
+				# Now send response back
+				return response.body
+			end
+		else
+			Net::HTTP.start(address, port) do |http|
+				req_img = Net::HTTP::Get.new(url)
+				#req_img.basic_auth 'username', 'password'
+				req_img.basic_auth uid, pwd
+				response = http.request(req_img)
+				#puts "Code = #{response.code}"
+				#puts "Message = #{response.message}"
+				#response.each {|key, val| printf "%14s = %40.40s\n", key, val }
+				## Nelson working		f.write(response.body)
+				#Magick::Image.from_blob(response.body)[0];
+				return response.body
+			end
 		end
 	end
 end
-
 ##############################################################################################
 # The two def below are modified from gpl code at:
 # http://spodzone.org.uk/packages/hawking-HNC230G-motion-detect.txt
@@ -431,7 +454,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 	if motion_enable == 0 then
 		begin
 			log.info("Motion detection enabled. Pulling first image!")
-			image1=pullimage(image_addr,image_addr_port,image_url,image_uid,image_pwd)
+			image1=pullimage(image_addr,image_addr_port,image_url,image_uid,image_pwd,image_auth_type)
 		rescue Exception
 			log.warn("Encountered an error during image1 initial pull of: "+$!.to_s)
 		end
@@ -458,7 +481,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 				sentry_gc_count = 0
 			end
 			# Get the current image
-			image2=pullimage(image_addr,image_addr_port,image_url,image_uid,image_pwd)
+			image2=pullimage(image_addr,image_addr_port,image_url,image_uid,image_pwd,image_auth_type)
 			# Adding pullTime to timeStamp images.
 			pullTime = Time.now.strftime("%Y-%m-%d %H:%M:%S")
 			image_name_DRB_exchange = [prefix,count.divmod(MODPRIME)[1].to_s,prefix+"_"+count.to_s+".jpg"].join('/')
