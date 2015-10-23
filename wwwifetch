@@ -337,7 +337,7 @@ class CameraStartStop < HTTPServlet::AbstractServlet
 end
 
 ##############################################################################################
-# CLive is dynamic to create a live view of each camera that is listed from the
+# CArchive is dynamic to create an archive view of each camera that is listed from the
 # conf dir at the time of the servlet creation. The tool will use the listing of files with
 # the .conf extension.
 ##############################################################################################
@@ -354,6 +354,7 @@ class CArchive < HTTPServlet::AbstractServlet
 		# 20061207 not as clean as I would like it but this seems to do the trick
 		camera_array = Array.new
 		cam_count = 0
+		image_alt='no_image_alt'
 		image_uid='no_image_uid'
 		image_pwd='no_image_pwd'
 		image_addr='no_image_ip'
@@ -370,7 +371,7 @@ class CArchive < HTTPServlet::AbstractServlet
 			end
 			cam_count = cam_count+1
 			# Put the camera pid and camera number in the table
-			myTempRespond = myTempRespond+'<a href="/camera?cameraName='+image_addr.split('.').last.to_s+'"><img src="http://'+image_uid.to_s+':'+image_pwd.to_s+'@'+image_addr.to_s+''+image_url.to_s+'" width='+HISTORYIMAGEWIDTH+' heigth='+HISTORYIMAGEHEIGHT+' ></a>
+			myTempRespond = myTempRespond+'<a href="/camera?cameraName='+image_addr.split('.').last.to_s+'" title="'+image_alt+'"><img src="http://'+image_uid.to_s+':'+image_pwd.to_s+'@'+image_addr.to_s+''+image_url.to_s+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>
 			'
 		end
 		GC.start
@@ -396,6 +397,7 @@ class CLive < HTTPServlet::AbstractServlet
 		# 20061207 not as clean as I would like it but this seems to do the trick
 		camera_array = Array.new
 		cam_count = 0
+		image_alt='no_image_alt'
 		image_uid='no_image_uid'
 		image_pwd='no_image_pwd'
 		image_addr='no_image_ip'
@@ -412,7 +414,7 @@ class CLive < HTTPServlet::AbstractServlet
 			end
 			cam_count = cam_count+1
 			# Put the camera pid and camera number in the table
-			myTempRespond = myTempRespond+'<a href="http://'+image_uid.to_s+':'+image_pwd.to_s+'@'+image_addr.to_s+''+image_url.to_s+'"><img src="http://'+image_uid.to_s+':'+image_pwd.to_s+'@'+image_addr.to_s+''+image_url.to_s+'" width='+HISTORYIMAGEWIDTH+' heigth='+HISTORYIMAGEHEIGHT+' ></a>
+			myTempRespond = myTempRespond+'<a href="http://'+image_uid.to_s+':'+image_pwd.to_s+'@'+image_addr.to_s+''+image_url.to_s+'" title="'+image_alt+'"><img src="http://'+image_uid.to_s+':'+image_pwd.to_s+'@'+image_addr.to_s+''+image_url.to_s+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>
 			'
 		end
 		GC.start
