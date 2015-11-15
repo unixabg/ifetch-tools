@@ -414,11 +414,50 @@ class CLive < HTTPServlet::AbstractServlet
 			end
 			cam_count = cam_count+1
 			# Put the camera pid and camera number in the table
-			myTempRespond = myTempRespond+'<a href="http://'+image_uid.to_s+':'+image_pwd.to_s+'@'+image_addr.to_s+''+image_url.to_s+'" title="'+image_alt+'"><img src="http://'+image_uid.to_s+':'+image_pwd.to_s+'@'+image_addr.to_s+''+image_url.to_s+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>
+			myTempRespond = myTempRespond+'<a href="/livesingle?cameraName='+File.basename(cam_tmp, ".*")+'" title="'+image_alt+'"><img src="http://'+image_uid.to_s+':'+image_pwd.to_s+'@'+image_addr.to_s+''+image_url.to_s+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>
 			'
 		end
 		GC.start
 		res.body = eval(File.open("/usr/share/ifetch-tools/templates/Live") {|fh| fh.read})
+	end
+end
+
+##############################################################################################
+# CLiveSingle creates a live view of a single camera.
+##############################################################################################
+class CLiveSingle < HTTPServlet::AbstractServlet
+	def do_GET(req, res)
+		HTTPAuth.basic_auth(req, res, 'Camera History Realm') {|user, pass|
+			# this block returns true if
+			# authentication token is valid
+			user == HISTORYUSER && pass == HISTORYPASS
+		}
+		res['Content-Type'] = "text/html" # Tell the browser how we are talking
+		raise HTTPServerError, 'Error: cameraName parameter not passed correctly.' if req.query['cameraName'] == nil || /[0-9]+/.match(req.query['cameraName']) == nil
+		cameraName = /[0-9]+/.match(req.query['cameraName']).to_s
+		myTempRespond = ""
+
+		# 20061207 not as clean as I would like it but this seems to do the trick
+		camera_array = Array.new
+		cam_count = 0
+		image_alt='no_image_alt'
+		image_uid='no_image_uid'
+		image_pwd='no_image_pwd'
+		image_addr='no_image_ip'
+		image_url='/no_image_url_defined'
+		###############################################################
+		# Eval in the conf file for the camera with error trap on this operation.
+		begin
+			eval(File.open("/etc/ifetch-tools/cameras/"+cameraName+".conf") {|fh| fh.read})
+		rescue
+			res.body = eval(puts "Encountered reading the camera.conf file of: "+$!.to_s)
+			# Stop after the error feedback.
+			#break
+		end
+		# Put the camera image in the template return
+		myTempRespond = '<img src="http://'+image_uid.to_s+':'+image_pwd.to_s+'@'+image_addr.to_s+''+image_url.to_s+'" alt="'+image_alt+'"></a>'
+		GC.start
+		res.body = eval(File.open("/usr/share/ifetch-tools/templates/LiveSingle") {|fh| fh.read})
 	end
 end
 
@@ -645,6 +684,7 @@ s = WEBrick::HTTPServer.new(
 # Monitor Operations
 s.mount("/archive", CArchive)
 s.mount("/live", CLive)
+s.mount("/livesingle", CLiveSingle)
 s.mount("/monitor", CMonitor)
 s.mount("/camerastartstop", CameraStartStop)
 s.mount("/startallcameras", StartAllCameras)
