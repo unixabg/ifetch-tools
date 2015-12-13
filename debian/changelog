@@ -1,3 +1,45 @@
+ifetch-tools (0.15.24d3-1) unstable; urgency=medium
+
+  [ Richard Nelson ]
+  * General improvements for memory utilization and monitoring on ifetch,
+    wwwifetch, templates/Monitor.
+  * Attempt to improve memory utilization by RMagick on ifetch.
+  * Attempt to improve memory information in wwwifetch.
+  * Two fold attempt to convince browser to show the unique image and not
+    cached, and reduce the need to watermark since the browser should not
+    cache on wwwifetch.
+  * Improved last commit to convince browser to show the unique image and not
+    cached on wwwifetch.
+  * Simplify image handling for watermarking and generalize garbage collection
+    with a call every 100 images on ifetch.
+  * Move rmagick to a gem call and hard code version to deal with mem leaking
+    on ifetch.
+  * Initial commit to offer dynamic presentation for live view of cameras on
+    wwwifetch and templates/Live.
+  * Initial commit to offer dynamic presentation for archive view of cameras
+    on wwwifetch and templates/Archive.
+  * Moved version number to the bottom on dynamic live and archive pages in
+    templates/Live and templates/Archive.
+  * Updated htdocs index.html and removed live.html and archive.html since we
+    have added dynamic creation of pages.
+  * Unify some navigation on the templates of Archive, Live, Monitor,
+    and ShowImage.
+  * Initial commit to support digest authentication for image collection.
+  * Added information on using Trendnet TV-IP320PI camera.
+  * Initial inclusion for using img alt infomration and including in dynamic
+    pages for href title as well.
+  * Initial commit for live camera view.
+  * Add comment to point users for changelog info to just examine
+    debian/changelog.
+  * Revert to ruby-rmagick for package release cleanup.
+  * Update ifetch-tools-html-page/index.html for package release 0.15.24.d3.
+  * Remove test for existence of deluser and delgroup in
+    debian/ifetch-tools.postrm to satisfy lintian.
+
+
+ -- Richard Nelson <unixabg@gmail.com>  Sat, 12 Dec 2015 19:38:18 -0600
+
+
 ifetch-tools (0.15.24d2-1) unstable; urgency=medium
 
   * Closing only stdin, stdout and stderr 0,1,2 on IO.for_fd() on
