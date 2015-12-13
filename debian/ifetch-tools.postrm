@@ -4,15 +4,8 @@ set -e
 
 case "${1}" in
 	remove)
-		if [ -x /usr/sbin/deluser ]
-		then
-			deluser --quiet --system ifetch-tools
-		fi
-
-		if [ -x /usr/sbin/delgroup ]
-		then
-			delgroup --quiet --system --only-if-empty ifetch-tools || true
-		fi
+		deluser --quiet --system ifetch-tools
+		delgroup --quiet --system --only-if-empty ifetch-tools || true
 		;;
 
 	purge)
