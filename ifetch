@@ -54,9 +54,9 @@ require 'uri'
 require 'net/http'
 require 'net/http/digest_auth'
 require 'time'
-#require 'RMagick'
-require "rubygems"
-gem "rmagick", "= 2.15.3"
+require 'RMagick'
+#require "rubygems"
+#gem "rmagick", "= 2.15.3"
 require "rmagick"
 
 ##############################################################################################
