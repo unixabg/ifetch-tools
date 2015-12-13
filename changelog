@@ -22,6 +22,8 @@
 # Changlog for milestone operations
 ####################################################################################
 
+# See debian/changelog
+
 20141103
   * Updating to standards version 3.9.6.
   * Address postinst uses /usr/share/doc content, (Closes: #767859).
