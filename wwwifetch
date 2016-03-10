@@ -358,6 +358,7 @@ class CArchive < HTTPServlet::AbstractServlet
 		image_uid='no_image_uid'
 		image_pwd='no_image_pwd'
 		image_addr='no_image_ip'
+		image_addr_port='80'
 		image_url='/no_image_url_defined'
 		Dir["/etc/ifetch-tools/cameras/*.conf"].sort.each do |cam_tmp|
 			###############################################################
@@ -371,7 +372,7 @@ class CArchive < HTTPServlet::AbstractServlet
 			end
 			cam_count = cam_count+1
 			# Put the camera pid and camera number in the table
-			myTempRespond = myTempRespond+'<a href="/camera?cameraName='+image_addr.split('.').last.to_s+'" title="'+image_alt+'"><img src="http://'+image_uid.to_s+':'+image_pwd.to_s+'@'+image_addr.to_s+''+image_url.to_s+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>
+			myTempRespond = myTempRespond+'<a href="/camera?cameraName='+image_addr.split('.').last.to_s+'" title="'+image_alt+'"><img src="http://'+image_uid.to_s+':'+image_pwd.to_s+'@'+image_addr.to_s+':'+image_addr_port.to_s+''+image_url.to_s+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>
 			'
 		end
 		GC.start
@@ -401,6 +402,7 @@ class CLive < HTTPServlet::AbstractServlet
 		image_uid='no_image_uid'
 		image_pwd='no_image_pwd'
 		image_addr='no_image_ip'
+		image_addr_port='80'
 		image_url='/no_image_url_defined'
 		Dir["/etc/ifetch-tools/cameras/*.conf"].sort.each do |cam_tmp|
 			###############################################################
@@ -414,7 +416,7 @@ class CLive < HTTPServlet::AbstractServlet
 			end
 			cam_count = cam_count+1
 			# Put the camera pid and camera number in the table
-			myTempRespond = myTempRespond+'<a href="/livesingle?cameraName='+File.basename(cam_tmp, ".*")+'" title="'+image_alt+'"><img src="http://'+image_uid.to_s+':'+image_pwd.to_s+'@'+image_addr.to_s+''+image_url.to_s+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>
+			myTempRespond = myTempRespond+'<a href="/livesingle?cameraName='+File.basename(cam_tmp, ".*")+'" title="'+image_alt+'"><img src="http://'+image_uid.to_s+':'+image_pwd.to_s+'@'+image_addr.to_s+':'+image_addr_port.to_s+''+image_url.to_s+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>
 			'
 		end
 		GC.start
@@ -444,6 +446,7 @@ class CLiveSingle < HTTPServlet::AbstractServlet
 		image_uid='no_image_uid'
 		image_pwd='no_image_pwd'
 		image_addr='no_image_ip'
+		image_addr_port='80'
 		image_url='/no_image_url_defined'
 		###############################################################
 		# Eval in the conf file for the camera with error trap on this operation.
@@ -455,7 +458,7 @@ class CLiveSingle < HTTPServlet::AbstractServlet
 			#break
 		end
 		# Put the camera image in the template return
-		myTempRespond = '<img src="http://'+image_uid.to_s+':'+image_pwd.to_s+'@'+image_addr.to_s+''+image_url.to_s+'" alt="'+image_alt+'"></a>'
+		myTempRespond = '<img src="http://'+image_uid.to_s+':'+image_pwd.to_s+'@'+image_addr.to_s+':'+image_addr_port.to_s+''+image_url.to_s+'" alt="'+image_alt+'"></a>'
 		GC.start
 		res.body = eval(File.open("/usr/share/ifetch-tools/templates/LiveSingle") {|fh| fh.read})
 	end
