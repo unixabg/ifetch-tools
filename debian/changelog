@@ -1,3 +1,20 @@
+ifetch-tools (0.15.24d4-1) unstable; urgency=medium
+
+  [ Richard Nelson ]
+  * Corrected bug of not including image_addr_port on dynamic presentation in
+    wwwifetch.
+  * Added support for TP-Link NC220 in examples/ifetch-tools.conf and
+    examples/cameras/camera_number.conf.
+  * Updated information of BTS, PDO, PTS, and VCS in
+    ifetch-tools-html/index.html.
+  * Adding information about TP-Link NC220 to ifetch-tools-html/index.html.
+  * Updating version information for release 0.15.24.d4 in ifetch, wwwifetch,
+    and ifetch-tools-html.
+
+
+ -- Richard Nelson <unixabg@gmail.com>  Sat, 02 Apr 2016 18:30:19 -0500
+
+
 ifetch-tools (0.15.24d3-1) unstable; urgency=medium
 
   [ Richard Nelson ]
