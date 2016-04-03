@@ -35,7 +35,7 @@ GC.enable
 ##############################################################################################
 require 'webrick'
 require 'drb'
-require 'RMagick'
+require 'rmagick'
 #require 'logger'
 # Unremark the below two lines if you want to try with high-performance.
 #require 'rubygems'

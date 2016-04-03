@@ -54,7 +54,6 @@ require 'uri'
 require 'net/http'
 require 'net/http/digest_auth'
 require 'time'
-require 'RMagick'
 #require "rubygems"
 #gem "rmagick", "= 2.15.3"
 require "rmagick"
@@ -107,7 +106,7 @@ end
 # This def will pull the image from the cam now and return the response.
 ##############################################################################################
 def pullimage(address,port,url,uid,pwd,auth_type)
-	timeout(10) do
+	Timeout.timeout(10) do
 		# Here we determine if we need to handle as basic auth or digest
 		if auth_type == 'digest' then
 			uri = URI.parse('http://'+address.to_s+':'+port.to_s+''+url.to_s)
