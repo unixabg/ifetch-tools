@@ -10,6 +10,7 @@ ifetch-tools (0.15.24d4-1) unstable; urgency=medium
   * Adding information about TP-Link NC220 to ifetch-tools-html/index.html.
   * Updating version information for release 0.15.24.d4 in ifetch, wwwifetch,
     and ifetch-tools-html.
+  * Update ifetch and wwwifetch for deprecated syntax.
 
 
  -- Richard Nelson <unixabg@gmail.com>  Sat, 02 Apr 2016 18:30:19 -0500
