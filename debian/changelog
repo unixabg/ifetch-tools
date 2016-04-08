@@ -12,9 +12,7 @@ ifetch-tools (0.15.24d4-1) unstable; urgency=medium
     and ifetch-tools-html.
   * Update ifetch and wwwifetch for deprecated syntax.
 
-
  -- Richard Nelson <unixabg@gmail.com>  Sat, 02 Apr 2016 18:30:19 -0500
-
 
 ifetch-tools (0.15.24d3-1) unstable; urgency=medium
 
@@ -54,9 +52,7 @@ ifetch-tools (0.15.24d3-1) unstable; urgency=medium
   * Remove test for existence of deluser and delgroup in
     debian/ifetch-tools.postrm to satisfy lintian.
 
-
  -- Richard Nelson <unixabg@gmail.com>  Sat, 12 Dec 2015 19:38:18 -0600
-
 
 ifetch-tools (0.15.24d2-1) unstable; urgency=medium
 
