@@ -448,18 +448,24 @@ class CLiveSingle < HTTPServlet::AbstractServlet
 		raise HTTPServerError, 'Error: cameraName parameter not passed correctly.' if req.query['cameraName'] == nil || /[0-9]+/.match(req.query['cameraName']) == nil
 		cameraName = /[0-9]+/.match(req.query['cameraName']).to_s
 		myTempRespond = ""
-
-		# 20061207 not as clean as I would like it but this seems to do the trick
-		camera_array = Array.new
-		cam_count = 0
-		image_alt='no_image_alt'
-		image_uid='no_image_uid'
-		image_pwd='no_image_pwd'
-		image_addr='no_image_ip'
-		image_addr_port='80'
-		image_url='/no_image_url_defined'
+		image_addr = "127.0.0.1"
+		image_addr_port = "80"
+		image_alt = "no_image_alt"
+		image_uid = "no_image_uid"
+		image_url = "no_image_url"
+		image_pwd = "no_image_pwd"
+		# 20160408 Rework the live and archive dynamic view to utilize the global ifetch-tools.conf file.
 		###############################################################
-		# Eval in the conf file for the camera with error trap on this operation.
+		# First suck in the config settings from the ifetch-tools.conf file.
+		begin
+			eval(File.open("/etc/ifetch-tools/ifetch-tools.conf") {|fh| fh.read})
+		rescue
+			puts "Error encountered reading the conf file of: "+$!.to_s
+			# Stop after the error feedback.
+			#break
+		end
+		###############################################################
+		# Now let the camera.conf file overload the settings they want.
 		begin
 			eval(File.open("/etc/ifetch-tools/cameras/"+cameraName+".conf") {|fh| fh.read})
 		rescue
