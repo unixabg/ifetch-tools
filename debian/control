@@ -3,7 +3,7 @@ Section: web
 Priority: optional
 Maintainer: Richard Nelson <unixabg@gmail.com>
 Build-Depends: debhelper (>= 9)
-Standards-Version: 3.9.7
+Standards-Version: 3.9.8
 Homepage: http://fyeox.com/ifetch-tools/
 
 Package: ifetch-tools
