@@ -273,12 +273,12 @@ class CameraHistory < HTTPServlet::AbstractServlet
 			# then destroy said temp area upon return for security.
 			Dir.mktmpdir(nil, "/tmp") {|dir|
 				# use the directory...
-				tempResponse.write("#{dir}/tmpVideo.mp4")
-				mtype = WEBrick::HTTPUtils::mime_type("#{dir}/tmpVideo.mp4", WEBrick::HTTPUtils::DefaultMimeTypes)
+				tempResponse.write("#{dir}/tmpVideo."+$video_export_type)
+				mtype = WEBrick::HTTPUtils::mime_type("#{dir}/tmpVideo."+$video_export_type, WEBrick::HTTPUtils::DefaultMimeTypes)
 				res['Content-Type'] = mtype
-				res['Content-Disposition'] = 'inline; filename="video.mp4"'
+				res['Content-Disposition'] = "inline; filename=\"video."+$video_export_type
 				puts mtype
-				res.body = File.open("#{dir}/tmpVideo.mp4","rb") {|io| io.read}
+				res.body = File.open("#{dir}/tmpVideo."+$video_export_type,"rb") {|io| io.read}
 			}
 		else
 			GC.start
