@@ -606,7 +606,7 @@ class CSnapshot < HTTPServlet::AbstractServlet
 			# authentication token is valid
 			user == HISTORYUSER && pass == HISTORYPASS
 		}
-		res['Content-Type'] = "text/html" # Tell the browser how we are talking
+		res['Content-Type'] = "image/jpeg" # Tell the browser how we are talking
 		raise HTTPServerError, 'Error: cameraName parameter not passed correctly.' if req.query['cameraName'] == nil || /[0-9]+/.match(req.query['cameraName']) == nil
 		cameraName = /[0-9]+/.match(req.query['cameraName']).to_s
 		myTempRespond = ""
