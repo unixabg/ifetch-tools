@@ -36,11 +36,56 @@ GC.enable
 require 'webrick'
 require 'drb'
 require 'rmagick'
+require 'net/http'
+require 'net/http/digest_auth'
 #require 'logger'
 # Unremark the below two lines if you want to try with high-performance.
 #require 'rubygems'
 #require 'webrick/highperformanceserver'
 include WEBrick
+
+##############################################################################################
+# Define the way we pull in an image from a camera.
+#
+# This def will pull the image from the cam now and return the response.
+##############################################################################################
+def pullimage(address,port,url,uid,pwd,auth_type)
+	Timeout.timeout(10) do
+		# Here we determine if we need to handle as basic auth or digest
+		if auth_type == 'digest' then
+			uri = URI.parse('http://'+address.to_s+':'+port.to_s+''+url.to_s)
+			uri.user = uid
+			uri.password = pwd
+			Net::HTTP.start(address, port) do |http|
+				req_img = Net::HTTP::Get.new uri.request_uri
+				digest_auth = Net::HTTP::DigestAuth.new
+				response = http.request(req_img)
+				# response is a 401 response with a WWW-Authenticate header
+				auth = digest_auth.auth_header uri, response['www-authenticate'], 'GET'
+				# create a new request with the Authorization header
+				req_img = Net::HTTP::Get.new uri.request_uri
+				req_img.add_field 'Authorization', auth
+				# re-issue request with Authorization
+				response = http.request req_img
+				# Now send response back
+				return response.body
+			end
+		else
+			Net::HTTP.start(address, port) do |http|
+				req_img = Net::HTTP::Get.new(url)
+				#req_img.basic_auth 'username', 'password'
+				req_img.basic_auth uid, pwd
+				response = http.request(req_img)
+				#puts "Code = #{response.code}"
+				#puts "Message = #{response.message}"
+				#response.each {|key, val| printf "%14s = %40.40s\n", key, val }
+				## Nelson working		f.write(response.body)
+				#Magick::Image.from_blob(response.body)[0];
+				return response.body
+			end
+		end
+	end
+end
 
 ##############################################################################################
 # Suck in the config settings from the ifetch-tools.conf file.
@@ -377,7 +422,7 @@ class CArchive < HTTPServlet::AbstractServlet
 				break
 			end
 			# Add the inline image and link to the page.
-			myTempRespond = myTempRespond+'<a href="/camera?cameraName='+image_addr.split('.').last.to_s+'" title="'+image_alt+'"><img src="http://'+image_uid.to_s+':'+image_pwd.to_s+'@'+image_addr.to_s+':'+image_addr_port.to_s+''+image_url.to_s+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>'
+			myTempRespond = myTempRespond+'<a href="/camera?cameraName='+image_addr.split('.').last.to_s+'" title="'+image_alt+'"><img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>'
 		end
 		GC.start
 		res.body = eval(File.open("/usr/share/ifetch-tools/templates/Archive") {|fh| fh.read})
@@ -425,7 +470,7 @@ class CLive < HTTPServlet::AbstractServlet
 				break
 			end
 			# Add the inline image and link to the page.
-			myTempRespond = myTempRespond+'<a href="/livesingle?cameraName='+File.basename(cam_tmp, ".*")+'" title="'+image_alt+'"><img src="http://'+image_uid.to_s+':'+image_pwd.to_s+'@'+image_addr.to_s+':'+image_addr_port.to_s+''+image_url.to_s+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>'
+			myTempRespond = myTempRespond+'<a href="/livesingle?cameraName='+File.basename(cam_tmp, ".*")+'" title="'+image_alt+'"><img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>'
 		end
 		GC.start
 		res.body = eval(File.open("/usr/share/ifetch-tools/templates/Live") {|fh| fh.read})
@@ -472,7 +517,7 @@ class CLiveSingle < HTTPServlet::AbstractServlet
 			#break
 		end
 		# Put the camera image in the template return
-		myTempRespond = '<img src="http://'+image_uid.to_s+':'+image_pwd.to_s+'@'+image_addr.to_s+':'+image_addr_port.to_s+''+image_url.to_s+'" alt="'+image_alt+'"></a>'
+		myTempRespond = '<img src="/snapshot?cameraName='+cameraName+'" alt="'+image_alt+'"></a>'
 		GC.start
 		res.body = eval(File.open("/usr/share/ifetch-tools/templates/LiveSingle") {|fh| fh.read})
 	end
@@ -550,6 +595,52 @@ class CMonitor < HTTPServlet::AbstractServlet
 		res.body = eval(File.open("/usr/share/ifetch-tools/templates/Monitor") {|fh| fh.read})
 	end
 end
+
+##############################################################################################
+# CSnapshot pulls a live snapshot of a given camera.
+##############################################################################################
+class CSnapshot < HTTPServlet::AbstractServlet
+	def do_GET(req, res)
+		HTTPAuth.basic_auth(req, res, 'Camera History Realm') {|user, pass|
+			# this block returns true if
+			# authentication token is valid
+			user == HISTORYUSER && pass == HISTORYPASS
+		}
+		res['Content-Type'] = "text/html" # Tell the browser how we are talking
+		raise HTTPServerError, 'Error: cameraName parameter not passed correctly.' if req.query['cameraName'] == nil || /[0-9]+/.match(req.query['cameraName']) == nil
+		cameraName = /[0-9]+/.match(req.query['cameraName']).to_s
+		myTempRespond = ""
+		image_addr = "127.0.0.1"
+		image_addr_port = "80"
+		image_alt = "no_image_alt"
+		image_auth_type="basic"
+		image_uid = "no_image_uid"
+		image_url = "no_image_url"
+		image_pwd = "no_image_pwd"
+		# 20160408 Rework the live and archive dynamic view to utilize the global ifetch-tools.conf file.
+		###############################################################
+		# First suck in the config settings from the ifetch-tools.conf file.
+		begin
+			eval(File.open("/etc/ifetch-tools/ifetch-tools.conf") {|fh| fh.read})
+		rescue
+			puts "Error encountered reading the conf file of: "+$!.to_s
+			# Stop after the error feedback.
+			#break
+		end
+		###############################################################
+		# Now let the camera.conf file overload the settings they want.
+		begin
+			eval(File.open("/etc/ifetch-tools/cameras/"+cameraName+".conf") {|fh| fh.read})
+		rescue
+			res.body = eval(puts "Encountered reading the camera.conf file of: "+$!.to_s)
+			# Stop after the error feedback.
+			#break
+		end
+		# return the current camera snapshot image.
+		res.body = pullimage(image_addr,image_addr_port,image_url,image_uid,image_pwd,image_auth_type)
+	end
+end
+
 
 ##############################################################################################
 # Display an image and a time stamp. of the system.
@@ -700,6 +791,7 @@ s = WEBrick::HTTPServer.new(
 ##############################################################################################
 # Monitor Operations
 s.mount("/archive", CArchive)
+s.mount("/snapshot", CSnapshot)
 s.mount("/live", CLive)
 s.mount("/livesingle", CLiveSingle)
 s.mount("/monitor", CMonitor)
