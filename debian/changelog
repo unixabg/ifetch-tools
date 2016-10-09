@@ -1,3 +1,19 @@
+ifetch-tools (0.15.24d6-1) unstable; urgency=medium
+
+  [ Richard Nelson ]
+  * Add granularity of export video type in examples/ifetch-tools.conf
+    and wwwifetch.
+  * Correct notation on dynamic page creation of cameras on wwwifetch.
+  * Clean up extra line and tabs to close response string on wwwifetch.
+  * Initial commit for browser agnostic viewing on wwwifetch.
+  * Adjust Content-Type to image/jpeg response for browser agnostic viewing
+    on wwwifetch.
+  * Adjust version numbers in ifetch, wwwifetch, and
+    ifetch-tools-html-page/index.html.
+  * Update copyright information on files.
+
+ -- Richard Nelson <unixabg@gmail.com>  Sat, 08 Oct 2016 20:55:29 -0500
+
 ifetch-tools (0.15.24d5-1) unstable; urgency=medium
 
   [ Richard Nelson ]
