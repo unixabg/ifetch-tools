@@ -71,7 +71,7 @@ ifetch-tools (0.15.24d2-1) unstable; urgency=medium
     wwwifetch (Closes: #779536).
   * Adjust class Monitor name to CMonitor in wwwifetch (Closes: #779532).
   * Adjusting VER for next release on wwwifetch.
-  * Update copyright from 2005-2012 to 2005-2015.
+  * Update copyright from 2005-2012 to 2005-2016.
   * Adjust Upstream-Homepage in debian/copyright (Closes: #779537).
   * Remove trailing whitespace on wwwifetch.
   * Remove unused array call in wwwifetch.
