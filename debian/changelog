@@ -1,3 +1,15 @@
+ifetch-tools (0.15.24d7-1) unstable; urgency=medium
+
+  [ Richard Nelson ]
+  * Initial attempt to reduce Live Image view flickering in browsers on
+    wwwifetch and templates/LiveSingle.
+  * Adjust formatting for image_watermark in
+    examples/cameras/camera_number.conf.
+  * Adjust version numbers in ifetch, wwwifetch, and
+    ifetch-tools-html-page/index.html.
+
+ -- Richard Nelson <unixabg@gmail.com>  Wed, 30 Nov 2016 15:34:34 -0600
+
 ifetch-tools (0.15.24d6-1) unstable; urgency=medium
 
   [ Richard Nelson ]
