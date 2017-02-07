@@ -86,6 +86,8 @@ image_url=nil
 image_watermark=nil
 log_files=nil
 log_size=nil
+marshal_dump_enable=nil
+marshal_dump_sentry=1
 motion_enable=nil
 motion_mdpp=nil
 motion_sleep=nil
@@ -347,41 +349,51 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 
 	###############################################################
 	# This is the area where we collect the timestamps are on any history.
-	# Initialize an arrary
-	tmp_history_array = Array.new
-	# Get a listing of all the images in the history
-	history_files = Dir["/var/lib/ifetch-tools/#{prefix}/*/*.jpg"]
-	# Unremark the below lines for diagnostic
-	#puts history_files
-	#puts history_files.length
-	0.upto(history_files.length - 1) do |count|
-		# Pop off the index from the image name for the array index, time stamp the file, recreate array.
-		##################### Bug fix 6960 #############################################
-		# Remarking out the line changed for reference. This bug also required a change in
-		# the code on the image time stamp in the array for exchange.
-		#tmp_history_array[File.basename(history_files[count], ".jpg").split(/_/)[1].to_i] = File.new(history_files[count]).mtime.to_s+","+history_files[count]
-		# Get the acutal file number:
-		temp_fn = File.basename(history_files[count], ".jpg").split(/_/)[1].to_i
-		tmp_history_array[temp_fn] = Time.parse(File.mtime(history_files[count]).to_s).strftime("%Y-%m-%d %H:%M:%S")+","+[prefix,temp_fn.divmod(MODPRIME)[1].to_s,File.basename(history_files[count])].join('/')
-		#Unremark for below for diag on the actual number being split out.
-		#puts File.basename(history_files[count], ".jpg").split(/_/)[1]
+	# 20170205 Feature add to attempt to improve indexing on large storages utilizing Marshaling.
+	# Set a temp file name for the tstamp path.
+	temp_mdump_path = ["/var/lib/ifetch-tools",prefix,prefix+".marshal"].join('/')
+
+	# Load the contents of last Marshal dump first in to the global array.
+	if File.exist?(temp_mdump_path) then
+		log.info("Camera .marshal file found. Attempting to load...")
+		# If we are here then we have found a .marshal file for the camera.
+		# First let us load the image_array dump.
+		$image_array = Marshal.load File.read(temp_mdump_path)
+		log.info("Camera .marshal file loaded!")
+		# Second let us pull in all the .tstamp files for the images that we need to pull in
+		# to make our image_array up to day.
+		log.info("Attempting to load camera .tstamp files...")
+		temp_tstamp_files = Dir["/var/lib/ifetch-tools/#{prefix}/*.tstamp"]
+		0.upto(temp_tstamp_files.length - 1) do |count|
+			temp_fn = File.basename(temp_tstamp_files[count], ".tstamp").split(/_/)[1].to_i
+			$image_array[temp_fn] = Marshal.load File.read(temp_tstamp_files[count])
+		end
+		log.info("Loading of camera .tstamp files complete!")
+	else
+		# If we are here then we must brute force time stamps for all files.
+		log.info("No .marshal file found to  switching to brute force dating of history!")
+		# Get a listing of all the images in the history
+		history_files = Dir["/var/lib/ifetch-tools/#{prefix}/*/*.jpg"]
+		# Unremark the below lines for diagnostic
+		#puts history_files
+		#puts history_files.length
+		0.upto(history_files.length - 1) do |count|
+			# Here we step through the files and pop off the file name/number and put it in the image_array in
+			# the correct position.
+			temp_fn = File.basename(history_files[count], ".jpg").split(/_/)[1].to_i
+			$image_array[temp_fn] = Time.parse(File.mtime(history_files[count]).to_s).strftime("%Y-%m-%d %H:%M:%S")+","+[prefix,temp_fn.divmod(MODPRIME)[1].to_s,File.basename(history_files[count])].join('/')
+			#Unremark for below for diag on the actual number being split out.
+			#puts File.basename(history_files[count], ".jpg").split(/_/)[1]
+		end
 	end
 
-	#puts tmp_history_array
-	if image_count >= tmp_history_array.length then
+	###############################################################
+	# Here we adjust the array if need be to be the size requested by the configs.
+	if image_count >= $image_array.length then
 		log.info("Starting history generation with history count normal!")
-		0.upto(history_files.length - 1) do |count|
-			# 20070316 Nelson: Well we have an issue if images are missing from an array.
-			# We need to watch out for null entries since we base a lot of logic on the expectation
-			# of a set of images in sequence. So before we do a 1 to 1 transfer lets make sure the
-			# transfer is not nil.
-			# One issue that would appear later in the code is the sorting for latest image recorded
-			# and needing to start writing again after most recent images. So the below modification
-			# should address the issue.
-			if tmp_history_array[count] != nil then
-				#puts tmp_history_array[count]
-				$image_array[count] = tmp_history_array[count]
-			else
+		# Make sure no entries are nil
+		0.upto($image_array.length - 1) do |count|
+			if $image_array[count] == nil then
 				$image_array[count] = "19000101 00:00:01,images/missed.jpg"
 			end
 		end
@@ -390,43 +402,36 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 		log.info("Starting history generation with history count over set collection!")
 		0.upto(image_count - 1) do |count|
 			# This is the same as the above logic for images missing from the array.
-			if tmp_history_array[count] != nil then
-				$image_array[count] = tmp_history_array[count]
-			else
+			if $image_array[count] == nil then
 				$image_array[count] = "19000101 00:00:01,images/missed.jpg"
 			end
 		end
 		log.info("Dumping history count over set collection from disk!")
-		image_count.upto(history_files.length - 1) do |count|
-			#puts "Deleting "+tmp_history_array[count].split(/,/)[1]+"!"
-			File.delete("/var/lib/ifetch-tools/"+tmp_history_array[count].split(/,/)[1])
+		image_count.upto($image_array.length - 1) do |count|
+			#puts "Deleting "+$image_array[count].split(/,/)[1]+"!"
+			if File.exist?(temp_mdump_path) then
+				File.delete("/var/lib/ifetch-tools/"+$image_array[count].split(/,/)[1])
+			else
+				# FIXME test the below logging.
+				log.warn("File /var/lib/ifetch-tools/"+$image_array[count].split(/,/)[1]+" was not found to delete.")
+			end
 		end
+		# Drop the elements out of the array now.
+		$image_array = $image_array.take image_count
 	end
 
 	# 20070108 Nelson: We need to bump the image count to the next correct number.
 	# Set the counter up for starting at correct location.
-	if history_files.length > 1 then
-		#puts image_count
-		#puts $image_array.max
-		#puts $image_array.index($image_array.max)
-		# Switching from count = $image_array.index($image_array.sort[0]) to the below
-		count = $image_array.index($image_array.max)
-		#puts count
-		history_count = $image_array.length
-		#if image_count > history_count then
-		#	count = history_count-1
-		#	#puts $image_array.sort[0]
-		#end
-	else
-		count = -1
-		history_count = 0
-	end
+	count = $image_array.index($image_array.max)
+	history_count = $image_array.length
 
-	log.info("History generation complete with #{history_count} images in the history and start image of #{[count+1]}. Collection count set at #{image_count}. History access is now online.")
+	#log.info("History generation complete with #{history_count} images in the history and start image of #{[count+1]}. Collection count set at #{image_count}. History access is now online.")
+	log.info("History generation complete with #{history_count} images in the history and start image of. Collection count set at #{image_count}. History access is now online.")
 
-	# Here we clear out things we want to like unused array space.
-	tmp_history_array.clear
-	history_files = ""
+	# Here we clear out things we want to like unused array space and others.
+	#history_files = nil
+	temp_mdump_path = nil
+	temp_tstamp_files = nil
 
 	###############################################################
 	# Put in service 20061011 test code.
@@ -545,6 +550,40 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 					end
 				rescue Exception
 					log.warn("Encountered an error during image file output of: "+$!.to_s)
+				end
+				###############################################################
+				# To improve large data stores we want to marshal dump every 1000 images.
+				# Do marshal_dump operations if true and it is the last image recorded on montion detection.
+				if count.divmod(1000)[1] == 0 then
+					marshal_dump_sentry = 0
+				end
+				if marshal_dump_enable == 0 then
+					if marshal_dump_sentry == 0 then
+						###############################################################
+						# To improve large data stores we want to marshal dump image_array every 1000 images.
+						begin
+							# First marshal dump the image array.
+							image_array_name_mdump = ["/var/lib/ifetch-tools",prefix,prefix+".marshal"].join('/')
+							image_array_dump = Marshal.dump($image_array)
+							File.open(image_array_name_mdump, 'w') {|f| f.write(image_array_dump) }
+							# Second clean up the tstamp dumps.
+							Dir.glob("/var/lib/ifetch-tools/#{prefix}/*.tstamp").each { |f| File.delete(f) }
+						rescue Exception
+							log.warn("Encountered an error during marshal dump of: "+$!.to_s)
+						end
+						# Reset the sentry for the next time.
+						marshal_dump_sentry = 1
+					else
+						###############################################################
+						# Now only dump single images one per file for 1000
+						begin
+							image_name_dump = ["/var/lib/ifetch-tools",prefix,prefix+"_"+count.to_s+".tstamp"].join('/')
+							image_dump = Marshal.dump($image_array[count])
+							File.open(image_name_dump, 'w') {|f| f.write(image_dump) }
+						rescue Exception
+							log.warn("Encountered an error during marshal dump of: "+$!.to_s)
+						end
+					end
 				end
 			else
 				# Here drop the count back and just keep writing out the same image number
