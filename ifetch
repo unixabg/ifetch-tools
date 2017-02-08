@@ -366,7 +366,11 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 		temp_tstamp_files = Dir["/var/lib/ifetch-tools/#{prefix}/*.tstamp"]
 		0.upto(temp_tstamp_files.length - 1) do |count|
 			temp_fn = File.basename(temp_tstamp_files[count], ".tstamp").split(/_/)[1].to_i
-			$image_array[temp_fn] = Marshal.load File.read(temp_tstamp_files[count])
+			begin
+				$image_array[temp_fn] = Marshal.load File.read(temp_tstamp_files[count])
+			rescue Exception
+				log.warn("Encountered an error during .tstamp import of: "+$!.to_s)
+			end
 		end
 		log.info("Loading of camera .tstamp files complete!")
 	else
