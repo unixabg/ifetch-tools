@@ -13,7 +13,7 @@ _DATE =%x[date +%Y-%m-%d]
 		if (document.getElementById("myImage")){
 			var tempImage = document.getElementById("myImage").src.split("&");
 			document.getElementById("myImage").src = tempImage[0]+"&rand="+ Math.random();
-			setTimeout("reloadImage()", 1000);
+			setTimeout("reloadImage()", 350);
 		}
 	}
 	//-->
