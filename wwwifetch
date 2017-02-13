@@ -238,7 +238,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 		# Ok here we do the Jump List as an array for just a bit.
 		#myJumpNavigation = myJumpNavigation+'<OPTION STYLE="color : #ff6666" selected > *-- Navigation Jump --* '+"\n"
 		myJumpHash = Hash.new
-		myJumpHash["0"] = '<OPTION STYLE="color : #ff6666" selected > *-- Navigation Jump --*'+"</OPTION>\n"
+		myJumpHash["999999999999"] = '<OPTION STYLE="color : #ff6666" selected > *-- Navigation Jump --*'+"</OPTION>\n"
 
 		# Build the navi
 		0.upto(totalPages) do |count|
@@ -261,7 +261,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 
 		# Now that we have built it lets prep it to display it like we want (sorted in this case).
 		#myJumpNavigation = myJumpHash.sort.each {|key, value| puts "The key value is #{key} and the hash is #{value}" }
-		myJumpHash.sort.each {|key, value| myJumpNavigation = "#{myJumpNavigation}#{value}" }
+		myJumpHash.sort.reverse.each {|key, value| myJumpNavigation = "#{myJumpNavigation}#{value}" }
 		#puts myJumpNavigation
 
 		# Ok here is where we handle the < Previous | Next >" navigation.
