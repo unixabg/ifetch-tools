@@ -427,6 +427,9 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 	# 20070108 Nelson: We need to bump the image count to the next correct number.
 	# Set the counter up for starting at correct location.
 	count = $image_array.index($image_array.max)
+	if count == nil
+		count = 0
+	end
 	history_count = $image_array.length
 
 	log.info("History generation complete with #{history_count} images in the history and start image of #{count+1}. Collection count set at #{image_count}. History access is now online.")
