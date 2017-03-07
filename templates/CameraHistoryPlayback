@@ -4,12 +4,16 @@
 	</HEAD><CENTER>
 	<BODY LINK=#{LINK} ALINK=#{ALINK} VLINK=#{VLINK} BGCOLOR=#{BGCOLOR}  onload="setImg();" >
 	<SCRIPT type="text/javascript">
+	var cameraName = #{cameraName};
 	var myImages = #{imgPlaybackList};
 	var i=0;
-	var temp = ["", ""];
 	function setImg(param) {
+		var imageIndex = myImages[i].split("_")[1].split(".")[0];
 		document.getElementById("slideDate").innerHTML=myImages[i].split('=')[1];
-		document.getElementById("slideshow").src=myImages[0];
+		document.getElementById("slideshow").src=myImages[i];
+		document.getElementById("updateNav").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=0";
+		document.getElementById("slideLinkVideo").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=2";
+		document.getElementById("slideLinkArchive").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=1";
 	}
 	function mode(param) {
 		smode=param;
@@ -19,8 +23,11 @@
 			document.getElementById("play").disabled="disabled";
 			document.getElementById("pause").disabled="";
 			document.getElementById("stop").disabled="";
+			var imageIndex = myImages[i].split("_")[1].split(".")[0];
 			document.getElementById("slideDate").innerHTML=myImages[i].split('=')[1];
 			document.getElementById("slideshow").src=myImages[i];
+			document.getElementById("slideLinkVideo").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=2";
+			document.getElementById("slideLinkArchive").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=1";
 			i++;
 			setTimeout("startSlideshow()",1000);
 		} else if(smode=="pause") {
@@ -41,11 +48,14 @@
 	}
 	</SCRIPT>
 		<p id="slideDate">Date Error</p>
-		<img id="slideshow" src="">
+		<a href="" id="updateNav" target="shownav"><img id="slideshow" src=""></a>
 		<br>
 		<input id="play" type="button" value="Play" onclick="mode('play');startSlideshow();">
 		<input id="pause" type="button" value="Pause" disabled="disabled" onclick="mode('pause');startSlideshow();">
 		<input id="stop" type="button" value="Stop" disabled="disabled" onclick="mode('stop');startSlideshow();">
+	<BR><BR>
+	<A HREF="/" target="_top">Home</A> | <A HREF="/archive" target="_top">Archive</A> | <A HREF="/live" target="_top">Live</A> | <A HREF="/monitor" target="_top">Monitor</A> | <A HREF="images/ifetch.png" id="slideLinkArchive" target="_blank">HTML Export</A> | <A HREF="images/ifetch.png" id="slideLinkVideo" target="_blank">Video Export</A>
+	<P>ifetch-tools version: #{VER}</P>
 	</CENTER>
 	</BODY>
 	</HTML>
