@@ -1,16 +1,47 @@
 %{
-<HTML> <HEAD> <!-- This HTML file has been created by a ruby servlet -->
-<TITLE>Camera #{cameraName} History Interface</TITLE>
-</HEAD><CENTER>
-<BODY LINK=#{LINK} ALINK=#{ALINK} VLINK=#{VLINK} BGCOLOR=#{BGCOLOR} >
-<!-- ********************************************************* -->
-<SCRIPT type="text/javascript">
+	<HTML> <HEAD> <!-- This HTML file has been created by a ruby servlet -->
+	<TITLE>Camera #{cameraName} History Interface</TITLE>
+	</HEAD><CENTER>
+	<BODY LINK=#{LINK} ALINK=#{ALINK} VLINK=#{VLINK} BGCOLOR=#{BGCOLOR}  onload="setImg();" >
+	<SCRIPT type="text/javascript">
 	var myImages = #{imgPlaybackList};
-//-->
-</SCRIPT>
-<!-- *** End of the javascript *** -->
-	<BR><BR><BR><BR>
-	FIXME
+	var i=0;
+	function setImg(param) {
+		document.getElementById("slideshow").src=myImages[0];
+	}
+	function mode(param) {
+		smode=param;
+	}
+	function startSlideshow() {
+		if(smode=="play") {
+			document.getElementById("play").disabled="disabled";
+			document.getElementById("pause").disabled="";
+			document.getElementById("stop").disabled="";
+			document.getElementById("slideshow").src=myImages[i];
+			i++;
+			setTimeout("startSlideshow()",1000);
+		} else if(smode=="pause") {
+			document.getElementById("pause").disabled="disabled";
+			document.getElementById("play").disabled="";
+			document.getElementById("play").value="Resume";
+		} else if(smode=="stop") {
+			document.getElementById("play").disabled="";
+			document.getElementById("play").value="Play";
+			document.getElementById("pause").disabled="disabled";
+			document.getElementById("stop").disabled="disabled";
+			document.getElementById("slideshow").src=myImages[0];
+			i=0;
+		}
+		if(i==myImages.length){
+			i=0;
+		}
+	}
+	</SCRIPT>
+		<img id="slideshow" src="" />
+		<br>
+		<input id="play" type="button" value="Play" onclick="mode('play');startSlideshow();" />
+		<input id="pause" type="button" value="Pause" disabled="disabled" onclick="mode('pause');startSlideshow();" />
+		<input id="stop" type="button" value="Stop" disabled="disabled" onclick="mode('stop');startSlideshow();" />
 	</CENTER>
 	</BODY>
 	</HTML>
