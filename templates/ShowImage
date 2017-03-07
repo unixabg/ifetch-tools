@@ -9,7 +9,7 @@
 	<P>#{theDate}</P>
 	#{pageToBuild}
 	<BR><BR>
-	<A HREF="#{HOMELINK}" target="_top">Home</A> | <A HREF="/archive" target="_top">Archive</A> | <A HREF="/live" target="_top">Live</A> | <A HREF="/monitor" target="_top">Monitor</A> | <A HREF="#{pageToBuildBasic}" target="_blank">Basic Archive View</A> | <A HREF="#{pageToBuildPlayback}" target="_blank"> JavaScript Playback</A> | <A HREF="#{pageToBuildVideo}" target="_blank">Basic Video Export</A>
+	<A HREF="#{HOMELINK}" target="_top">Home</A> | <A HREF="/archive" target="_top">Archive</A> | <A HREF="/live" target="_top">Live</A> | <A HREF="/monitor" target="_top">Monitor</A> | <A HREF="#{pageToBuildBasic}" target="_blank">HTML Archive</A> | <A HREF="#{pageToBuildPlayback}" target="_blank">Javascript Playback</A> | <A HREF="#{pageToBuildVideo}" target="_blank">Video Export</A>
 	<P>ifetch-tools version: #{VER}</P>
 	</CENTER>
 	</BODY>
