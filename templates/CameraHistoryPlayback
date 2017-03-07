@@ -6,7 +6,9 @@
 	<SCRIPT type="text/javascript">
 	var myImages = #{imgPlaybackList};
 	var i=0;
+	var temp = ["", ""];
 	function setImg(param) {
+		document.getElementById("slideDate").innerHTML=myImages[i].split('=')[1];
 		document.getElementById("slideshow").src=myImages[0];
 	}
 	function mode(param) {
@@ -17,6 +19,7 @@
 			document.getElementById("play").disabled="disabled";
 			document.getElementById("pause").disabled="";
 			document.getElementById("stop").disabled="";
+			document.getElementById("slideDate").innerHTML=myImages[i].split('=')[1];
 			document.getElementById("slideshow").src=myImages[i];
 			i++;
 			setTimeout("startSlideshow()",1000);
@@ -37,6 +40,7 @@
 		}
 	}
 	</SCRIPT>
+		<p id="slideDate">Date Error</p>
 		<img id="slideshow" src="">
 		<br>
 		<input id="play" type="button" value="Play" onclick="mode('play');startSlideshow();">
