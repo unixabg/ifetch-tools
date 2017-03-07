@@ -37,11 +37,11 @@
 		}
 	}
 	</SCRIPT>
-		<img id="slideshow" src="" />
+		<img id="slideshow" src="">
 		<br>
-		<input id="play" type="button" value="Play" onclick="mode('play');startSlideshow();" />
-		<input id="pause" type="button" value="Pause" disabled="disabled" onclick="mode('pause');startSlideshow();" />
-		<input id="stop" type="button" value="Stop" disabled="disabled" onclick="mode('stop');startSlideshow();" />
+		<input id="play" type="button" value="Play" onclick="mode('play');startSlideshow();">
+		<input id="pause" type="button" value="Pause" disabled="disabled" onclick="mode('pause');startSlideshow();">
+		<input id="stop" type="button" value="Stop" disabled="disabled" onclick="mode('stop');startSlideshow();">
 	</CENTER>
 	</BODY>
 	</HTML>
