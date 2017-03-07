@@ -1,0 +1,17 @@
+%{
+<HTML> <HEAD> <!-- This HTML file has been created by a ruby servlet -->
+<TITLE>Camera #{cameraName} History Interface</TITLE>
+</HEAD><CENTER>
+<BODY LINK=#{LINK} ALINK=#{ALINK} VLINK=#{VLINK} BGCOLOR=#{BGCOLOR} >
+<!-- ********************************************************* -->
+<SCRIPT type="text/javascript">
+	var myImages = #{imgPlaybackList};
+//-->
+</SCRIPT>
+<!-- *** End of the javascript *** -->
+	<BR><BR><BR><BR>
+	FIXME
+	</CENTER>
+	</BODY>
+	</HTML>
+}

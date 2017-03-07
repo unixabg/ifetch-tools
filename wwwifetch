@@ -145,8 +145,8 @@ class CameraHistory < HTTPServlet::AbstractServlet
 		navigation = /[0-1]/.match(req.query['navigation']).to_s # Crop out all the bad stuff.
 
 		# basicView is for the Basic Archive View.
-		raise HTTPServerError, 'Error: basicView parameter not passed correctly.' if req.query['basicView'] == nil || /[0-2]/.match(req.query['basicView']) == nil
-		basicView = /[0-2]/.match(req.query['basicView']).to_s
+		raise HTTPServerError, 'Error: basicView parameter not passed correctly.' if req.query['basicView'] == nil || /[0-3]/.match(req.query['basicView']) == nil
+		basicView = /[0-3]/.match(req.query['basicView']).to_s
 
 		# Initialize some vars.
 		myJumpNavigation = "" # Jump navigation string.
@@ -203,6 +203,8 @@ class CameraHistory < HTTPServlet::AbstractServlet
 		# Ok now actually populate the page with the lastImgOnPage
 			# Keep track of image file names when building frame for video export
 			imgFileList = Array.new
+			# Keep track of image file names for javascript playback
+			imgPlaybackList = Array.new
 			index.to_i.upto(lastImgOnPage) do |imgIndex|
 				#imgTime, imgFile = imgSorted[5].to_s.split(/,/)
 				imgTime, imgFile = imgSorted[imgIndex].split(/,/)
@@ -212,6 +214,8 @@ class CameraHistory < HTTPServlet::AbstractServlet
 				# 20090122 Nelson - Added small fix for .deb and user data expected in different location.
 				# myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'" target="showframe"><IMG SRC="'+imgFile+'" width='+HISTORYIMAGEWIDTH+' height='+HISTORYIMAGEHEIGHT+'></A><BR>'+"\n"
 				myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'?timehash='+imgTime+'" target="showframe"><IMG SRC="/data/'+imgFile+'?timehash='+imgTime+'" width='+HISTORYIMAGEWIDTH+' height='+HISTORYIMAGEHEIGHT+'></A><BR>'+"\n"
+				# Push the image on the array javascript playback
+				imgPlaybackList.push("/data/#{imgFile}?timehash=#{imgTime}")
 				# Push the image on the array where we are keeping image file names
 				if File.exist?("/var/lib/ifetch-tools/#{imgFile}") && File.size("/var/lib/ifetch-tools/#{imgFile}")>0 then
 					imgFileList.push("/var/lib/ifetch-tools/#{imgFile}")
@@ -227,6 +231,8 @@ class CameraHistory < HTTPServlet::AbstractServlet
 					# Ok here we are getting a number to reference so we do not have time drift based on our new navigation.
 					#imgTime, imgFile = imgSorted[imgIndex].to_s.split(/,/)
 					myTempRespond = myTempRespond+"<BR>"+imgTime+'<BR><A HREF="/showimage?cameraName='+cameraName+'&imageName='+imgFile+'" target="showframe"><IMG SRC="/data/'+imgFile+'?timehash='+imgTime+'" width='+HISTORYIMAGEWIDTH+' height='+HISTORYIMAGEHEIGHT+'></A><BR>'+"\n"
+					# Push the image on the array javascript playback
+					imgPlaybackList.push("/data/#{imgFile}?timehash=#{imgTime}")
 					# Push the image on the array where we are keeping image file names
 					if File.exist?("/var/lib/ifetch-tools/#{imgFile}") && File.size("/var/lib/ifetch-tools/#{imgFile}")>0 then
 						imgFileList.push("/var/lib/ifetch-tools/#{imgFile}")
@@ -325,6 +331,10 @@ class CameraHistory < HTTPServlet::AbstractServlet
 				puts mtype
 				res.body = File.open("#{dir}/tmpVideo."+$video_export_type,"rb") {|io| io.read}
 			}
+		elsif basicView.to_i == 3
+			# If we are here then we need to setup for javascript playback
+			# Now generate the page with the correct substitution.
+			res.body = eval(File.open("/usr/share/ifetch-tools/templates/CameraHistoryPlayback") {|fh| fh.read})
 		else
 			GC.start
 			# Now generate the page with the correct substitution.
@@ -662,6 +672,7 @@ class ShowImage < HTTPServlet::AbstractServlet
 			theDate = "Welcome to camera number #{cameraName} history."
 			pageToBuild = %{<IMG SRC=/data/#{imgFile}>}
 			pageToBuildBasic = %{/data/#{imgFile}}
+			pageToBuildPlayback = %{/data/#{imgFile}}
 			pageToBuildVideo = %{/data/#{imgFile}}
 		elsif imgFile != nil
 			# tmpIndex will hold the index position of the page we are on.
@@ -669,6 +680,7 @@ class ShowImage < HTTPServlet::AbstractServlet
 			theDate = File.mtime("/var/lib/ifetch-tools/#{imgFile}")
 			pageToBuild = %{<A HREF="/camerahistory?cameraName=#{cameraName}&index=#{tmpIndex}&navigation=1&basicView=0" target="shownav"><IMG SRC="/data/#{imgFile}?timehash=#{theDate}"></A>}
 			pageToBuildBasic = %{/camerahistory?cameraName=#{cameraName}&index=#{tmpIndex}&navigation=1&basicView=1}
+			pageToBuildPlayback = %{/camerahistory?cameraName=#{cameraName}&index=#{tmpIndex}&navigation=1&basicView=3}
 			pageToBuildVideo = %{/camerahistory?cameraName=#{cameraName}&index=#{tmpIndex}&navigation=1&basicView=2}
 		else
 			pageToBuild = %{Error in image passing to ShowImage could be a security issue.}
