@@ -37,6 +37,7 @@
 			var imageIndex = myImages[i].split("_")[1].split(".")[0];
 			document.getElementById("slideDate").innerHTML=myImages[i].split('=')[1];
 			document.getElementById("slideshow").src=myImages[i];
+			document.getElementById("updateNav").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=0";
 			document.getElementById("slideLinkVideo").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=2";
 			document.getElementById("slideLinkArchive").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=1";
 			i++;
