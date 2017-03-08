@@ -7,6 +7,7 @@
 	var cameraName = #{cameraName};
 	var myImages = #{imgPlaybackList};
 	var i=0;
+	var speed=1000;
 	function setImg(param) {
 		var imageIndex = myImages[i].split("_")[1].split(".")[0];
 		document.getElementById("slideDate").innerHTML=myImages[i].split('=')[1];
@@ -15,11 +16,21 @@
 		document.getElementById("slideLinkVideo").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=2";
 		document.getElementById("slideLinkArchive").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=1";
 	}
+	function speedUp() {
+		speed=speed/2;
+		document.getElementById("speed").value=speed/1000;
+	}
+	function slowDown() {
+		speed=speed*2;
+		document.getElementById("speed").value=speed/1000;
+	}
 	function mode(param) {
 		smode=param;
 	}
 	function startSlideshow() {
 		if(smode=="play") {
+			document.getElementById("slowDown").disabled="";
+			document.getElementById("speedUp").disabled="";
 			document.getElementById("play").disabled="disabled";
 			document.getElementById("pause").disabled="";
 			document.getElementById("stop").disabled="";
@@ -29,18 +40,24 @@
 			document.getElementById("slideLinkVideo").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=2";
 			document.getElementById("slideLinkArchive").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=1";
 			i++;
-			setTimeout("startSlideshow()",1000);
+			setTimeout("startSlideshow()",speed);
 		} else if(smode=="pause") {
 			document.getElementById("pause").disabled="disabled";
+			document.getElementById("slowDown").disabled="disabled";
+			document.getElementById("speedUp").disabled="disabled";
 			document.getElementById("play").disabled="";
 			document.getElementById("play").value="Resume";
 		} else if(smode=="stop") {
 			document.getElementById("play").disabled="";
 			document.getElementById("play").value="Play";
 			document.getElementById("pause").disabled="disabled";
+			document.getElementById("slowDown").disabled="disabled";
+			document.getElementById("speedUp").disabled="disabled";
 			document.getElementById("stop").disabled="disabled";
 			document.getElementById("slideshow").src=myImages[0];
 			i=0;
+			speed=1000;
+			document.getElementById("speed").value=speed;
 		}
 		if(i==myImages.length){
 			i=0;
@@ -51,6 +68,9 @@
 		<a href="" id="updateNav" target="shownav"><img id="slideshow" src=""></a>
 		<br>
 		<input id="play" type="button" value="Play" onclick="mode('play');startSlideshow();">
+		<input id="slowDown" type="button" value="--" disabled="disabled" onclick="slowDown();">
+		<input id="speed" type="text" name="speed" value="1" size="4" readonly>
+		<input id="speedUp" type="button" value="++" disabled="disabled" onclick="speedUp();">
 		<input id="pause" type="button" value="Pause" disabled="disabled" onclick="mode('pause');startSlideshow();">
 		<input id="stop" type="button" value="Stop" disabled="disabled" onclick="mode('stop');startSlideshow();">
 	<BR><BR>
