@@ -58,7 +58,7 @@
 			document.getElementById("slideshow").src=myImages[0];
 			i=0;
 			speed=1000;
-			document.getElementById("speed").value=speed;
+			document.getElementById("speed").value=1;
 		}
 		if(i==myImages.length){
 			i=0;
