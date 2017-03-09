@@ -1,8 +1,9 @@
 %{
 	<HTML> <HEAD> <!-- This HTML file has been created by a ruby servlet -->
 	<TITLE>Camera #{cameraName} History Interface</TITLE>
+	<link rel="stylesheet" type="text/css" href="/style.css">
 	</HEAD><CENTER>
-	<BODY LINK=#{LINK} ALINK=#{ALINK} VLINK=#{VLINK} BGCOLOR=#{BGCOLOR}  onload="setImg();" >
+	<BODY onload="setImg();" >
 	<SCRIPT type="text/javascript">
 	var cameraName = #{cameraName};
 	var myImages = #{imgPlaybackList};

@@ -1,6 +1,7 @@
 %{
 	<HTML> <HEAD> <!-- This HTML file has been created by a ruby servlet -->
 	<TITLE>Camera #{cameraName} Interface</TITLE>
+	<link rel="stylesheet" type="text/css" href="/style.css">
 	</HEAD>
 	<FRAMESET cols="25%,75%">
 		<FRAME src="/camerahistory?cameraName=#{cameraName}&index=0&navigation=0&basicView=0" name="shownav">

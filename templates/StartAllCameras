@@ -1,6 +1,7 @@
 %{
 	<HTML> <HEAD> <!-- This HTML file has been created by a ruby servlet -->
 	<TITLE>Start All Cameras</TITLE>
+	<link rel="stylesheet" type="text/css" href="/style.css">
 	<SCRIPT type="text/javascript">
 	<!--
 	function redirecter(){

@@ -1,11 +1,12 @@
 %{
 	<HTML> <HEAD> <!-- This HTML file has been created by a ruby servlet -->
 	<TITLE>Camera #{cameraName} Interface</TITLE>
+	<link rel="stylesheet" type="text/css" href="/style.css">
 	<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
 	<META HTTP-EQUIV="Expires" CONTENT="-1">
 	<META HTTP-EQUIV="Cache-Control" CONTENT="no-store">
 	</HEAD><CENTER>
-	<BODY LINK=#{LINK} ALINK=#{ALINK} VLINK=#{VLINK} BGCOLOR=#{BGCOLOR}>
+	<BODY>
 	<P>#{theDate}</P>
 	#{pageToBuild}
 	<BR><BR>
