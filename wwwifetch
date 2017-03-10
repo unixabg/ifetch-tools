@@ -504,6 +504,7 @@ class CLiveSingle < HTTPServlet::AbstractServlet
 		image_addr = "127.0.0.1"
 		image_addr_port = "80"
 		image_alt = "no_image_alt"
+		image_sleep = "1"
 		image_uid = "no_image_uid"
 		image_url = "no_image_url"
 		image_pwd = "no_image_pwd"
