@@ -33,6 +33,7 @@
 			document.getElementById("slowDown").disabled="";
 			document.getElementById("speedUp").disabled="";
 			document.getElementById("play").disabled="disabled";
+			document.getElementById("playRev").disabled="disabled";
 			document.getElementById("pause").disabled="";
 			document.getElementById("stop").disabled="";
 			var imageIndex = myImages[i].split("_")[1].split(".")[0];
@@ -43,15 +44,34 @@
 			document.getElementById("slideLinkArchive").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=1";
 			i++;
 			setTimeout("startSlideshow()",speed);
+		} else if(smode=="playRev") {
+			document.getElementById("slowDown").disabled="";
+			document.getElementById("speedUp").disabled="";
+			document.getElementById("play").disabled="disabled";
+			document.getElementById("playRev").disabled="disabled";
+			document.getElementById("pause").disabled="";
+			document.getElementById("stop").disabled="";
+			var imageIndex = myImages[i].split("_")[1].split(".")[0];
+			document.getElementById("slideDate").innerHTML=myImages[i].split('=')[1];
+			document.getElementById("slideshow").src=myImages[i];
+			document.getElementById("updateNav").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=0";
+			document.getElementById("slideLinkVideo").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=2";
+			document.getElementById("slideLinkArchive").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=1";
+			i--;
+			setTimeout("startSlideshow()",speed);
 		} else if(smode=="pause") {
 			document.getElementById("pause").disabled="disabled";
 			document.getElementById("slowDown").disabled="disabled";
 			document.getElementById("speedUp").disabled="disabled";
 			document.getElementById("play").disabled="";
-			document.getElementById("play").value="Resume";
+			document.getElementById("play").value="Resume Forward";
+			document.getElementById("playRev").disabled="";
+			document.getElementById("playRev").value="Resume Backward";
 		} else if(smode=="stop") {
 			document.getElementById("play").disabled="";
 			document.getElementById("play").value="Play";
+			document.getElementById("playRev").disabled="";
+			document.getElementById("playRev").value="Play Backward";
 			document.getElementById("pause").disabled="disabled";
 			document.getElementById("slowDown").disabled="disabled";
 			document.getElementById("speedUp").disabled="disabled";
@@ -62,13 +82,18 @@
 			document.getElementById("speed").value=1;
 		}
 		if(i==myImages.length){
+			// Loop if counting forward
 			i=0;
+		} else if(i==0) {
+			// Loop if counting backward
+			i=myImages.length-1;
 		}
 	}
 	</SCRIPT>
 		<p id="slideDate">Date Error</p>
 		<a href="" id="updateNav" target="shownav"><img id="slideshow" src=""></a>
 		<br>
+		<input id="playRev" type="button" value="Play Backward" onclick="mode('playRev');startSlideshow();">
 		<input id="play" type="button" value="Play" onclick="mode('play');startSlideshow();">
 		<input id="slowDown" type="button" value="--" disabled="disabled" onclick="slowDown();">
 		<input id="speed" type="text" name="speed" value="1" size="4" readonly>
