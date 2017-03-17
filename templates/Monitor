@@ -7,6 +7,7 @@ _DATE =%x[date +%Y-%m-%d]
 %{
 	<HTML> <HEAD> <!-- This HTML file has been created by a ruby servlet -->
 	<TITLE>Camera Monitor Interface</TITLE>
+	<link rel="stylesheet" type="text/css" href="/style.css">
 	<SCRIPT type="text/javascript">
 	<!--
 	function redirecter(){
@@ -15,7 +16,7 @@ _DATE =%x[date +%Y-%m-%d]
 	//-->
 	</SCRIPT>
 	</HEAD>
-	<BODY LINK=#{LINK} ALINK=#{ALINK} VLINK=#{VLINK} BGCOLOR=#{BGCOLOR}  onLoad="setTimeout('redirecter()', 30000)">
+	<BODY onLoad="setTimeout('redirecter()', 30000)">
 	<TABLE border="1" cellpadding="5" >
 	<TBODY>
 	<TD align="center">

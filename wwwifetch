@@ -23,7 +23,7 @@
 # Set some variables.
 ##############################################################################################
 # Version number
-VER = "0.15.26"
+VER = "0.15.26b"
 
 ##############################################################################################
 # Set some options to ensure memory management.
@@ -504,6 +504,7 @@ class CLiveSingle < HTTPServlet::AbstractServlet
 		image_addr = "127.0.0.1"
 		image_addr_port = "80"
 		image_alt = "no_image_alt"
+		image_sleep = "1"
 		image_uid = "no_image_uid"
 		image_url = "no_image_url"
 		image_pwd = "no_image_pwd"
@@ -672,7 +673,6 @@ class ShowImage < HTTPServlet::AbstractServlet
 			theDate = "Welcome to camera number #{cameraName} history."
 			pageToBuild = %{<IMG SRC=/data/#{imgFile}>}
 			pageToBuildBasic = %{/data/#{imgFile}}
-			pageToBuildPlayback = %{/data/#{imgFile}}
 			pageToBuildVideo = %{/data/#{imgFile}}
 		elsif imgFile != nil
 			# tmpIndex will hold the index position of the page we are on.
@@ -680,7 +680,6 @@ class ShowImage < HTTPServlet::AbstractServlet
 			theDate = File.mtime("/var/lib/ifetch-tools/#{imgFile}")
 			pageToBuild = %{<A HREF="/camerahistory?cameraName=#{cameraName}&index=#{tmpIndex}&navigation=1&basicView=0" target="shownav"><IMG SRC="/data/#{imgFile}?timehash=#{theDate}"></A>}
 			pageToBuildBasic = %{/camerahistory?cameraName=#{cameraName}&index=#{tmpIndex}&navigation=1&basicView=1}
-			pageToBuildPlayback = %{/camerahistory?cameraName=#{cameraName}&index=#{tmpIndex}&navigation=1&basicView=3}
 			pageToBuildVideo = %{/camerahistory?cameraName=#{cameraName}&index=#{tmpIndex}&navigation=1&basicView=2}
 		else
 			pageToBuild = %{Error in image passing to ShowImage could be a security issue.}

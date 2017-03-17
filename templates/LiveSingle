@@ -7,19 +7,20 @@ _DATE =%x[date +%Y-%m-%d]
 %{
 	<HTML> <HEAD> <!-- This HTML file has been created by a ruby servlet -->
 	<TITLE>Camera Single Live View</TITLE>
+	<link rel="stylesheet" type="text/css" href="/style.css">
 	<SCRIPT type="text/javascript">
 	<!--
 	function reloadImage(){
 		if (document.getElementById("myImage")){
 			var tempImage = document.getElementById("myImage").src.split("&");
 			document.getElementById("myImage").src = tempImage[0]+"&rand="+ Math.random();
-			setTimeout("reloadImage()", 350);
+			setTimeout("reloadImage()", #{image_sleep}*1000);
 		}
 	}
 	//-->
 	</SCRIPT>
 	</HEAD>
-	<BODY LINK=#{LINK} ALINK=#{ALINK} VLINK=#{VLINK} BGCOLOR=#{BGCOLOR} onload="reloadImage();">
+	<BODY onload="reloadImage();">
 	<TABLE border="1" cellpadding="5" >
 	<TBODY>
 	<TD align="center">
