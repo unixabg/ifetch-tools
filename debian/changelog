@@ -1,3 +1,50 @@
+ifetch-tools (0.15.26b-1) experimental; urgency=low
+
+  [ Richard Nelson ]
+  * Initial commit to config files for marshal dumps with ifetch.
+  * Initial commit, and a major one, to improve indexing on startup for
+    systems with either a large number of cameras or with large history
+    on ifetch.
+  * Error trap imports of marshal .tstamp files on ifetch.
+  * Update VER to 0.15.25 on ifetch for testing.
+  * Update copyright from 2005-2016 to 2005-2017.
+  * Correct starting image on collection logging on ifetch.
+  * Correct starting image on collection logging on ifetch.
+  * Display the date jump on navigation with the newest first on history
+    instead of the oldest first on wwwifetch.
+  * Initial commit of JQuery in htdocs/jquery with a symlink of jquery.js
+    to jquery-3.1.1.min.js.
+  * Adjust version number on wwwifetch for testing systems.
+  * Shorten refresh rate on templates/LiveSingle.
+  * Catch nil count for new cameras with no history on ifetch.
+  * Initial commit for Amcrest camera support.
+  * Initial commit for a new javascript playback interface.
+  * Adjust link names on templates/ShowImages.
+  * Added basic playback to templates/CameraHistoryPlayback.
+  * Drop some tag syntax on templates/CameraHistoryPlayback.
+  * Display image timestamp during playback on templates/CameraHistoryPlayback.
+  * Migrate playback presentation to utilize javascript interface.
+  * Revert "Initial commit of JQuery in htdocs/jquery with a symlink
+    of jquery.js"
+  * Bump version numbers on ifetch and wwwifetch for testers.
+  * Add playback speed adjustment options on templates/CameraHistoryPlayback.
+  * Correct missed updateNav image link to repopulate pane on the left on
+    templates/CameraHistoryPlayback.
+  * Adjust speed reset value to 1 on templates/CameraHistoryPlayback.
+  * Alphabetize somewhat the example config files of examples/ifetch-tools.conf
+    and examples/cameras/camera_number.conf.
+  * Drop pageToBuildPlayback reference in wwwifetch and templates/ShowImage.
+  * Initial commit to convert presentation style to css.
+  * Initial commit to introduce dynamic setting to LiveSingle view by
+    image_sleep variable for each camera.
+  * Add play backward to templates/CameraHistoryPlayback.
+  * Bump verstion number to 0.15.26b for testers on ifetch and wwwifetch.
+  * Update version information on ifetch-tools-html-page/index.html.
+  * Adjust debian package removal to remove /var/run/ifetch-tools
+    and /var/lock/ifetch-tools directories.
+
+ -- Richard Nelson <unixabg@gmail.com>  Fri, 17 Mar 2017 10:21:26 -0500
+
 ifetch-tools (0.15.24d7-1) unstable; urgency=medium
 
   [ Richard Nelson ]
