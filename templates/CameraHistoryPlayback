@@ -8,7 +8,15 @@
 	var cameraName = #{cameraName};
 	var myImages = #{imgPlaybackList};
 	var i=0;
-	var speed=1000;
+	var nextURLNav="";
+	var nextURLPlayback="";
+	var speed=getUrlVars()["speed"];
+	mode(getUrlVars()["smode"]);
+	function getUrlVars() {
+		var vars = {};
+		var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) { vars[key] = value; });
+		return vars;
+	}
 	function setImg(param) {
 		var imageIndex = myImages[i].split("_")[1].split(".")[0];
 		document.getElementById("slideDate").innerHTML=myImages[i].split('=')[1];
@@ -16,6 +24,15 @@
 		document.getElementById("updateNav").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=0";
 		document.getElementById("slideLinkVideo").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=2";
 		document.getElementById("slideLinkArchive").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=1";
+		if(!smode || !speed) {
+			// If we did not get params for constant play, set some defaults
+			mode('stop');
+			speed=1000;
+		} else {
+			// If we are here we are in constant play mode
+			document.getElementById("speed").value=speed/1000;
+			startSlideshow();
+		}
 	}
 	function speedUp() {
 		speed=speed/2;
@@ -42,8 +59,15 @@
 			document.getElementById("updateNav").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=0";
 			document.getElementById("slideLinkVideo").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=2";
 			document.getElementById("slideLinkArchive").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=1";
-			i++;
+			nextURLNav="/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=0";
+			nextURLPlayback="/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=3&smode=play&speed="+speed;
 			setTimeout("startSlideshow()",speed);
+			i++;
+			if(i==myImages.length){
+				// Move navigation and playback forward
+				window.open(nextURLNav, "shownav");
+				window.open(nextURLPlayback, "showframe");
+			}
 		} else if(smode=="playRev") {
 			document.getElementById("slowDown").disabled="";
 			document.getElementById("speedUp").disabled="";
@@ -57,8 +81,12 @@
 			document.getElementById("updateNav").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=0";
 			document.getElementById("slideLinkVideo").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=2";
 			document.getElementById("slideLinkArchive").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=1";
-			i--;
 			setTimeout("startSlideshow()",speed);
+			if(i==0) {
+				// Stop at the first image when playback backward
+				mode('stop');
+			}
+			i--;
 		} else if(smode=="pause") {
 			document.getElementById("pause").disabled="disabled";
 			document.getElementById("slowDown").disabled="disabled";
@@ -80,13 +108,6 @@
 			i=0;
 			speed=1000;
 			document.getElementById("speed").value=1;
-		}
-		if(i==myImages.length){
-			// Loop if counting forward
-			i=0;
-		} else if(i==0) {
-			// Loop if counting backward
-			i=myImages.length-1;
 		}
 	}
 	</SCRIPT>
