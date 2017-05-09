@@ -35,8 +35,8 @@
 		}
 	}
 	function speedUp() {
-		if(speed<=125) {
-			speed=125;
+		if(speed<=62.5) {
+			speed=62.5;
 		} else {
 			speed=speed/2;
 		}
