@@ -1,3 +1,15 @@
+ifetch-tools (0.15.26c-1) experimental; urgency=low
+
+  [ Richard Nelson ]
+  * Initial commit for continuous forward playback on
+    templates/CameraHistoryPlayback.
+  * Set playback speed limits on templates/CameraHistoryPlayback.
+  * Adjust max forward playback speed limit on templates/CameraHistoryPlayback.
+  * Bump version number to 0.15.26c on ifetch, wwwifetch and
+    ifetch-tools-html-page/index.html.
+
+ -- Richard Nelson <unixabg@gmail.com>  Thu, 11 May 2017 21:01:57 -0500
+
 ifetch-tools (0.15.26b-1) experimental; urgency=low
 
   [ Richard Nelson ]
