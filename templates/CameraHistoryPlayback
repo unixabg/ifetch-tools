@@ -55,8 +55,6 @@
 	}
 	function startSlideshow() {
 		if(smode=="play") {
-			document.getElementById("slowDown").disabled="";
-			document.getElementById("speedUp").disabled="";
 			document.getElementById("play").disabled="disabled";
 			document.getElementById("playRev").disabled="disabled";
 			document.getElementById("pause").disabled="";
@@ -77,8 +75,6 @@
 				window.open(nextURLPlayback, "showframe");
 			}
 		} else if(smode=="playRev") {
-			document.getElementById("slowDown").disabled="";
-			document.getElementById("speedUp").disabled="";
 			document.getElementById("play").disabled="disabled";
 			document.getElementById("playRev").disabled="disabled";
 			document.getElementById("pause").disabled="";
@@ -97,8 +93,6 @@
 			i--;
 		} else if(smode=="pause") {
 			document.getElementById("pause").disabled="disabled";
-			document.getElementById("slowDown").disabled="disabled";
-			document.getElementById("speedUp").disabled="disabled";
 			document.getElementById("play").disabled="";
 			document.getElementById("play").value="Resume Forward";
 			document.getElementById("playRev").disabled="";
@@ -109,8 +103,6 @@
 			document.getElementById("playRev").disabled="";
 			document.getElementById("playRev").value="Play Backward";
 			document.getElementById("pause").disabled="disabled";
-			document.getElementById("slowDown").disabled="disabled";
-			document.getElementById("speedUp").disabled="disabled";
 			document.getElementById("stop").disabled="disabled";
 			document.getElementById("slideshow").src=myImages[0];
 			i=0;
@@ -124,9 +116,9 @@
 		<br>
 		<input id="playRev" type="button" value="Play Backward" onclick="mode('playRev');startSlideshow();">
 		<input id="play" type="button" value="Play" onclick="mode('play');startSlideshow();">
-		<input id="slowDown" type="button" value="--" disabled="disabled" onclick="slowDown();">
+		<input id="slowDown" type="button" value="--" onclick="slowDown();">
 		<input id="speed" type="text" name="speed" value="1" size="4" readonly>
-		<input id="speedUp" type="button" value="++" disabled="disabled" onclick="speedUp();">
+		<input id="speedUp" type="button" value="++" onclick="speedUp();">
 		<input id="pause" type="button" value="Pause" disabled="disabled" onclick="mode('pause');startSlideshow();">
 		<input id="stop" type="button" value="Stop" disabled="disabled" onclick="mode('stop');startSlideshow();">
 	<BR><BR>
