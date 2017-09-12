@@ -18,19 +18,18 @@ _DATE =%x[date +%Y-%m-%d]
 	</HEAD>
 	<BODY onLoad="setTimeout('redirecter()', 30000)">
 	<TABLE border="1" cellpadding="5" >
-	<TBODY>
-	<TD align="center">
-		<A HREF="#{HOMELINK}"><img src="/ifetch.png" width=80 heigth=80 ></A>
-		<br>Archive View
-	<TD align="center">
-		<FONT size=+2><a href="/archive" >Archive</a> <a href="/live" >Live</a> <a href="/monitor" >Monitor</a></FONT>
-	</TD>
-	</TR>
-	<TD align="center" colspan="2" >
-		#{_DATE} #{_UPTIME}
-	</TD>
-
-	</TBODY></TABLE>
+		<TBODY>
+			<TR>
+				<TD align="center">
+					<A HREF="/"><img src="ifetch.png" align="left" width=50 heigth=50></A>
+					#{_DATE}
+					#{_UPTIME}
+					<BR>
+					<FONT size=+2> (Archive) </FONT><a href="/live" >Live</a> <a href="/monitor" >Monitor</a>
+				</TD>
+			</TR>
+		</TBODY>
+	</TABLE>
 	#{myTempRespond}
 	<br>version: #{VER}
 	</BODY>
