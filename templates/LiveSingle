@@ -24,7 +24,7 @@ _DATE =%x[date +%Y-%m-%d]
 	<TABLE border="1" cellpadding="5" >
 	<TBODY>
 	<TD align="center">
-		<A HREF="#{HOMELINK}"><img src="/ifetch.png" width=80 heigth=80 ></A>
+		<A HREF="#{HOMELINK}"><img src="/ifetch.png" width=50 heigth=50 ></A>
 		<br>Cam #{cameraName} #{image_alt}
 	<TD align="center">
 		<FONT size=+2><a href="/archive" >Archive</a> <a href="/live" >Live</a> <a href="/monitor" >Monitor</a></FONT>
