@@ -5,3 +5,11 @@ body {
 a {
   color: black;
 }
+
+table {
+  border-radius: 25px;
+}
+
+td {
+  border-radius: 25px;
+}
