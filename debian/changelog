@@ -1,4 +1,24 @@
-ifetch-tools (0.15.26c-1) experimental; urgency=low
+ifetch-tools (0.15.26d-1) unstable; urgency=medium
+
+  [ Richard Nelson ]
+  * Allow for adjusting playback speed at all times on
+    templates/CameraHistoryPlayback.
+  * Drop tabs for 2 space indention on htdocs/style.css.
+  * Add some radius to tables in htdocs/style.css.
+  * Improve html presentation on Archive and Live templates.
+  * Adjust floating nav with border-radius on templates/CameraHistory.
+  * Bump version to 0.15.26d for next release.
+  * Improve presentation of default htdocs/index.html.
+  * Bump Standards-Version to 4.1.0 (no changes required).
+  * Adjust logo size on templates/LiveSingle.
+  * Finish unify of presentation on templates/LiveSingle.
+  * Drop /bin/sh to /bin/false shell on adduser call on
+    debian/ifetch-tools.postinst.
+  * Dropping libav-tools for ffmpeg on debian/control (Closes: #873193).
+
+ -- Richard Nelson <unixabg@gmail.com>  Thu, 28 Sep 2017 11:34:13 -0500
+
+ifetch-tools (0.15.26c-1) unstable; urgency=low
 
   [ Richard Nelson ]
   * Initial commit for continuous forward playback on
