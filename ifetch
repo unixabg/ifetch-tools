@@ -413,7 +413,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 		log.info("Dumping history count over set collection from disk!")
 		image_count.upto($image_array.length - 1) do |count|
 			#puts "Deleting "+$image_array[count].split(/,/)[1]+"!"
-			if File.exist?(temp_mdump_path) then
+			if File.exist?("/var/lib/ifetch-tools/"+$image_array[count].split(/,/)[1]) then
 				File.delete("/var/lib/ifetch-tools/"+$image_array[count].split(/,/)[1])
 			else
 				# FIXME test the below logging.
