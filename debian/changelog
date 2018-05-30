@@ -39,7 +39,7 @@ ifetch-tools (0.15.26b-1) experimental; urgency=low
     on ifetch.
   * Error trap imports of marshal .tstamp files on ifetch.
   * Update VER to 0.15.25 on ifetch for testing.
-  * Update copyright from 2005-2016 to 2005-2017.
+  * Update copyright from 2005-2016 to 2005-2018.
   * Correct starting image on collection logging on ifetch.
   * Correct starting image on collection logging on ifetch.
   * Display the date jump on navigation with the newest first on history
