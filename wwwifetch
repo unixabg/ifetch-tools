@@ -104,23 +104,6 @@ end
 ##############################################################################################
 
 ##############################################################################################
-# Camera generates two frames and calls CameraHistory on the left frame of the system.
-##############################################################################################
-class Camera < HTTPServlet::AbstractServlet
-	def do_GET(req, res)
-		HTTPAuth.basic_auth(req, res, 'Camera History Realm') {|user, pass|
-			# this block returns true if
-			# authentication token is valid
-			user == HISTORYUSER && pass == HISTORYPASS
-		}
-		res['Content-Type'] = "text/html" # Tell the browser how we are talking
-		raise HTTPServerError, 'Error: cameraName parameter not passed correctly.' if req.query['cameraName'] == nil || /[0-9]+/.match(req.query['cameraName']) == nil
-		cameraName = /[0-9]+/.match(req.query['cameraName']).to_s
-		res.body = eval(File.open("/usr/share/ifetch-tools/templates/Camera") {|fh| fh.read})
-	end
-end
-
-##############################################################################################
 # CameraHistory generates the left frame of the system and setup some stuff to do the magic
 # on the camera history.
 ##############################################################################################
@@ -211,7 +194,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 				#puts imgFile
 				# Ok here we are getting a number to reference so we do not have time drift based on our new navigation.
 				#imgTime, imgFile = imgSorted[imgIndex].to_s.split(/,/)
-				myTempRespond = myTempRespond+'<BR>'+imgTime+'<BR><A HREF="/camerahistory?cameraName='+cameraName+'&index='+imgIndex.to_s+'&navigation=1&basicView=3" target="showframe"><IMG SRC="/data/'+imgFile+'?timehash='+imgTime+'" width='+HISTORYIMAGEWIDTH+' height='+HISTORYIMAGEHEIGHT+'></A><BR>'
+				myTempRespond = myTempRespond+'<BR>'+imgTime+'<BR><A HREF="/camerahistory?cameraName='+cameraName+'&index='+imgIndex.to_s+'&navigation=1&basicView=3"><IMG SRC="/data/'+imgFile+'?timehash='+imgTime+'" width='+HISTORYIMAGEWIDTH+' height='+HISTORYIMAGEHEIGHT+'></A><BR>'
 				# Push the image on the array javascript playback
 				imgPlaybackList.push("/data/#{imgFile}?timehash=#{imgTime}")
 				# Push the image on the array where we are keeping image file names
@@ -228,7 +211,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 					#puts imgFile
 					# Ok here we are getting a number to reference so we do not have time drift based on our new navigation.
 					#imgTime, imgFile = imgSorted[imgIndex].to_s.split(/,/)
-					myTempRespond = myTempRespond+'<BR>'+imgTime+'<BR><A HREF="/camerahistory?cameraName='+cameraName+'&index='+imgIndex.to_s+'&navigation=1&basicView=3" target="showframe"><IMG SRC="/data/'+imgFile+'?timehash='+imgTime+'" width='+HISTORYIMAGEWIDTH+' height='+HISTORYIMAGEHEIGHT+'></A><BR>'
+					myTempRespond = myTempRespond+'<BR>'+imgTime+'<BR><A HREF="/camerahistory?cameraName='+cameraName+'&index='+imgIndex.to_s+'&navigation=1&basicView=3"><IMG SRC="/data/'+imgFile+'?timehash='+imgTime+'" width='+HISTORYIMAGEWIDTH+' height='+HISTORYIMAGEHEIGHT+'></A><BR>'
 					# Push the image on the array javascript playback
 					imgPlaybackList.push("/data/#{imgFile}?timehash=#{imgTime}")
 					# Push the image on the array where we are keeping image file names
@@ -260,7 +243,7 @@ class CameraHistory < HTTPServlet::AbstractServlet
 			tmpIndex = File.basename(imgFile, ".jpg").split(/_/)[1].to_i
 
 			# This is the elements in the jumping list. This could be sorted but for now I am leaving since I sort of like how if shows the scroll of image count in an abstract way.
-			myJumpHash[imgTime] = '<OPTION value="/camerahistory?cameraName='+cameraName+'&index='+tmpIndex.to_s+'&navigation=1&basicView=0">'+imgTime+"</OPTION>\n"
+			myJumpHash[imgTime] = '<OPTION value="/camerahistory?cameraName='+cameraName+'&index='+tmpIndex.to_s+'&navigation=1&basicView=3">'+imgTime+"</OPTION>\n"
 		end
 
 		# Now that we have built it lets prep it to display it like we want (sorted in this case).
@@ -284,22 +267,22 @@ class CameraHistory < HTTPServlet::AbstractServlet
 					<SELECT name="mylist" onChange="disp_text();">
 					#{myJumpNavigation}
 					</SELECT></FORM>
-					<A HREF="/camerahistory?cameraName=#{cameraName}&index=#{index.to_i-IMAGESPERPAGE}&navigation=1&basicView=0"> < Previous </A>
+					<A HREF="/camerahistory?cameraName=#{cameraName}&index=#{index.to_i-IMAGESPERPAGE}&navigation=1&basicView=3"> < Previous </A>
 				}
 			else
 				myNavigation = %{<FORM NAME="myform">
 					<SELECT name="mylist" onChange="disp_text();">
 					#{myJumpNavigation}
 					</SELECT></FORM>
-					<A HREF="/camerahistory?cameraName=#{cameraName}&index=#{index.to_i-IMAGESPERPAGE+imgSortedLength-1}&navigation=1&basicView=0"> < Previous </A>
+					<A HREF="/camerahistory?cameraName=#{cameraName}&index=#{index.to_i-IMAGESPERPAGE+imgSortedLength-1}&navigation=1&basicView=3"> < Previous </A>
 				}
 			end
 			# Here is the move forward between page code
 			if index.to_i+IMAGESPERPAGE <= imgSortedLength-1
-				myNavigation = %{#{myNavigation}| <A HREF="/camerahistory?cameraName=#{cameraName}&index=#{index.to_i+IMAGESPERPAGE}&navigation=1&basicView=0"> Next > </A><BR>
+				myNavigation = %{#{myNavigation}| <A HREF="/camerahistory?cameraName=#{cameraName}&index=#{index.to_i+IMAGESPERPAGE}&navigation=1&basicView=3"> Next > </A><BR>
 				}
 			else
-				myNavigation = %{#{myNavigation}| <A HREF="/camerahistory?cameraName=#{cameraName}&index=#{indexSentry}&navigation=1&basicView=0"> Next > </A><BR>
+				myNavigation = %{#{myNavigation}| <A HREF="/camerahistory?cameraName=#{cameraName}&index=#{indexSentry}&navigation=1&basicView=3"> Next > </A><BR>
 				}
 			end
 		end
@@ -329,12 +312,12 @@ class CameraHistory < HTTPServlet::AbstractServlet
 				puts mtype
 				res.body = File.open("#{dir}/tmpVideo."+$video_export_type,"rb") {|io| io.read}
 			}
-		elsif basicView.to_i == 3
-			# If we are here then we need to setup for javascript playback
-			# Now generate the page with the correct substitution.
-			# Unify history playback here while dropping ShowImage method
-			# tmpIndex will hold the index position of the page we are on.
-			res.body = eval(File.open("/usr/share/ifetch-tools/templates/CameraHistoryPlayback") {|fh| fh.read})
+		# elsif basicView.to_i == 4
+		#	# If we are here then we need to setup for javascript playback
+		#	# Now generate the page with the correct substitution.
+		#	# Unify history playback here while dropping ShowImage method
+		#	# tmpIndex will hold the index position of the page we are on.
+		#	res.body = eval(File.open("/usr/share/ifetch-tools/templates/CameraHistoryPlayback") {|fh| fh.read})
 		else
 			GC.start
 			# Now generate the page with the correct substitution.
@@ -432,7 +415,7 @@ class CArchive < HTTPServlet::AbstractServlet
 				break
 			end
 			# Add the inline image and link to the page.
-			myTempRespond = myTempRespond+'<a href="/camera?cameraName='+File.basename(cam_tmp, ".conf").to_s+'" title="'+image_alt+'"><img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>'
+			myTempRespond = myTempRespond+'<a href="/camerahistory?cameraName='+File.basename(cam_tmp, ".conf").to_s+'&index=0&navigation=0&basicView=0" title="'+image_alt+'"><img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>'
 		end
 		GC.start
 		res.body = eval(File.open("/usr/share/ifetch-tools/templates/Archive") {|fh| fh.read})
@@ -574,7 +557,7 @@ class CMonitor < HTTPServlet::AbstractServlet
 				# Set the camera_pid to hold the pid of the running camera process.
 				camera_pid = File.read("/var/run/ifetch-tools/"+camera_num.to_s+".pid").chomp
 				# Put the camera pid and camera number in the table
-				myTempRespond = myTempRespond+'<TD><CENTER><A HREF="/camera?cameraName='+camera_num.to_s+'"> '+camera_num.to_s+'</A></CENTER></TD>
+				myTempRespond = myTempRespond+'<TD><CENTER><A HREF="/camerahistory?cameraName='+camera_num.to_s+'&index=0&navigation=0&basicView=0"> '+camera_num.to_s+'</A></CENTER></TD>
 				<TD><CENTER>'+camera_pid+' - '+%x[pmap -x #{camera_pid} | tail -1][10,40].strip+'</CENTER></TD>
 				<TD><CENTER><A HREF="/camerastartstop?cameraName='+camera_num.to_s+'"><IMG SRC="/stop.jpg"></A></CENTER></TD>'
 			# Set the logFileName
@@ -810,7 +793,6 @@ s.mount("/camerastartstop", CameraStartStop)
 s.mount("/startallcameras", StartAllCameras)
 
 # History Operations
-s.mount("/camera", Camera)
 s.mount("/camerahistory", CameraHistory)
 s.mount("/showimage", ShowImage)
 # Below creates symlink to default area if no custom /var/lib/ifetch-tools/htdocs folder or symlink is found.

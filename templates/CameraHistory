@@ -1,81 +1,161 @@
 %{
-<HTML> <HEAD> <!-- This HTML file has been created by a ruby servlet -->
-<TITLE>Camera #{cameraName} History Interface</TITLE>
-<link rel="stylesheet" type="text/css" href="/style.css">
-<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
-<META HTTP-EQUIV="Expires" CONTENT="-1">
-<META HTTP-EQUIV="Cache-Control" CONTENT="no-store">
-</HEAD><CENTER>
-<BODY>
-<SCRIPT type="text/javascript">
-// The following code should be stored in the HTML head section
-function disp_text() {
-	var w = document.myform.mylist.selectedIndex;
-	var selected_value = document.myform.mylist.options[w].value;
-	var selected_text = document.myform.mylist.options[w].text;
-	var fRet;
-	fRet = confirm('Jump to '+selected_text+'?');
-	// alert(fRet);
-	if (fRet==true) {
-		this.location.href = selected_value;
-		//alert('Jumping to '+selected_text);
-	} else {
-		alert('No Jump.');
+	<HTML> <HEAD> <!-- This HTML file has been created by a ruby servlet -->
+	<TITLE>Camera #{cameraName} History Interface</TITLE>
+	<link rel="stylesheet" type="text/css" href="/style.css">
+	</HEAD>
+
+	<BODY onload="setImg();" >
+	<SCRIPT type="text/javascript">
+	// The following code should be stored in the HTML head section
+	function disp_text() {
+		var w = document.myform.mylist.selectedIndex;
+		var selected_value = document.myform.mylist.options[w].value;
+		var selected_text = document.myform.mylist.options[w].text;
+		var fRet;
+		fRet = confirm('Jump to '+selected_text+'?');
+		// alert(fRet);
+		if (fRet==true) {
+			this.location.href = selected_value;
+			//alert('Jumping to '+selected_text);
+		} else {
+			alert('No Jump.');
+		}
 	}
-}
-</SCRIPT>
+	</SCRIPT>
 
-<!-- *** Beginning of the javascript for floating menu left as is from site *** -->
-<!-- *********************************************************
-     * You may use this code for free on any web page provided that
-     * these comment lines and the following credit remain in the code.
-     * Floating Div from http://www.javascript-fx.com
-     ********************************************************  -->
-<div id="divTopLeft" style="position:absolute;
-	width:150px;height:40px;left:0px;top:0px;
-	padding:16px;background:#FFFFFF;
-	border-radius: 25px;
-	border:2px solid #2266AA">
-<!-- Start - put your content here --->
-	#{myNavigation}
-<!-- End   - put your content here --->
-</div>
+	<div id="divTopLeft" style="position:absolute;
+		width:150px;height:40px;left:10px;top:10px;
+		padding:16px;background:#FFFFFF;
+		border-radius: 25px;
+		border:2px solid #2266AA">
+		<!-- Start - put your content here --->
+		#{myNavigation}
+		<!-- End   - put your content here --->
+	</div>
 
-<script type="text/javascript">
-var ns = (navigator.appName.indexOf("Netscape") != -1);
-var d = document;
-function JSFX_FloatDiv(id, sx, sy)
-{
-	var el=d.getElementById?d.getElementById(id):d.all?d.all[id]:d.layers[id];
-	var px = document.layers ? "" : "px";
-	window[id + "_obj"] = el;
-	if(d.layers)el.style=el;
-	el.cx = el.sx = sx;el.cy = el.sy = sy;
-	el.sP=function(x,y){this.style.left=x+px;this.style.top=y+px;};
 
-	el.floatIt=function()
-	{
-		var pX, pY;
-		pX = (this.sx >= 0) ? 0 : ns ? innerWidth :
-		document.documentElement && document.documentElement.clientWidth ?
-		document.documentElement.clientWidth : document.body.clientWidth;
-		pY = ns ? pageYOffset : document.documentElement && document.documentElement.scrollTop ?
-		document.documentElement.scrollTop : document.body.scrollTop;
-		if(this.sy<0)
-		pY += ns ? innerHeight : document.documentElement && document.documentElement.clientHeight ?
-		document.documentElement.clientHeight : document.body.clientHeight;
-		this.cx += (pX + this.sx - this.cx);this.cy += (pY + this.sy - this.cy);
-		this.sP(this.cx, this.cy);
-		setTimeout(this.id + "_obj.floatIt()", 40);
+	<SCRIPT type="text/javascript">
+	var cameraName = #{cameraName};
+	var myImages = #{imgPlaybackList};
+	var i=0;
+	var nextURLNav="";
+	var nextURLPlayback="";
+	var speed=getUrlVars()["speed"];
+	mode(getUrlVars()["smode"]);
+	function getUrlVars() {
+		var vars = {};
+		var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) { vars[key] = value; });
+		return vars;
 	}
-	return el;
-}
-JSFX_FloatDiv("divTopLeft", 5,5).floatIt();
-</script>
-<!-- ********************************************************* -->
-<!-- *** End of the javascript for floating menu left as is from site *** -->
-	<BR><BR><BR><BR>
-	#{myTempRespond}
+	function setImg(param) {
+		var imageIndex = myImages[i].split("_")[1].split(".")[0];
+		document.getElementById("slideDate").innerHTML=myImages[i].split('=')[1];
+		document.getElementById("slideshow").src=myImages[i];
+		document.getElementById("updateNav").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=3";
+		document.getElementById("slideLinkVideo").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=2";
+		document.getElementById("slideLinkArchive").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=1";
+		if(!smode || !speed) {
+			// If we did not get params for constant play, set some defaults
+			mode('stop');
+			speed=1000;
+		} else {
+			// If we are here we are in constant play mode
+			document.getElementById("speed").value=speed/1000;
+			startSlideshow();
+		}
+	}
+	function speedUp() {
+		if(speed<=62.5) {
+			speed=62.5;
+		} else {
+			speed=speed/2;
+		}
+		document.getElementById("speed").value=speed/1000;
+	}
+	function slowDown() {
+		if(speed>=4000) {
+			speed=4000;
+		} else {
+			speed=speed*2;
+		}
+		document.getElementById("speed").value=speed/1000;
+	}
+	function mode(param) {
+		smode=param;
+	}
+	function startSlideshow() {
+		if(smode=="play") {
+			document.getElementById("play").disabled="disabled";
+			document.getElementById("playRev").disabled="disabled";
+			document.getElementById("pause").disabled="";
+			document.getElementById("stop").disabled="";
+			var imageIndex = myImages[i].split("_")[1].split(".")[0];
+			document.getElementById("slideDate").innerHTML=myImages[i].split('=')[1];
+			document.getElementById("slideshow").src=myImages[i];
+			document.getElementById("updateNav").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=0";
+			document.getElementById("slideLinkVideo").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=2";
+			document.getElementById("slideLinkArchive").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=1";
+			//** nextURLNav="/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=0";
+			nextURLPlayback="/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=3&smode=play&speed="+speed;
+			setTimeout("startSlideshow()",speed);
+			i++;
+			if(i==myImages.length){
+				// Move navigation and playback forward
+				//** window.open(nextURLNav, "shownav");
+				//**window.open(nextURLPlayback, "showframe");
+				window.location.replace(nextURLPlayback);
+			}
+		} else if(smode=="playRev") {
+			document.getElementById("play").disabled="disabled";
+			document.getElementById("playRev").disabled="disabled";
+			document.getElementById("pause").disabled="";
+			document.getElementById("stop").disabled="";
+			var imageIndex = myImages[i].split("_")[1].split(".")[0];
+			document.getElementById("slideDate").innerHTML=myImages[i].split('=')[1];
+			document.getElementById("slideshow").src=myImages[i];
+			document.getElementById("updateNav").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=0";
+			document.getElementById("slideLinkVideo").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=2";
+			document.getElementById("slideLinkArchive").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=1";
+			setTimeout("startSlideshow()",speed);
+			if(i==0) {
+				// Stop at the first image when playback backward
+				mode('stop');
+			}
+			i--;
+		} else if(smode=="pause") {
+			document.getElementById("pause").disabled="disabled";
+			document.getElementById("play").disabled="";
+			document.getElementById("play").value="Resume Forward";
+			document.getElementById("playRev").disabled="";
+			document.getElementById("playRev").value="Resume Backward";
+		} else if(smode=="stop") {
+			document.getElementById("play").disabled="";
+			document.getElementById("play").value="Play";
+			document.getElementById("playRev").disabled="";
+			document.getElementById("playRev").value="Play Backward";
+			document.getElementById("pause").disabled="disabled";
+			document.getElementById("stop").disabled="disabled";
+			document.getElementById("slideshow").src=myImages[0];
+			i=0;
+			speed=1000;
+			document.getElementById("speed").value=1;
+		}
+	}
+	</SCRIPT>
+	<CENTER>
+		<p id="slideDate">ifetch-tools</p>
+		<a href="" id="updateNav"><img id="slideshow" src="/data/images/ifetch.png"></a>
+		<br>
+		<input id="playRev" type="button" value="Play Backward" onclick="mode('playRev');startSlideshow();">
+		<input id="play" type="button" value="Play" onclick="mode('play');startSlideshow();">
+		<input id="slowDown" type="button" value="--" onclick="slowDown();">
+		<input id="speed" type="text" name="speed" value="1" size="4" readonly>
+		<input id="speedUp" type="button" value="++" onclick="speedUp();">
+		<input id="pause" type="button" value="Pause" disabled="disabled" onclick="mode('pause');startSlideshow();">
+		<input id="stop" type="button" value="Stop" disabled="disabled" onclick="mode('stop');startSlideshow();">
+	<BR><BR>
+	<A HREF="/" target="_top">Home</A> | <A HREF="/archive" target="_top">Archive</A> | <A HREF="/live" target="_top">Live</A> | <A HREF="/monitor" target="_top">Monitor</A> | <A HREF="images/ifetch.png" id="slideLinkArchive" target="_blank">HTML Export</A> | <A HREF="images/ifetch.png" id="slideLinkVideo" target="_blank">Video Export</A>
+	<P>ifetch-tools version: #{VER}</P>
 	</CENTER>
 	</BODY>
 	</HTML>
