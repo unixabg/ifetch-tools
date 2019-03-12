@@ -49,9 +49,14 @@
 			but hey, it's pure CSS magic.
 			-->
 			<ul id="menu">
-				<!-- Start - put your content here --->
-				#{myNavigation}
-				<!-- End   - put your content here --->
+				<div id="floatMenu">
+					<!-- Start - put your content here --->
+					#{myNavigation}
+					<!-- End   - put your content here --->
+				</div>
+				<div id="navMenu">
+					#{myTempRespond}
+				</div>
 			</ul>
 		</div>
 	</nav>
