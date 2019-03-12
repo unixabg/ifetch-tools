@@ -23,16 +23,38 @@
 	}
 	</SCRIPT>
 
-	<div id="divTopLeft" style="position:absolute;
-		width:150px;height:40px;left:10px;top:10px;
-		padding:16px;background:#FFFFFF;
-		border-radius: 25px;
-		border:2px solid #2266AA">
-		<!-- Start - put your content here --->
-		#{myNavigation}
-		<!-- End   - put your content here --->
-	</div>
+	<!--    Made by Erik Terwan    -->
+	<!--   24th of November 2015   -->
+	<!--        MIT License        -->
+	<nav role="navigation">
+		<div id="menuToggle">
+			<!--
+			A fake / hidden checkbox is used as click reciever,
+			so you can use the :checked selector on it.
+			-->
+			<input type="checkbox" />
 
+			<!--
+			Some spans to act as a hamburger.
+
+			They are acting like a real hamburger,
+			not that McDonalds stuff.
+			-->
+			<span></span>
+			<span></span>
+			<span></span>
+
+			<!--
+			Too bad the menu has to be inside of the button
+			but hey, it's pure CSS magic.
+			-->
+			<ul id="menu">
+				<!-- Start - put your content here --->
+				#{myNavigation}
+				<!-- End   - put your content here --->
+			</ul>
+		</div>
+	</nav>
 
 	<SCRIPT type="text/javascript">
 	var cameraName = #{cameraName};
@@ -134,6 +156,7 @@
 		}
 	}
 	</SCRIPT>
+	<div id="cameraHistory">
 	<CENTER>
 		<p id="slideDate">ifetch-tools</p>
 		<div id="updateNav"><img id="slideshow" src="/data/images/ifetch.png"></div>
@@ -144,10 +167,10 @@
 		<input id="speed" type="text" name="speed" value="1" size="4" readonly>
 		<input id="speedUp" type="button" value="++" onclick="speedUp();">
 		<input id="stop" type="button" value="Stop" disabled="disabled" onclick="mode('stop');startSlideshow();">
-	<BR><BR>
-	<A HREF="/" target="_top">Home</A> | <A HREF="/archive" target="_top">Archive</A> | <A HREF="/live" target="_top">Live</A> | <A HREF="/monitor" target="_top">Monitor</A> | <A HREF="images/ifetch.png" id="slideLinkArchive" target="_blank">HTML Export</A> | <A HREF="images/ifetch.png" id="slideLinkVideo" target="_blank">Video Export</A>
-	<P>ifetch-tools version: #{VER}</P>
-	</CENTER>
+		<BR><BR>
+		<A HREF="/" target="_top">Home</A> | <A HREF="/archive" target="_top">Archive</A> | <A HREF="/live" target="_top">Live</A> | <A HREF="/monitor" target="_top">Monitor</A> | <A HREF="images/ifetch.png" id="slideLinkArchive" target="_blank">HTML Export</A> | <A HREF="images/ifetch.png" id="slideLinkVideo" target="_blank">Video Export</A>
+		<P>ifetch-tools version: #{VER}</P>
+	</CENTER></div>
 	</BODY>
 	</HTML>
 }
