@@ -11,7 +11,7 @@ _DATE =%x[date +%Y-%m-%d]
 	<SCRIPT type="text/javascript">
 	<!--
 	function redirecter(){
-		window.location = "/live"
+		window.location = "/archive"
 	}
 	//-->
 	</SCRIPT>
