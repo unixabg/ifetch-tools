@@ -164,7 +164,7 @@
 	<div id="cameraHistory">
 	<CENTER>
 		<p id="slideDate">ifetch-tools</p>
-		<div id="updateNav"><img onclick="mode('stop');startSlideshow();" id="slideshow" src="/data/images/ifetch.png"></div>
+		<div id="updateNav"><img height="80%" onclick="mode('stop');startSlideshow();" id="slideshow" src="/data/images/ifetch.png"></div>
 		<br>
 		<input id="playRev" type="button" value="Play Backward" onclick="mode('playRev');startSlideshow();">
 		<input id="play" type="button" value="Play" onclick="mode('play');startSlideshow();">
