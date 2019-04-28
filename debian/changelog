@@ -1,3 +1,44 @@
+ifetch-tools (0.16.2-1) experimental; urgency=low
+
+  [ Richard Nelson ]
+  * Correcting logic on ifetch to delete files when image_count is below
+    what is stored on system.
+  * Unify camera population for live and archive view on wwwifetch.
+  * Adjusted VCS link in ifetch-tools-html-page/index.html.
+  * Adjust copyright year to 2018.
+  * Adjust Last updated in ifetch-tools-html-page/index.html.
+  * Initial commit to unify the archive interface and drop split frames.
+  * Improve navigation with looping play reverse, drop pause button, and
+    adjust stop to pause on templates/CameraHistory.
+  * Adding some formatting to presentation of history operations.
+  * Minor adjustment in htdocs/style.css.
+  * Improve right hand nav in htdocs/style.css and templates/CameraHistory.
+  * Imporve margins on cameraHistory element in htdocs/style.css.
+  * Bump version numbers in ifetch and wwwifetch for new interface.
+  * Added onclick stop action to image in templates/CameraHistory.
+  * Added onclick stop action when navigation menu selected in
+    templates/CameraHistory.
+  * Bump version numbers in ifetch and wwwifetch for interface updates.
+  * Update copyright to 2019 for project files.
+  * Update html page information on ifetch-tools-html-page/index.html.
+  * Fix archive page to stay on archive listing in templates/Archive.
+  * Added support for IPC-E3600 camera in examples cameras/camera_number.conf
+    and ifetch-tools.conf.
+  * On new history generations fix first image index in ifetch.
+  * Add snapshot url for TV-IP314PI in examples/ifetch-tools.conf and
+    examples/cameras/camera_number.conf. Snapshot url provided by
+    Jason Hartgraves <jharttech@hotmail.com>.
+  * Initial commit to improve image viewing on live and history presentation
+    in wwwifetch and templates/CameraHistory.
+  * Added support for RLC-410 camera in examples cameras/camera_number.conf
+    and ifetch-tools.conf.
+  * Improve package install and remove logic to address lintian warning of
+    maintainer-script-should-not-use-recursive-chown-or-chmod.
+  * Bump version numbers to 0.16.2 for next upload.
+  * Bump Standards-Version to 4.3.0 in debian/control.
+
+ -- Richard Nelson <unixabg@gmail.com>  Sun, 28 Apr 2019 09:28:43 -0500
+
 ifetch-tools (0.15.26d-1) unstable; urgency=medium
 
   [ Richard Nelson ]
