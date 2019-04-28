@@ -8,14 +8,14 @@ then
 fi
 
 # Set the prompt to remove data, logs, and settings each removal.
-db_fset ifetch-tools/purge seen false
+db_fset ifetch-tools/remove seen false
 
 case "${1}" in
 	configure)
 		if ! getent passwd "ifetch-tools" > /dev/null 2>&1
 		then
 			# Add new user account
-			adduser --system --shell /bin/false --disabled-password --home /dev/null --gecos 'ifetch-tools account' --group --quiet ifetch-tools
+			adduser --system --shell /bin/false --disabled-password --home /var/lib/ifetch-tools --gecos 'ifetch-tools account' --group --quiet ifetch-tools
 		elif ! getent group "ifetch-tools" > /dev/null 2>&1
 		then
 			# Add existing user to new new group
@@ -25,10 +25,9 @@ case "${1}" in
 
 		mkdir -p /etc/ifetch-tools/cameras
 		mkdir -p /var/log/ifetch-tools
-		mkdir -p /var/lib/ifetch-tools
 
-		chown ifetch-tools:ifetch-tools /var/log/ifetch-tools /etc/ifetch-tools /var/lib/ifetch-tools -R
-		chmod 700 /etc/ifetch-tools /etc/ifetch-tools/cameras
+		chown ifetch-tools:ifetch-tools /var/log/ifetch-tools /etc/ifetch-tools /etc/ifetch-tools/cameras
+		chmod 700 /etc/ifetch-tools /etc/ifetch-tools/cameras /var/lib/ifetch-tools
 
 		if [ ! -e /etc/ifetch-tools/ifetch-tools.conf ]
 		then

@@ -4,20 +4,16 @@ set -e
 
 case "${1}" in
 	remove)
-		deluser --quiet --system ifetch-tools
-		delgroup --quiet --system --only-if-empty ifetch-tools || true
 		rm -rf /var/lock/ifetch-tools*
 		rm -rf /var/run/ifetch-tools*
-		;;
 
-	purge)
 		if [ -e /usr/share/debconf/confmodule ]
 		then
 			. /usr/share/debconf/confmodule
 
-			db_input high ifetch-tools/purge || true
+			db_input high ifetch-tools/remove || true
 			db_go || true
-			db_get ifetch-tools/purge || true
+			db_get ifetch-tools/remove || true
 
 			PURGE="${RET}"
 		fi
@@ -26,6 +22,27 @@ case "${1}" in
 		then
 			rm -rf /etc/ifetch-tools
 			rm -rf /var/lib/ifetch-tools
+			rm -rf /var/log/ifetch-tools
+			deluser --quiet --system ifetch-tools
+			delgroup --quiet --system --only-if-empty ifetch-tools || true
+		fi
+		;;
+
+	purge)
+		if [ -d /etc/ifetch-tools ]
+		then
+			rm -rf /etc/ifetch-tools
+		fi
+
+		if [ -d /var/lib/ifetch-tools ]
+		then
+			rm -rf /var/lib/ifetch-tools
+			deluser --quiet --system ifetch-tools
+			delgroup --quiet --system --only-if-empty ifetch-tools || true
+		fi
+
+		if [ -d /var/log/ifetch-tools ]
+		then
 			rm -rf /var/log/ifetch-tools
 		fi
 		;;

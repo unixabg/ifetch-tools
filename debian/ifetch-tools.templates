@@ -1,4 +1,4 @@
-Template: ifetch-tools/purge
+Template: ifetch-tools/remove
 Type: boolean
 Default: false
 _Description: Remove all ifetch-tools data, logs, and settings files?
