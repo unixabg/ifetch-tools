@@ -2,10 +2,7 @@
 
 set -e
 
-if [ -e /usr/share/debconf/confmodule ]
-then
-	. /usr/share/debconf/confmodule
-fi
+. /usr/share/debconf/confmodule
 
 # Set the prompt to remove data, logs, and settings each removal.
 db_fset ifetch-tools/remove seen false
