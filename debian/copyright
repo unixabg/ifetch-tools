@@ -1,8 +1,10 @@
-Upstream-Contact: Richard Nelson <unixabg@gmail.com>
-Upstream-Homepage: http://fyeox.com/ifetch-tools/
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: ifetch-tools
+Upstream-Contact: unixabg@gmail.com
+Source: https://github.com/unixabg/ifetch-tools
 
 Files: *
-Copyright: (C) 2005-2016 Richard Nelson <unixabg@gmail.com>
+Copyright: (C) 2005-2019 Richard Nelson <unixabg@gmail.com>
 License: GPL-2+
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
