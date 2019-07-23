@@ -20,8 +20,8 @@ case "${1}" in
 			rm -rf /etc/ifetch-tools
 			rm -rf /var/lib/ifetch-tools
 			rm -rf /var/log/ifetch-tools
-			deluser --quiet --system ifetch-tools
-			delgroup --quiet --system --only-if-empty ifetch-tools || true
+			userdel ifetch-tools >/dev/null 2>&1 || true
+			groupdel ifetch-tools >/dev/null 2>&1 || true
 		fi
 		;;
 
@@ -34,8 +34,8 @@ case "${1}" in
 		if [ -d /var/lib/ifetch-tools ]
 		then
 			rm -rf /var/lib/ifetch-tools
-			deluser --quiet --system ifetch-tools
-			delgroup --quiet --system --only-if-empty ifetch-tools || true
+			userdel ifetch-tools >/dev/null 2>&1 || true
+			groupdel ifetch-tools >/dev/null 2>&1 || true
 		fi
 
 		if [ -d /var/log/ifetch-tools ]
