@@ -74,7 +74,7 @@ ifetch-tools (0.15.26d-1) unstable; urgency=medium
     debian/ifetch-tools.postinst.
   * Dropping libav-tools for ffmpeg on debian/control (Closes: #873193).
 
- -- Richard Nelson <unixabg@gmail.com>  Thu, 28 Sep 2017 11:34:13 -0500
+ -- Richard Nelson <unixabg@gmail.com>  Tue, 07 Nov 2017 21:47:36 +0100
 
 ifetch-tools (0.15.26c-1) unstable; urgency=low
 
@@ -86,7 +86,7 @@ ifetch-tools (0.15.26c-1) unstable; urgency=low
   * Bump version number to 0.15.26c on ifetch, wwwifetch and
     ifetch-tools-html-page/index.html.
 
- -- Richard Nelson <unixabg@gmail.com>  Thu, 11 May 2017 21:01:57 -0500
+ -- Richard Nelson <unixabg@gmail.com>  Tue, 06 Jun 2017 09:59:28 +0200
 
 ifetch-tools (0.15.26b-1) experimental; urgency=low
 
