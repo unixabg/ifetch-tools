@@ -560,10 +560,10 @@ class CMonitor < HTTPServlet::AbstractServlet
 				myTempRespond = myTempRespond+'<TD><CENTER><A HREF="/camerahistory?cameraName='+camera_num.to_s+'&index=0&navigation=0&basicView=0"> '+camera_num.to_s+'</A></CENTER></TD>
 				<TD><CENTER>'+camera_pid+' - '+%x[pmap -x #{camera_pid} | tail -1][10,40].strip+'</CENTER></TD>
 				<TD><CENTER><A HREF="/camerastartstop?cameraName='+camera_num.to_s+'"><IMG SRC="/stop.jpg"></A></CENTER></TD>'
-			# Set the logFileName
-			logFileName = "/var/log/ifetch-tools/"+camera_num.to_s+".txt"
-			# Remarked out the backtick with tail for a pure ruby try. Not for sure about performance but want to try.
-			# logFileLastLine = `/usr/bin/tail -n 1 #{logFileName}`.split(/,/)
+				# Set the logFileName
+				logFileName = "/var/log/ifetch-tools/"+camera_num.to_s+".txt"
+				# Remarked out the backtick with tail for a pure ruby try. Not for sure about performance but want to try.
+				# logFileLastLine = `/usr/bin/tail -n 1 #{logFileName}`.split(/,/)
 				# Put the notes of what the log file says in monitor.
 				tempForLastLine=[]
 				File.open(logFileName, "r") { |f|
