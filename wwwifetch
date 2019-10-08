@@ -425,26 +425,37 @@ class CArchive < HTTPServlet::AbstractServlet
 		image_pwd = "no_image_pwd"
 		# 20160408 Rework the live and archive dynamic view to utilize the global ifetch-tools.conf file.
 		Dir["/etc/ifetch-tools/cameras/*.conf"].sort.each do |cam_tmp|
-			###############################################################
-			# First suck in the config settings from the ifetch-tools.conf file.
-			begin
-				eval(File.open("/etc/ifetch-tools/ifetch-tools.conf") {|fh| fh.read})
-			rescue
-				puts "Error encountered reading the conf file of: "+$!.to_s
-				# Stop after the error feedback.
-				break
+			# First check camera status
+			cam_status = camerastatus(File.basename(cam_tmp, ".conf").to_i)
+			if cam_status[0] == 0 then
+				myTempRespond = myTempRespond+'<svg width="200" height="100"><rect x="0" y="0" width="200" height="100" stroke="grey" stroke-width="3px" fill="white"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">Cam '+File.basename(cam_tmp, ".conf").to_s+' collection off!</text></svg>'
+			else
+				# Camera collection being attempted
+				# First suck in the config settings from the ifetch-tools.conf file.
+				begin
+					eval(File.open("/etc/ifetch-tools/ifetch-tools.conf") {|fh| fh.read})
+					rescue
+						puts "Error encountered reading the conf file of: "+$!.to_s
+						# Stop after the error feedback.
+					break
+				end
+				###############################################################
+				# Now let the camera.conf file overload the settings they want.
+				begin
+					eval(File.open(cam_tmp) {|fh| fh.read})
+					rescue
+						res.body = eval(puts "Encountered reading the camera.conf file of: "+$!.to_s)
+						# Stop after the error feedback.
+					break
+				end
+				# Add the inline image and link to the page.
+				# Check for errors and notify webpage
+				if cam_status[1][0] == "I" then
+					myTempRespond = myTempRespond+'<a href="/camerahistory?cameraName='+File.basename(cam_tmp, ".conf").to_s+'&index=0&navigation=0&basicView=0" title="'+image_alt+'"><img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" class="camImage" id="'+File.basename(cam_tmp, ".conf")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>'
+				else
+					myTempRespond = myTempRespond+'<a href="/camerahistory?cameraName='+File.basename(cam_tmp, ".conf").to_s+'&index=0&navigation=0&basicView=0" title="'+image_alt+'"><span>&#33;</span><svg width="200" height="100"><rect x="0" y="0" width="200" height="100" stroke="red" stroke-width="3px" fill="white"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">Cam '+File.basename(cam_tmp, ".conf").to_s+' collection error!</text></svg></a>'
+				end
 			end
-			###############################################################
-			# Now let the camera.conf file overload the settings they want.
-			begin
-				eval(File.open(cam_tmp) {|fh| fh.read})
-			rescue
-				res.body = eval(puts "Encountered reading the camera.conf file of: "+$!.to_s)
-				# Stop after the error feedback.
-				break
-			end
-			# Add the inline image and link to the page.
-			myTempRespond = myTempRespond+'<a href="/camerahistory?cameraName='+File.basename(cam_tmp, ".conf").to_s+'&index=0&navigation=0&basicView=0" title="'+image_alt+'"><img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" class="camImage" id="'+File.basename(cam_tmp, ".conf")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>'
 		end
 		GC.start
 		res.body = eval(File.open("/usr/share/ifetch-tools/templates/Archive") {|fh| fh.read})
@@ -473,26 +484,37 @@ class CLive < HTTPServlet::AbstractServlet
 		image_pwd = "no_image_pwd"
 		# 20160408 Rework the live and archive dynamic view to utilize the global ifetch-tools.conf file.
 		Dir["/etc/ifetch-tools/cameras/*.conf"].sort.each do |cam_tmp|
-			###############################################################
-			# First suck in the config settings from the ifetch-tools.conf file.
-			begin
-				eval(File.open("/etc/ifetch-tools/ifetch-tools.conf") {|fh| fh.read})
-			rescue
-				puts "Error encountered reading the conf file of: "+$!.to_s
-				# Stop after the error feedback.
-				break
+			# First check camera status
+			cam_status = camerastatus(File.basename(cam_tmp, ".conf").to_i)
+			if cam_status[0] == 0 then
+				myTempRespond = myTempRespond+'<svg width="200" height="100"><rect x="0" y="0" width="200" height="100" stroke="grey" stroke-width="3px" fill="white"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">Cam '+File.basename(cam_tmp, ".conf").to_s+' collection off!</text></svg>'
+			else
+				# Camera collection being attempted
+				# First suck in the config settings from the ifetch-tools.conf file.
+				begin
+					eval(File.open("/etc/ifetch-tools/ifetch-tools.conf") {|fh| fh.read})
+					rescue
+						puts "Error encountered reading the conf file of: "+$!.to_s
+						# Stop after the error feedback.
+					break
+				end
+				###############################################################
+				# Now let the camera.conf file overload the settings they want.
+				begin
+					eval(File.open(cam_tmp) {|fh| fh.read})
+					rescue
+						res.body = eval(puts "Encountered reading the camera.conf file of: "+$!.to_s)
+						# Stop after the error feedback.
+					break
+				end
+				# Add the inline image and link to the page.
+				# Check for errors and notify webpage
+				if cam_status[1][0] == "I" then
+					myTempRespond = myTempRespond+'<a href="/livesingle?cameraName='+File.basename(cam_tmp, ".conf")+'" title="'+image_alt+'"><img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" class="camImage" id="'+File.basename(cam_tmp, ".conf")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>'
+				else
+					myTempRespond = myTempRespond+'<a href="/livesingle?cameraName='+File.basename(cam_tmp, ".conf")+'" title="'+image_alt+'"><span>&#33;</span><svg width="200" height="100"><rect x="0" y="0" width="200" height="100" stroke="red" stroke-width="3px" fill="white"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">Cam '+File.basename(cam_tmp, ".conf").to_s+' collection error!</text></svg></a>'
+				end
 			end
-			###############################################################
-			# Now let the camera.conf file overload the settings they want.
-			begin
-				eval(File.open(cam_tmp) {|fh| fh.read})
-			rescue
-				res.body = eval(puts "Encountered reading the camera.conf file of: "+$!.to_s)
-				# Stop after the error feedback.
-				break
-			end
-			# Add the inline image and link to the page.
-			myTempRespond = myTempRespond+'<a href="/livesingle?cameraName='+File.basename(cam_tmp, ".conf")+'" title="'+image_alt+'"><img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" class="camImage" id="'+File.basename(cam_tmp, ".conf")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>'
 		end
 		GC.start
 		res.body = eval(File.open("/usr/share/ifetch-tools/templates/Live") {|fh| fh.read})
