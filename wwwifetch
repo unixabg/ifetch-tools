@@ -423,22 +423,12 @@ class CArchive < HTTPServlet::AbstractServlet
 		image_uid = "no_image_uid"
 		image_url = "no_image_url"
 		image_pwd = "no_image_pwd"
-		# 20160408 Rework the live and archive dynamic view to utilize the global ifetch-tools.conf file.
 		Dir["/etc/ifetch-tools/cameras/*.conf"].sort.each do |cam_tmp|
 			# First check camera status
 			cam_status = camerastatus(File.basename(cam_tmp, ".conf").to_i)
 			if cam_status[0] == 0 then
 				myTempRespond = myTempRespond+'<svg width="200" height="100"><rect x="0" y="0" width="200" height="100" stroke="grey" stroke-width="3px" fill="white"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">Cam '+File.basename(cam_tmp, ".conf").to_s+' collection off!</text></svg>'
 			else
-				# Camera collection being attempted
-				# First suck in the config settings from the ifetch-tools.conf file.
-				begin
-					eval(File.open("/etc/ifetch-tools/ifetch-tools.conf") {|fh| fh.read})
-					rescue
-						puts "Error encountered reading the conf file of: "+$!.to_s
-						# Stop after the error feedback.
-					break
-				end
 				###############################################################
 				# Now let the camera.conf file overload the settings they want.
 				begin
@@ -482,7 +472,6 @@ class CLive < HTTPServlet::AbstractServlet
 		image_uid = "no_image_uid"
 		image_url = "no_image_url"
 		image_pwd = "no_image_pwd"
-		# 20160408 Rework the live and archive dynamic view to utilize the global ifetch-tools.conf file.
 		Dir["/etc/ifetch-tools/cameras/*.conf"].sort.each do |cam_tmp|
 			# First check camera status
 			cam_status = camerastatus(File.basename(cam_tmp, ".conf").to_i)
@@ -490,14 +479,6 @@ class CLive < HTTPServlet::AbstractServlet
 				myTempRespond = myTempRespond+'<svg width="200" height="100"><rect x="0" y="0" width="200" height="100" stroke="grey" stroke-width="3px" fill="white"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">Cam '+File.basename(cam_tmp, ".conf").to_s+' collection off!</text></svg>'
 			else
 				# Camera collection being attempted
-				# First suck in the config settings from the ifetch-tools.conf file.
-				begin
-					eval(File.open("/etc/ifetch-tools/ifetch-tools.conf") {|fh| fh.read})
-					rescue
-						puts "Error encountered reading the conf file of: "+$!.to_s
-						# Stop after the error feedback.
-					break
-				end
 				###############################################################
 				# Now let the camera.conf file overload the settings they want.
 				begin
@@ -542,16 +523,6 @@ class CLiveSingle < HTTPServlet::AbstractServlet
 		image_uid = "no_image_uid"
 		image_url = "no_image_url"
 		image_pwd = "no_image_pwd"
-		# 20160408 Rework the live and archive dynamic view to utilize the global ifetch-tools.conf file.
-		###############################################################
-		# First suck in the config settings from the ifetch-tools.conf file.
-		begin
-			eval(File.open("/etc/ifetch-tools/ifetch-tools.conf") {|fh| fh.read})
-		rescue
-			puts "Error encountered reading the conf file of: "+$!.to_s
-			# Stop after the error feedback.
-			#break
-		end
 		###############################################################
 		# Now let the camera.conf file overload the settings they want.
 		begin
@@ -644,16 +615,6 @@ class CSnapshot < HTTPServlet::AbstractServlet
 		image_uid = "no_image_uid"
 		image_url = "no_image_url"
 		image_pwd = "no_image_pwd"
-		# 20160408 Rework the live and archive dynamic view to utilize the global ifetch-tools.conf file.
-		###############################################################
-		# First suck in the config settings from the ifetch-tools.conf file.
-		begin
-			eval(File.open("/etc/ifetch-tools/ifetch-tools.conf") {|fh| fh.read})
-		rescue
-			puts "Error encountered reading the conf file of: "+$!.to_s
-			# Stop after the error feedback.
-			#break
-		end
 		###############################################################
 		# Now let the camera.conf file overload the settings they want.
 		begin
