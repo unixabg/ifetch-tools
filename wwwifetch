@@ -88,6 +88,35 @@ def pullimage(address,port,url,uid,pwd,auth_type)
 end
 
 ##############################################################################################
+# This def will return an array of every camera status which has a .conf file.
+##############################################################################################
+def camerastatus(_camera_num)
+	# Now test for the status of the cameras lock file.
+	my_return= Array. new
+	lock_file = File::open("/var/lock/ifetch-tools/"+_camera_num.to_s+".lock", 'w')
+	if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
+		my_return[0] = 0
+		my_return[1] = "I, Collection offline!"
+		# Really important here to close the file or you will get confused!
+		lock_file.close
+	else
+		log_file_name = "/var/log/ifetch-tools/"+_camera_num.to_s+".txt"
+		# Remarked out the backtick with tail for a pure ruby try. Not for sure about performance but want to try.
+		# last_line = `/usr/bin/tail -n 1 #{log_file_name}`.split(/,/)
+		last_line= Array.new
+		File.open(log_file_name, "r") { |f|
+			while f.gets
+				last_line.push $_
+				last_line.shift if $. > 1
+			end
+		}
+		my_return[0] = 1
+		my_return[1] = last_line[0].split(/,/)
+	end
+	return my_return
+end
+
+##############################################################################################
 # Suck in the config settings from the ifetch-tools.conf file.
 ##############################################################################################
 begin
@@ -541,9 +570,9 @@ class CMonitor < HTTPServlet::AbstractServlet
 		end
 		camera_array.sort.each do |camera_num|
 			# Now test for the status of the cameras lock file.
-			lock_file = File::open("/var/lock/ifetch-tools/"+camera_num.to_s+".lock", 'w')
 			# Table col 1 camera number, 2 - pid / mem, 3 - actions, 4 - status, 5 - log file, 6 - mdpp, 7 - information
-			if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
+			cam_status = camerastatus(camera_num)
+			if cam_status[0] == 0 then
 				myTempRespond =	 myTempRespond+'<TR><TD><CENTER>'+camera_num.to_s+'</CENTER></TD>
 				<TD><CENTER> - / - </CENTER></TD>
 				<TD><A HREF="/camerastartstop?cameraName='+camera_num.to_s+'"><CENTER><IMG SRC="/start.jpg"></CENTER></A></TD>
@@ -552,7 +581,6 @@ class CMonitor < HTTPServlet::AbstractServlet
 				<TD><A HREF="/log/'+camera_num.to_s+'.mdpp.txt" target="_blank"><CENTER><IMG SRC="/mdpplog.jpg"></A></CENTER></TD>
 				<TD>Camera ifetch is not running. </TD></TR>'
 				# Really important here to close the file or you will get confused!
-				lock_file.close
 			else
 				# Set the camera_pid to hold the pid of the running camera process.
 				camera_pid = File.read("/var/run/ifetch-tools/"+camera_num.to_s+".pid").chomp
@@ -560,28 +588,11 @@ class CMonitor < HTTPServlet::AbstractServlet
 				myTempRespond = myTempRespond+'<TD><CENTER><A HREF="/camerahistory?cameraName='+camera_num.to_s+'&index=0&navigation=0&basicView=0"> '+camera_num.to_s+'</A></CENTER></TD>
 				<TD><CENTER>'+camera_pid+' - '+%x[pmap -x #{camera_pid} | tail -1][10,40].strip+'</CENTER></TD>
 				<TD><CENTER><A HREF="/camerastartstop?cameraName='+camera_num.to_s+'"><IMG SRC="/stop.jpg"></A></CENTER></TD>'
-				# Set the logFileName
-				logFileName = "/var/log/ifetch-tools/"+camera_num.to_s+".txt"
-				# Remarked out the backtick with tail for a pure ruby try. Not for sure about performance but want to try.
-				# logFileLastLine = `/usr/bin/tail -n 1 #{logFileName}`.split(/,/)
-				# Put the notes of what the log file says in monitor.
-				tempForLastLine=[]
-				File.open(logFileName, "r") { |f|
-					while f.gets
-						tempForLastLine.push $_
-						tempForLastLine.shift if $. > 1
-					end
-				}
 
-				#tempForLastLine.each{|e| print e}
-				logFileLastLine = tempForLastLine[0].split(/,/)
-
-				# Below is for diagnostics
-				#myTempRespond = myTempRespond+logFileLastLine[0]+logFileName
-				if logFileLastLine[0] == "I" then
-					myTempRespond = myTempRespond+'<TD><CENTER><IMG SRC="/green.jpg"></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></A></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.mdpp.txt" target="_blank"><CENTER><IMG SRC="/mdpplog.jpg"></A></CENTER></TD><TD> '+logFileLastLine[1]+" </TD></TR>"
+				if cam_status[1][0] == "I" then
+					myTempRespond = myTempRespond+'<TD><CENTER><IMG SRC="/green.jpg"></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></A></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.mdpp.txt" target="_blank"><CENTER><IMG SRC="/mdpplog.jpg"></A></CENTER></TD><TD> '+cam_status[1][1]+" </TD></TR>"
 				else
-					myTempRespond = myTempRespond+'<TD><CENTER><IMG SRC="/red.jpg"></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></A><CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.mdpp.txt" target="_blank"><CENTER><IMG SRC="/mdpplog.jpg"></A></CENTER></TD><TD> '+logFileLastLine[1]+" </TD></TR>"
+					myTempRespond = myTempRespond+'<TD><CENTER><IMG SRC="/red.jpg"></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></A><CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.mdpp.txt" target="_blank"><CENTER><IMG SRC="/mdpplog.jpg"></A></CENTER></TD><TD> '+cam_status[1][1]+" </TD></TR>"
 				end
 			end
 		end
