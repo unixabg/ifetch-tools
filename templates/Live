@@ -18,7 +18,7 @@ _DATE =%x[date +%Y-%m-%d]
 		console.log(myClass.length);
 		*/
 		for (var i = 0; i < myClass.length; i++) {
-			console.log(myClass[i].id);
+			// console.log(myClass[i].id);
 			if (document.getElementById(myClass[i].id)){
 				var tempImage = document.getElementById(myClass[i].id).src.split("&");
 				document.getElementById(myClass[i].id).src = tempImage[0]+"&rand="+ Math.random();
