@@ -415,7 +415,7 @@ class CArchive < HTTPServlet::AbstractServlet
 				break
 			end
 			# Add the inline image and link to the page.
-			myTempRespond = myTempRespond+'<a href="/camerahistory?cameraName='+File.basename(cam_tmp, ".conf").to_s+'&index=0&navigation=0&basicView=0" title="'+image_alt+'"><img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>'
+			myTempRespond = myTempRespond+'<a href="/camerahistory?cameraName='+File.basename(cam_tmp, ".conf").to_s+'&index=0&navigation=0&basicView=0" title="'+image_alt+'"><img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" class="camImage" id="'+File.basename(cam_tmp, ".conf")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>'
 		end
 		GC.start
 		res.body = eval(File.open("/usr/share/ifetch-tools/templates/Archive") {|fh| fh.read})
@@ -463,7 +463,7 @@ class CLive < HTTPServlet::AbstractServlet
 				break
 			end
 			# Add the inline image and link to the page.
-			myTempRespond = myTempRespond+'<a href="/livesingle?cameraName='+File.basename(cam_tmp, ".conf")+'" title="'+image_alt+'"><img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>'
+			myTempRespond = myTempRespond+'<a href="/livesingle?cameraName='+File.basename(cam_tmp, ".conf")+'" title="'+image_alt+'"><img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" class="camImage" id="'+File.basename(cam_tmp, ".conf")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>'
 		end
 		GC.start
 		res.body = eval(File.open("/usr/share/ifetch-tools/templates/Live") {|fh| fh.read})

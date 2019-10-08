@@ -10,13 +10,30 @@ _DATE =%x[date +%Y-%m-%d]
 	<link rel="stylesheet" type="text/css" href="/style.css">
 	<SCRIPT type="text/javascript">
 	<!--
-	function redirecter(){
-		window.location = "/live"
+	function updateImg() {
+		var myClass = document.getElementsByClassName("camImage");
+		/*
+		console.log(myClass);
+		console.log(myClass[0].id);
+		console.log(myClass.length);
+		*/
+		for (var i = 0; i < myClass.length; i++) {
+			console.log(myClass[i].id);
+			if (document.getElementById(myClass[i].id)){
+				var tempImage = document.getElementById(myClass[i].id).src.split("&");
+				document.getElementById(myClass[i].id).src = tempImage[0]+"&rand="+ Math.random();
+			}
+		}
+		setTimeout(updateImg , #{ALIMGUPDATETIME});
 	}
 	//-->
 	</SCRIPT>
 	</HEAD>
-	<BODY onLoad="setTimeout('redirecter()', 30000)">
+	<BODY>
+	<script>
+		//call after page loaded
+		window.onload=updateImg ;
+	</script>
 	<TABLE border="1" cellpadding="5" >
 		<TBODY>
 			<TR>
