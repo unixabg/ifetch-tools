@@ -184,6 +184,6 @@ td {
   overflow: auto;
   overflow-x: hidden;
   /* width: 237px; */
-  height: 85%;
+  height: 600px;
   z-index: -1;
 }
