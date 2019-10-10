@@ -424,28 +424,17 @@ class CArchive < HTTPServlet::AbstractServlet
 		image_url = "no_image_url"
 		image_pwd = "no_image_pwd"
 		Dir["/etc/ifetch-tools/cameras/*.conf"].sort.each do |cam_tmp|
-			# First check camera status
-			cam_status = camerastatus(File.basename(cam_tmp, ".conf").to_i)
-			if cam_status[0] == 0 then
-				myTempRespond = myTempRespond+'<svg width="200" height="100"><rect x="0" y="0" width="200" height="100" stroke="grey" stroke-width="3px" fill="white"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">Cam '+File.basename(cam_tmp, ".conf").to_s+' collection off!</text></svg>'
-			else
-				###############################################################
-				# Now let the camera.conf file overload the settings they want.
-				begin
-					eval(File.open(cam_tmp) {|fh| fh.read})
-					rescue
-						res.body = eval(puts "Encountered reading the camera.conf file of: "+$!.to_s)
-						# Stop after the error feedback.
-					break
-				end
-				# Add the inline image and link to the page.
-				# Check for errors and notify webpage
-				if cam_status[1][0] == "I" then
-					myTempRespond = myTempRespond+'<a href="/camerahistory?cameraName='+File.basename(cam_tmp, ".conf").to_s+'&index=0&navigation=0&basicView=0" title="'+image_alt+'"><img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" class="camImage" id="'+File.basename(cam_tmp, ".conf")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>'
-				else
-					myTempRespond = myTempRespond+'<a href="/camerahistory?cameraName='+File.basename(cam_tmp, ".conf").to_s+'&index=0&navigation=0&basicView=0" title="'+image_alt+'"><span>&#33;</span><svg width="200" height="100"><rect x="0" y="0" width="200" height="100" stroke="red" stroke-width="3px" fill="white"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">Cam '+File.basename(cam_tmp, ".conf").to_s+' collection error!</text></svg></a>'
-				end
+			###############################################################
+			# Now let the camera.conf file overload the settings they want.
+			begin
+				eval(File.open(cam_tmp) {|fh| fh.read})
+				rescue
+					res.body = eval(puts "Encountered reading the camera.conf file of: "+$!.to_s)
+					# Stop after the error feedback.
+				break
 			end
+			# Add the inline image and link to the page.
+			myTempRespond = myTempRespond+'<a href="/camerahistory?cameraName='+File.basename(cam_tmp, ".conf").to_s+'&index=0&navigation=0&basicView=0" title="'+image_alt+'"><img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" class="camImage" id="'+File.basename(cam_tmp, ".conf")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>'
 		end
 		GC.start
 		res.body = eval(File.open("/usr/share/ifetch-tools/templates/Archive") {|fh| fh.read})
@@ -473,29 +462,18 @@ class CLive < HTTPServlet::AbstractServlet
 		image_url = "no_image_url"
 		image_pwd = "no_image_pwd"
 		Dir["/etc/ifetch-tools/cameras/*.conf"].sort.each do |cam_tmp|
-			# First check camera status
-			cam_status = camerastatus(File.basename(cam_tmp, ".conf").to_i)
-			if cam_status[0] == 0 then
-				myTempRespond = myTempRespond+'<svg width="200" height="100"><rect x="0" y="0" width="200" height="100" stroke="grey" stroke-width="3px" fill="white"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">Cam '+File.basename(cam_tmp, ".conf").to_s+' collection off!</text></svg>'
-			else
-				# Camera collection being attempted
-				###############################################################
-				# Now let the camera.conf file overload the settings they want.
-				begin
-					eval(File.open(cam_tmp) {|fh| fh.read})
-					rescue
-						res.body = eval(puts "Encountered reading the camera.conf file of: "+$!.to_s)
-						# Stop after the error feedback.
-					break
-				end
-				# Add the inline image and link to the page.
-				# Check for errors and notify webpage
-				if cam_status[1][0] == "I" then
-					myTempRespond = myTempRespond+'<a href="/livesingle?cameraName='+File.basename(cam_tmp, ".conf")+'" title="'+image_alt+'"><img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" class="camImage" id="'+File.basename(cam_tmp, ".conf")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>'
-				else
-					myTempRespond = myTempRespond+'<a href="/livesingle?cameraName='+File.basename(cam_tmp, ".conf")+'" title="'+image_alt+'"><span>&#33;</span><svg width="200" height="100"><rect x="0" y="0" width="200" height="100" stroke="red" stroke-width="3px" fill="white"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">Cam '+File.basename(cam_tmp, ".conf").to_s+' collection error!</text></svg></a>'
-				end
+			# Camera collection being attempted
+			###############################################################
+			# Now let the camera.conf file overload the settings they want.
+			begin
+				eval(File.open(cam_tmp) {|fh| fh.read})
+				rescue
+					res.body = eval(puts "Encountered reading the camera.conf file of: "+$!.to_s)
+					# Stop after the error feedback.
+				break
 			end
+			# Add the inline image and link to the page.
+			myTempRespond = myTempRespond+'<a href="/livesingle?cameraName='+File.basename(cam_tmp, ".conf")+'" title="'+image_alt+'"><img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" class="camImage" id="'+File.basename(cam_tmp, ".conf")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" heigth="'+HISTORYIMAGEHEIGHT+'" ></a>'
 		end
 		GC.start
 		res.body = eval(File.open("/usr/share/ifetch-tools/templates/Live") {|fh| fh.read})
@@ -516,6 +494,7 @@ class CLiveSingle < HTTPServlet::AbstractServlet
 		raise HTTPServerError, 'Error: cameraName parameter not passed correctly.' if req.query['cameraName'] == nil || /[0-9]+/.match(req.query['cameraName']) == nil
 		cameraName = /[0-9]+/.match(req.query['cameraName']).to_s
 		myTempRespond = ""
+		# First check camera status
 		image_addr = "127.0.0.1"
 		image_addr_port = "80"
 		image_alt = "no_image_alt"
@@ -532,6 +511,7 @@ class CLiveSingle < HTTPServlet::AbstractServlet
 			# Stop after the error feedback.
 			#break
 		end
+		# Add the inline image and link to the page.
 		# Put the camera image in the template return
 		myTempRespond = '<img height="80%" src="/snapshot?cameraName='+cameraName+'" id="myImage" alt="'+image_alt+'"></a>'
 		GC.start
@@ -607,25 +587,36 @@ class CSnapshot < HTTPServlet::AbstractServlet
 		res['Content-Type'] = "image/jpeg" # Tell the browser how we are talking
 		raise HTTPServerError, 'Error: cameraName parameter not passed correctly.' if req.query['cameraName'] == nil || /[0-9]+/.match(req.query['cameraName']) == nil
 		cameraName = /[0-9]+/.match(req.query['cameraName']).to_s
-		myTempRespond = ""
-		image_addr = "127.0.0.1"
-		image_addr_port = "80"
-		image_alt = "no_image_alt"
-		image_auth_type="basic"
-		image_uid = "no_image_uid"
-		image_url = "no_image_url"
-		image_pwd = "no_image_pwd"
-		###############################################################
-		# Now let the camera.conf file overload the settings they want.
-		begin
-			eval(File.open("/etc/ifetch-tools/cameras/"+cameraName+".conf") {|fh| fh.read})
-		rescue
-			res.body = eval(puts "Encountered reading the camera.conf file of: "+$!.to_s)
-			# Stop after the error feedback.
-			#break
+		cam_status = camerastatus(cameraName)
+		if cam_status[0] == 0 then
+			res.body = IO.read('/usr/share/ifetch-tools/htdocs/ccoffline.jpg')
+		else
+			image_addr = "127.0.0.1"
+			image_addr_port = "80"
+			image_alt = "no_image_alt"
+			image_auth_type='basic'
+			image_sleep = "1"
+			image_uid = "no_image_uid"
+			image_url = "no_image_url"
+			image_pwd = "no_image_pwd"
+			###############################################################
+			# Now let the camera.conf file overload the settings they want.
+			begin
+				eval(File.open("/etc/ifetch-tools/cameras/"+cameraName+".conf") {|fh| fh.read})
+			rescue
+				res.body = eval(puts "Encountered reading the camera.conf file of: "+$!.to_s)
+				# Stop after the error feedback.
+				#break
+			end
+			# Add the inline image and link to the page.
+			# Put the camera image in the template return
+			if cam_status[1][0] == "I" then
+				# return the current camera snapshot image.
+				res.body = pullimage(image_addr,image_addr_port,image_url,image_uid,image_pwd,image_auth_type)
+			else
+				res.body = IO.read('/usr/share/ifetch-tools/htdocs/ccerror.jpg')
+			end
 		end
-		# return the current camera snapshot image.
-		res.body = pullimage(image_addr,image_addr_port,image_url,image_uid,image_pwd,image_auth_type)
 	end
 end
 
