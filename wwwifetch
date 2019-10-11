@@ -119,14 +119,24 @@ end
 ##############################################################################################
 # Suck in the config settings from the ifetch-tools.conf file.
 ##############################################################################################
-begin
-	eval(File.open("/etc/ifetch-tools/ifetch-tools.conf") {|fh| fh.read})
-rescue
-	puts "Error encountered reading the conf file of: "+$!.to_s
-	# Stop after the error feedback.
-	exit
+def getlocalvars(_location, _sub_string)
+	begin
+		if _sub_string == nil then
+			eval(File.open("/etc/ifetch-tools/ifetch-tools.conf") {|fh| fh.read})
+		else
+			File.readlines('/etc/ifetch-tools/ifetch-tools.conf').each do |line|
+				if line.include?('_sub_string') then
+					puts line
+					eval(line)
+				end
+			end
+		end
+	rescue
+		puts _location+": Error encountered reading the conf file of: "+$!.to_s
+		# Stop after the error feedback.
+		exit
+	end
 end
-
 
 ##############################################################################################
 # Class definitions below.
@@ -417,14 +427,13 @@ class CArchive < HTTPServlet::AbstractServlet
 		}
 		res['Content-Type'] = "text/html" # Tell the browser how we are talking
 		myTempRespond = ""
-		image_addr = "127.0.0.1"
-		image_addr_port = "80"
+		###############################################################
+		# Setup the image_ vars we are going to need
 		image_alt = "no_image_alt"
-		image_uid = "no_image_uid"
-		image_url = "no_image_url"
-		image_pwd = "no_image_pwd"
 		Dir["/etc/ifetch-tools/cameras/*.conf"].sort.each do |cam_tmp|
 			###############################################################
+			# First source in the locals from ifetch-tools.conf file
+			getlocalvars('CArchive Class', 'image_')
 			# Now let the camera.conf file overload the settings they want.
 			begin
 				eval(File.open(cam_tmp) {|fh| fh.read})
@@ -455,15 +464,14 @@ class CLive < HTTPServlet::AbstractServlet
 		}
 		res['Content-Type'] = "text/html" # Tell the browser how we are talking
 		myTempRespond = ""
-		image_addr = "127.0.0.1"
-		image_addr_port = "80"
+		###############################################################
+		# Setup the image_ vars we are going to need
 		image_alt = "no_image_alt"
-		image_uid = "no_image_uid"
-		image_url = "no_image_url"
-		image_pwd = "no_image_pwd"
 		Dir["/etc/ifetch-tools/cameras/*.conf"].sort.each do |cam_tmp|
 			# Camera collection being attempted
 			###############################################################
+			# First source in the locals from ifetch-tools.conf file
+			getlocalvars('CLive Class', 'image_')
 			# Now let the camera.conf file overload the settings they want.
 			begin
 				eval(File.open(cam_tmp) {|fh| fh.read})
@@ -494,15 +502,14 @@ class CLiveSingle < HTTPServlet::AbstractServlet
 		raise HTTPServerError, 'Error: cameraName parameter not passed correctly.' if req.query['cameraName'] == nil || /[0-9]+/.match(req.query['cameraName']) == nil
 		cameraName = /[0-9]+/.match(req.query['cameraName']).to_s
 		myTempRespond = ""
-		# First check camera status
-		image_addr = "127.0.0.1"
-		image_addr_port = "80"
+		###############################################################
+		# Setup the image_ vars we are going to need
 		image_alt = "no_image_alt"
 		image_sleep = "1"
-		image_uid = "no_image_uid"
-		image_url = "no_image_url"
-		image_pwd = "no_image_pwd"
+		# First check camera status
 		###############################################################
+		# First source in the locals from ifetch-tools.conf file
+		getlocalvars('CLiveSingle Class', 'image_')
 		# Now let the camera.conf file overload the settings they want.
 		begin
 			eval(File.open("/etc/ifetch-tools/cameras/"+cameraName+".conf") {|fh| fh.read})
@@ -591,15 +598,17 @@ class CSnapshot < HTTPServlet::AbstractServlet
 		if cam_status[0] == 0 then
 			res.body = IO.read('/usr/share/ifetch-tools/htdocs/ccoffline.jpg')
 		else
-			image_addr = "127.0.0.1"
-			image_addr_port = "80"
-			image_alt = "no_image_alt"
+			###############################################################
+			# Setup the image_ vars we are going to need
+			image_addr = nil
+			image_addr_port = nil
 			image_auth_type='basic'
-			image_sleep = "1"
 			image_uid = "no_image_uid"
 			image_url = "no_image_url"
 			image_pwd = "no_image_pwd"
 			###############################################################
+			# First source in the locals from ifetch-tools.conf file
+			getlocalvars('CSnapshot Class', 'image_')
 			# Now let the camera.conf file overload the settings they want.
 			begin
 				eval(File.open("/etc/ifetch-tools/cameras/"+cameraName+".conf") {|fh| fh.read})
@@ -722,6 +731,11 @@ end
 #STDIN.reopen "/dev/null"	# Free file descriptors and
 #STDOUT.reopen "/dev/null", "a"	# point them somewhere sensible.
 #STDERR.reopen STDOUT		# STDOUT/ERR should better go to a logfile.
+
+##############################################################################################
+# Setup local vars
+##############################################################################################
+getlocalvars("Main Block", nil)
 
 ##############################################################################################
 # Enable the logging operations we want below.
