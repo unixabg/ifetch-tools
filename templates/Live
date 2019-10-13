@@ -19,12 +19,11 @@ _DATE =%x[date +%Y-%m-%d]
 		*/
 		for (var i = 0; i < myClass.length; i++) {
 			// console.log(myClass[i].id);
-			if (document.getElementById(myClass[i].id)){
+			if (document.getElementById(myClass[i].id)) {
 				var tempImage = document.getElementById(myClass[i].id).src.split("&");
 				document.getElementById(myClass[i].id).src = tempImage[0]+"&rand="+ Math.random();
 			}
 		}
-		setTimeout(updateImg , #{ALIMGUPDATETIME});
 	}
 	//-->
 	</SCRIPT>
@@ -32,7 +31,7 @@ _DATE =%x[date +%Y-%m-%d]
 	<BODY>
 	<script>
 		//call after page loaded
-		window.onload=updateImg ;
+		window.onload=setInterval(updateImg, #{ALIMGUPDATETIME});
 	</script>
 	<TABLE border="1" cellpadding="5" >
 		<TBODY>
