@@ -443,7 +443,13 @@ class CArchive < HTTPServlet::AbstractServlet
 				break
 			end
 			# Add the inline image and link to the page.
-			myTempRespond = myTempRespond+'<a href="/camerahistory?cameraName='+File.basename(cam_tmp, ".conf").to_s+'&index=0&navigation=0&basicView=0" title="'+image_alt+'"><img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" class="camImage" id="'+File.basename(cam_tmp, ".conf")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" height="'+HISTORYIMAGEHEIGHT+'" ></a>'
+			# If cam offline drop archive link
+			cam_status = camerastatus(File.basename(cam_tmp, ".conf"))
+			if cam_status[0] == 0 then
+				myTempRespond = myTempRespond+'<img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" class="camImage" id="'+File.basename(cam_tmp, ".conf")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" height="'+HISTORYIMAGEHEIGHT+'" >'
+			else
+				myTempRespond = myTempRespond+'<a href="/camerahistory?cameraName='+File.basename(cam_tmp, ".conf").to_s+'&index=0&navigation=0&basicView=0" title="'+image_alt+'"><img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" class="camImage" id="'+File.basename(cam_tmp, ".conf")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" height="'+HISTORYIMAGEHEIGHT+'" ></a>'
+			end
 		end
 		GC.start
 		res.body = eval(File.open("/usr/share/ifetch-tools/templates/Archive") {|fh| fh.read})
