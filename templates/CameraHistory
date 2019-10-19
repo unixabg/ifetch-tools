@@ -71,6 +71,13 @@
 	var prevURLPlayback="";
 	var speed=getUrlVars()["speed"];
 	mode(getUrlVars()["smode"]);
+	function sanityCheck() {
+		if(!smode || !speed) {
+			// If we did not get params for smode or speed, set some defaults
+			mode('stop');
+			speed=1000;
+		}
+	}
 	function getUrlVars() {
 		var vars = {};
 		var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) { vars[key] = value; });
@@ -86,15 +93,9 @@
 		document.getElementById("slideshow").src=myImages[i];
 		document.getElementById("slideLinkVideo").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=2";
 		document.getElementById("slideLinkArchive").href = "/camerahistory?cameraName="+cameraName+"&index="+imageIndex+"&navigation=1&basicView=1";
-		if(!smode || !speed) {
-			// If we did not get params for constant play, set some defaults
-			mode('stop');
-			speed=1000;
-		} else {
-			// If we are here we are in constant play mode
-			document.getElementById("speed").value=speed/1000;
-			startSlideshow();
-		}
+		sanityCheck();
+		document.getElementById("speed").value=speed/1000;
+		startSlideshow();
 	}
 	function speedUp() {
 		if(speed<=62.5) {
@@ -116,6 +117,7 @@
 		smode=param;
 	}
 	function startSlideshow() {
+		sanityCheck();
 		if(smode=="play") {
 			document.getElementById("play").disabled="disabled";
 			document.getElementById("playRev").disabled="disabled";
