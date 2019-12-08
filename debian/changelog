@@ -1,3 +1,34 @@
+ifetch-tools (0.17.2-1) unstable; urgency=medium
+
+  [ Richard Nelson ]
+  * Initial commit to drop page refresh with javascript for updating images
+    in archive and live all camera viewing in examples/ifetch-tools.conf,
+    templates/Archive, templates/Live, and wwwifetch.
+  * Drop console.log output in templates/Arvhive and templates/Live.
+  * Bump version numbers to 0.17.0 for ifetch and wwwifetch.
+  * Correct format on wwwifetch.
+  * Make camera status a def for later uses in wwwitetch.
+  * Initial attempt to show status on archive and live dynamic pages
+    in wwwifetch.
+  * Drop multiple eval onn ifetch-tools.conf in wwwifetch.
+  * Another pass to improve camera status on archive and live views in
+    wwwifetch and added two image files htdocs/ccerror.jpg and
+    htdocs/ccoffline.jpg.
+  * Correct spelling error in html of height in wwwifetch.
+  * Hard code navigation image listing in html/style.css.
+  * Improve accessing local variables from global ifetch-tools.conf in
+    wwwifetch.
+  * Minor adjustments on templates Archive and Live.
+  * Bump version in ifetch and wwwifetch for latest changes for testers.
+  * Camera history requires collection daemon to be running for archive access.
+    Drop link to camera history to avoid error when collection offline in
+    wwwifetch.
+  * Minor javascript race bug in templates/CameraHistory.
+  * Bump version in ifetch, wwwifetch, and ifetch-tools-html-page/index.html
+    for debian package upload.
+
+ -- Richard Nelson <unixabg@gmail.com>  Sat, 19 Oct 2019 13:09:08 -0500
+
 ifetch-tools (0.16.4-1) unstable; urgency=medium
 
   [ Richard Nelson ]
