@@ -1,4 +1,4 @@
-ifetch-tools (0.17.2-1) unstable; urgency=medium
+ifetch-tools (0.17.2-2) unstable; urgency=medium
 
   [ Richard Nelson ]
   * Initial commit to drop page refresh with javascript for updating images
