@@ -36,7 +36,7 @@ ifetch-tools (0.16.4-1) unstable; urgency=medium
     examples/cameras/camera_number.conf.
   * Fix format headers and copyright date in debian/copyright.
   * Update standards version to 4.4.0 in debian/control.
-  * Dorp condition around confmodule since already a dependency
+  * Drop condition around confmodule since already a dependency
     debian/ifetch-tools.postinst and ifetch-tools.postrm.
   * Correctly reference lsb-base entry on Depends in debian/control.
   * Switch to userdel/groupdel in debian/ifetch-tools.postrm.
@@ -44,7 +44,7 @@ ifetch-tools (0.16.4-1) unstable; urgency=medium
   * Make a pass with wrap-and-sort -bast on debian files.
   * Bump version numbers for release on ifetch and wwwifetch files.
 
- -- Richard Nelson <unixabg@gmail.com>  Tue, 23 Jul 2019 18:25:03 -0500
+ -- Richard Nelson <unixabg@gmail.com>  Wed, 31 Jul 2019 09:16:03 +0200
 
 ifetch-tools (0.16.2-1) experimental; urgency=low
 
