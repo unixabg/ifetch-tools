@@ -238,7 +238,6 @@ prefix=File.basename(ARGV[0], ".conf")
 ###############################################################
 # Set on varialbe names for file operations.
 log_name = "/var/log/ifetch-tools/#{prefix}.txt"
-mdpp_log_name = "/var/log/ifetch-tools/#{prefix}.mdpp.txt"
 pid_name = "/var/run/ifetch-tools/#{prefix}.pid"
 
 ################################################################
@@ -256,10 +255,6 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 	# Setup for logging general output.
 	log = Logger.new(log_name, 5, log_size*1024)
 	log.info("RMagick memory management status: "+Magick::MANAGED_MEMORY.to_s)
-
-	###############################################################
-	# Setup for logging mdpp output.
-	mdpp_log = Logger.new(mdpp_log_name, 1, 5*1024)
 
 	###############################################################
 	# Lets trap here to ensure we can close clean with the signal of INT
@@ -506,11 +501,9 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 				if motion_sentry < 1 then
 					# Here we are asked to listen for testing again.
 					#puts "Before"
-					#mdpp = difference(process(image2),process(image1))
 					mdpp = difference(image2,image1)
 					#puts "Images tested resulted with mdpp of #{mdpp}"
 					# Log out all mdpp tests to log file.
-					mdpp_log.info("Images tested resulted with mdpp of #{mdpp}")
 					if mdpp.is_a?(Numeric) then
 						if mdpp == 0 then
 							#puts "Zero mdpp detected!"
@@ -679,7 +672,6 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 	# Try to close the lock file and the Logger.
 	lock_file.close
 	log.close
-	mdpp_log.close
 	DRb.stop_service() # Stop the DRb on the ifetch session
 else
 	###############################################################

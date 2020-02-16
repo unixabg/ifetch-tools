@@ -556,7 +556,7 @@ class CMonitor < HTTPServlet::AbstractServlet
 		end
 		camera_array.sort.each do |camera_num|
 			# Now test for the status of the cameras lock file.
-			# Table col 1 camera number, 2 - pid / mem, 3 - actions, 4 - status, 5 - log file, 6 - mdpp, 7 - information
+			# Table col 1 camera number, 2 - pid / mem, 3 - actions, 4 - status, 5 - log file, 6 - information
 			cam_status = camerastatus(camera_num)
 			if cam_status[0] == 0 then
 				myTempRespond =	 myTempRespond+'<TR><TD><CENTER>'+camera_num.to_s+'</CENTER></TD>
@@ -564,7 +564,6 @@ class CMonitor < HTTPServlet::AbstractServlet
 				<TD><A HREF="/camerastartstop?cameraName='+camera_num.to_s+'"><CENTER><IMG SRC="/start.jpg"></CENTER></A></TD>
 				<TD><CENTER><IMG SRC="/grey.jpg"></CENTER></TD>
 				<TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></CENTER></A></TD>
-				<TD><A HREF="/log/'+camera_num.to_s+'.mdpp.txt" target="_blank"><CENTER><IMG SRC="/mdpplog.jpg"></A></CENTER></TD>
 				<TD>Camera ifetch is not running. </TD></TR>'
 				# Really important here to close the file or you will get confused!
 			else
@@ -576,9 +575,9 @@ class CMonitor < HTTPServlet::AbstractServlet
 				<TD><CENTER><A HREF="/camerastartstop?cameraName='+camera_num.to_s+'"><IMG SRC="/stop.jpg"></A></CENTER></TD>'
 
 				if cam_status[1][0] == "I" then
-					myTempRespond = myTempRespond+'<TD><CENTER><IMG SRC="/green.jpg"></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></A></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.mdpp.txt" target="_blank"><CENTER><IMG SRC="/mdpplog.jpg"></A></CENTER></TD><TD> '+cam_status[1][1]+" </TD></TR>"
+					myTempRespond = myTempRespond+'<TD><CENTER><IMG SRC="/green.jpg"></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></A></CENTER></TD><TD> '+cam_status[1][1]+" </TD></TR>"
 				else
-					myTempRespond = myTempRespond+'<TD><CENTER><IMG SRC="/red.jpg"></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></A><CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.mdpp.txt" target="_blank"><CENTER><IMG SRC="/mdpplog.jpg"></A></CENTER></TD><TD> '+cam_status[1][1]+" </TD></TR>"
+					myTempRespond = myTempRespond+'<TD><CENTER><IMG SRC="/red.jpg"></CENTER></TD><TD><A HREF="/log/'+camera_num.to_s+'.txt" target="_blank"><CENTER><IMG SRC="/log.jpg"></A><CENTER></TD><TD> '+cam_status[1][1]+" </TD></TR>"
 				end
 			end
 		end
