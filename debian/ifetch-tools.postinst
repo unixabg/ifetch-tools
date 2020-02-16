@@ -13,11 +13,12 @@ case "${1}" in
 		then
 			# Add new user account
 			adduser --system --shell /bin/false --disabled-password --home /var/lib/ifetch-tools --gecos 'ifetch-tools account' --group --quiet ifetch-tools
-		elif ! getent group "ifetch-tools" > /dev/null 2>&1
-		then
-			# Add existing user to new new group
-			addgroup --system --quiet ifetch-tools
-			gpasswd -a ifetch-tools ifetch-tools
+			if ! getent group "ifetch-tools" > /dev/null 2>&1
+			then
+				# Add existing user to new new group
+				addgroup --system --quiet ifetch-tools
+				gpasswd -a ifetch-tools ifetch-tools
+			fi
 		fi
 
 		mkdir -p /etc/ifetch-tools/cameras
