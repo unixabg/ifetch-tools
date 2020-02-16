@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Richard Nelson <unixabg@gmail.com>
 Build-Depends:
  debhelper-compat (= 9),
-Standards-Version: 4.4.0
+Standards-Version: 4.4.1
 Homepage: http://fyeox.com/ifetch-tools/
 
 Package: ifetch-tools
