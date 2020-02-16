@@ -512,10 +512,15 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 					# Log out all mdpp tests to log file.
 					mdpp_log.info("Images tested resulted with mdpp of #{mdpp}")
 					if mdpp.is_a?(Numeric) then
-						if mdpp > motion_mdpp then
+						if mdpp == 0 then
+							#puts "Zero mdpp detected!"
+							log.warn("Zero mdpp image difference detected: mdpp=#{mdpp} and motion_mdpp=#{motion_mdpp}!")
+						elsif mdpp > motion_mdpp then
 							#puts "Motion detected!"
 							log.info("Motion detected: mdpp=#{mdpp} and motion_mdpp=#{motion_mdpp}!")
 							motion_sentry = image_count_on_motion
+						else
+							log.info("Insufficient motion: mdpp=#{mdpp} and motion_mdpp=#{motion_mdpp}.")
 						end
 					else
 						log.info("The mdpp call did not return a number: mdpp=#{mdpp}!")
@@ -527,23 +532,24 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 				end
 				#puts "Ending sentry_motion test.\n"
 			end
-			# Write image2 to image1, since image1 is what we write and image2 is latest.
-			#puts "Swap images"
-			image1 = image2
 
 			###############################################################
 			# Here we test to determine if motion is detected or if motion
 			# is off. If either case write file to disk.
 			if motion_sentry > 0 || motion_enable == 1 then
+				# Update image1 since we compare latest of image2
+				image1 = image2
 				# Add to the image_array for DRB exchange
 				$image_array[count] = pullTime+","+image_name_DRB_exchange
 				#puts $image_array.max
 				#puts $image_array.index($image_array.max)
 				#log.info("The $image_array.max="+$image_array.max.to_s+" and the $image_array.index($image_array.max)="+$image_array.index($image_array.max).to_s+"!")
-				# Here is where we watermark the image if enabled.
+				# Here is where we watermark the image we are going to write if enabled.
 				if image_watermark == 0 then
-					#image1=timeStamp(process(image1),pullTime)
-					image1=timeStamp(image1,pullTime)
+					write_image=timeStamp(image2,pullTime)
+				else
+					# No watermark
+					write_image=image2
 				end
 				###############################################################
 				# Now put image in a file. Also let us do a quick error trap here.
@@ -552,7 +558,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 				#puts $image_array[count]
 				begin
 					File.open(image_name,'w') do |f|
-						f.write(image1)
+						f.write(write_image)
 					end
 				rescue Exception
 					log.warn("Encountered an error during image file output of: "+$!.to_s)
