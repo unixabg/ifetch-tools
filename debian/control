@@ -3,12 +3,14 @@ Section: web
 Priority: optional
 Maintainer: Richard Nelson <unixabg@gmail.com>
 Build-Depends:
- debhelper-compat (= 9),
+ debhelper-compat (= 12),
 Standards-Version: 4.4.1
 Homepage: http://fyeox.com/ifetch-tools/
+Rules-Requires-Root: no
 
 Package: ifetch-tools
 Architecture: all
+Pre-Depends: ${misc:Pre-Depends}
 Depends:
  adduser,
  ffmpeg,
