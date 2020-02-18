@@ -1,3 +1,18 @@
+ifetch-tools (0.18.0-1) unstable; urgency=medium
+
+  [ Richard Nelson ]
+  * Test for 0 mdpp and clean up logic for monitor feedback.
+  * Drop mdpp logging and feedback since unify in monitor feedback.
+  * Drop native changelog since only releasing as Debian package.
+  * Updating copyright for year 2020.
+  * Bump version in ifetch, wwwifetch, and ifetch-tools-html-page/index.html
+    for debian package upload.
+  * Update standards version to 4.4.1.
+  * Adjust debian/ifetch-tools.postinst check for user group.
+  * Adjust debhelper-compat to 12 in debian/control.
+
+ -- Richard Nelson <unixabg@gmail.com>  Sun, 16 Feb 2020 10:25:36 -0600
+
 ifetch-tools (0.17.2-2) unstable; urgency=medium
 
   [ Richard Nelson ]
