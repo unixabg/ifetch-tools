@@ -457,6 +457,23 @@ class CArchive < HTTPServlet::AbstractServlet
 end
 
 ##############################################################################################
+# CFile returns newest image for a given camera uploading images to folder.
+##############################################################################################
+class CFile < HTTPServlet::AbstractServlet
+	def do_GET(req, res)
+		HTTPAuth.basic_auth(req, res, 'Camera History Realm') {|user, pass|
+			# this block returns true if
+			# authentication token is valid
+			user == HISTORYUSER && pass == HISTORYPASS
+		}
+		res['Content-Type'] = "image/jpeg" # Tell the browser how we are talking
+		raise HTTPServerError, 'Error: cameraName parameter not passed correctly.' if req.query['cameraName'] == nil || /[0-9]+/.match(req.query['cameraName']) == nil
+		cameraName = /[0-9]+/.match(req.query['cameraName']).to_s
+		res.body = IO.read(Dir['/var/lib/ifetch-tools/htdocs/'+cameraName+'/*.jpg'].sort_by(&File.method(:ctime)).last.to_s)
+	end
+end
+
+##############################################################################################
 # CLive is dynamic to create a live view of each camera that is listed from the
 # conf dir at the time of the servlet creation. The tool will use the listing of files with
 # the .conf extension.
@@ -790,6 +807,7 @@ s = WEBrick::HTTPServer.new(
 # Monitor Operations
 s.mount("/archive", CArchive)
 s.mount("/snapshot", CSnapshot)
+s.mount("/cfile", CFile)
 s.mount("/live", CLive)
 s.mount("/livesingle", CLiveSingle)
 s.mount("/monitor", CMonitor)
