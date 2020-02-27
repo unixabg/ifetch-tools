@@ -514,6 +514,8 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 							motion_sentry = image_count_on_motion
 						else
 							log.info("Insufficient motion: mdpp=#{mdpp} and motion_mdpp=#{motion_mdpp}.")
+							# Update image1 since we compare latest of image2
+							image1 = image2
 						end
 					else
 						log.info("The mdpp call did not return a number: mdpp=#{mdpp}!")
