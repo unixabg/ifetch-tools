@@ -469,7 +469,9 @@ class CFile < HTTPServlet::AbstractServlet
 		res['Content-Type'] = "image/jpeg" # Tell the browser how we are talking
 		raise HTTPServerError, 'Error: cameraName parameter not passed correctly.' if req.query['cameraName'] == nil || /[0-9]+/.match(req.query['cameraName']) == nil
 		cameraName = /[0-9]+/.match(req.query['cameraName']).to_s
-		res.body = IO.read(Dir['/var/lib/ifetch-tools/htdocs/'+cameraName+'/*.jpg'].sort_by(&File.method(:ctime)).last.to_s)
+		#res.body = IO.read(Dir['/var/lib/ifetch-tools/htdocs/'+cameraName+'/*.jpg'].sort_by(&File.method(:ctime)).last.to_s)
+		imgArray = Dir['/var/lib/ifetch-tools/htdocs/'+cameraName+'/*.jpg'].sort_by(&File.method(:ctime))
+		res.body = IO.read(imgArray[imgArray.length - 1].to_s)
 	end
 end
 
