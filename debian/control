@@ -10,7 +10,8 @@ Rules-Requires-Root: no
 
 Package: ifetch-tools
 Architecture: all
-Pre-Depends: ${misc:Pre-Depends}
+Pre-Depends:
+ ${misc:Pre-Depends},
 Depends:
  adduser,
  ffmpeg,
