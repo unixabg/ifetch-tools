@@ -1,4 +1,5 @@
 examples	/usr/share/ifetch-tools
+helpers		/usr/share/ifetch-tools
 htdocs		/usr/share/ifetch-tools
 ifetch		/usr/bin
 templates	/usr/share/ifetch-tools
