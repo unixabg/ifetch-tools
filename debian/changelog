@@ -1,3 +1,18 @@
+ifetch-tools (0.18.1-1) unstable; urgency=medium
+
+  [ Richard Nelson ]
+  * Initial commit to pull in images from a directory of images in wwwifetch.
+  * Improve motion when insufficient mddp in ifetch.
+  * Step back one image to avoid any collision on CFile method in wwwifetch.
+  * Initial commit to add a helper script for cameras that only offer a stable
+    means to collect images via rtsp.
+  * Bump version in ifetch, wwwifetch, and ifetch-tools-html-page/index.html
+    for debian package upload.
+  * Run wrap-and-sort -bast on debian/control.
+  * Install helpers to /usr/share/ifetch-tools in debian/ifetch-tools.install.
+
+ -- Richard Nelson <unixabg@gmail.com>  Sun, 15 Mar 2020 09:27:07 -0500
+
 ifetch-tools (0.18.0-1) unstable; urgency=medium
 
   [ Richard Nelson ]
