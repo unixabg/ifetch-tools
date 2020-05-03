@@ -38,20 +38,27 @@ if [ ${_imagePath} != "0" ] && [ ${_rtspPath} != "0" ]; then
 		mkdir -p ${_imagePath}/${_cameraNum}
 	fi
 	echo $$ > ${_imagePath}/${_cameraNum}/pid
-	echo "I: Spawning ffmpeg rtsp collection and images housekeeper."
+	echo "I: Attempting to spawn ffmpeg rtsp collection and images housekeeper."
+	_spawnCount=0
 	while true
 	do
+		_spawnCount=$((${_spawnCount} +1))
+		echo -n "I: Spawning ffmpeg - spawn count of ${_spawnCount} and pid of "
 		ffmpeg -y -rtsp_transport tcp -stimeout 2000000 -i ${_rtspPath} -vf fps=fps=10 ${_imagePath}/${_cameraNum}/%1d.jpg  >/dev/null 2>&1 < /dev/null &
+		_PID=$!
+		echo "${_PID}."
 		sleep 45
 		while true
 		do
-			if ! ls ${_imagePath}/${_cameraNum}/*.jpg | grep -qs jpg
+			if ! find ${_imagePath}/${_cameraNum}/ -name "*.jpg" -type f | grep -qs jpg
 			then
-				echo "E: Appears no jpg files found! Sending break.";
+				echo "E: Appears no jpg files found! Killing ffmpeg and sending break to respawn.";
+				kill ${_PID}
 				break
+			else
+				find ${_imagePath}/${_cameraNum}/ -name "*.jpg" -type f -mmin +1 -delete
+				sleep 30
 			fi
-			find ${_imagePath}/${_cameraNum}/ -name "*.jpg" -type f -mmin +1 -delete
-			sleep 30
 		done
 	done
 else
