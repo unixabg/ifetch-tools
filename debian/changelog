@@ -1,3 +1,16 @@
+ifetch-tools (0.18.2-1) unstable; urgency=medium
+
+  [ Richard Nelson ]
+  * Improve verbiage and test for ffmpeg failure in /helpers/rtsp-to-jpegs.sh.
+  * Adjust watch file for tagging in debian/watch.
+  * Bump version in ifetch, wwwifetch, and ifetch-tools-html-page/index.html
+    for debian package upload.
+  * Update manpages debian/manpages/ifetch.1 and debian/manpages/wwwifetch.1.
+  * Set upstream metadata fields: Bug-Database, Bug-Submit, Repository,
+    Repository-Browse.
+
+ -- Richard Nelson <unixabg@gmail.com>  Mon, 11 May 2020 16:37:29 -0500
+
 ifetch-tools (0.18.1-1) unstable; urgency=medium
 
   [ Richard Nelson ]
