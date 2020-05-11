@@ -29,7 +29,7 @@ case "${1}" in
 
 		if [ ! -e /etc/ifetch-tools/ifetch-tools.conf ]
 		then
-			cp /usr/share/ifetch-tools/examples/ifetch-tools.conf /etc/ifetch-tools/ifetch-tools.conf
+			cp /usr/share/doc/ifetch-tools/examples/ifetch-tools.conf /etc/ifetch-tools/ifetch-tools.conf
 			chmod 600 /etc/ifetch-tools/ifetch-tools.conf
 			chown ifetch-tools:ifetch-tools /etc/ifetch-tools/ifetch-tools.conf
 		fi
