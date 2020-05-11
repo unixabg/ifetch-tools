@@ -8,8 +8,10 @@ ifetch-tools (0.18.2-1) unstable; urgency=medium
   * Update manpages debian/manpages/ifetch.1 and debian/manpages/wwwifetch.1.
   * Set upstream metadata fields: Bug-Database, Bug-Submit, Repository,
     Repository-Browse.
+  * Move examples to correct location on installs with ifetech-tools.examples
+    and ifetch-tools.postinstall. Drop from ifetch-tools.install.
 
- -- Richard Nelson <unixabg@gmail.com>  Mon, 11 May 2020 16:37:29 -0500
+ -- Richard Nelson <unixabg@gmail.com>  Mon, 11 May 2020 18:14:53 -0500
 
 ifetch-tools (0.18.1-1) unstable; urgency=medium
 
