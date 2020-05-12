@@ -10,8 +10,9 @@ ifetch-tools (0.18.2-1) unstable; urgency=medium
     Repository-Browse.
   * Move examples to correct location on installs with ifetech-tools.examples
     and ifetch-tools.postinstall. Drop from ifetch-tools.install.
+  * Add vcs fields to debain/control.
 
- -- Richard Nelson <unixabg@gmail.com>  Mon, 11 May 2020 18:14:53 -0500
+ -- Richard Nelson <unixabg@gmail.com>  Mon, 11 May 2020 21:02:42 -0500
 
 ifetch-tools (0.18.1-1) unstable; urgency=medium
 
