@@ -1,3 +1,9 @@
+ifetch-tools (0.18.2-2) UNRELEASED; urgency=low
+
+  * Use secure URI in Homepage field.
+
+ -- Debian Janitor <janitor@jelmer.uk>  Wed, 02 Sep 2020 06:02:09 -0000
+
 ifetch-tools (0.18.2-1) unstable; urgency=medium
 
   [ Richard Nelson ]
