@@ -56,7 +56,8 @@ require 'net/http/digest_auth'
 require 'time'
 #require "rubygems"
 #gem "rmagick", "= 2.15.3"
-require "rmagick"
+require 'rmagick'
+include Magick
 
 ##############################################################################################
 # Initialize the global array for the image access info with all nil values.
