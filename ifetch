@@ -181,7 +181,6 @@ end
 # timeStamp images with RMagick.
 ##############################################################################################
 def timeStamp(image,textInfo)
-	#GC.start
 	mark = Magick::Image.new(300, 30) do
 		self.background_color = 'black'
 	end
@@ -207,7 +206,7 @@ def timeStamp(image,textInfo)
 	mark.destroy!
 	image.destroy!
 	gc = nil
-	GC.start
+	GC.start(full_mark: true, immediate_sweep: true)
 	return $image_temp
 end
 
@@ -482,9 +481,13 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 			sentry_gc_count=sentry_gc_count+1
 			if sentry_gc_count%100 == 0
 				# For sanity run the GC in an effort to keep RMagick memory in check.
-				GC.start
+				memory_usage_before = `ps -o rss= -p #{Process.pid}`.to_i # in kilobytes
+				GC.start(full_mark: true, immediate_sweep: true)
 				sentry_gc_count = 0
+				memory_usage_after = `ps -o rss= -p #{Process.pid}`.to_i # in kilobytes
+				log.info("After garbage collection: before=#{memory_usage_before} after=#{memory_usage_after} !")
 			end
+
 			# Get the current image
 			image2=pullimage(image_addr,image_addr_port,image_url,image_uid,image_pwd,image_auth_type)
 			# Adding pullTime to timeStamp images.
