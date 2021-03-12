@@ -1,3 +1,10 @@
+ifetch-tools (0.18.2-2) unstable; urgency=medium
+
+  [ Richard Nelson ]
+  * Fix path for copy in debian/ifetch-tools.postinst (Closes: #985051).
+
+ -- Richard Nelson <unixabg@gmail.com>  Fri, 12 Mar 2021 08:31:05 -0600
+
 ifetch-tools (0.18.2-1) unstable; urgency=medium
 
   [ Richard Nelson ]
