@@ -534,13 +534,6 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 				#puts $image_array.max
 				#puts $image_array.index($image_array.max)
 				#log.info("The $image_array.max="+$image_array.max.to_s+" and the $image_array.index($image_array.max)="+$image_array.index($image_array.max).to_s+"!")
-				# Here is where we watermark the image we are going to write if enabled.
-				if image_watermark == 0 then
-					write_image=timeStamp(image2,pullTime)
-				else
-					# No watermark
-					write_image=image2
-				end
 				###############################################################
 				# Now put image in a file. Also let us do a quick error trap here.
 				#puts count
@@ -548,7 +541,13 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 				#puts $image_array[count]
 				begin
 					File.open(image_name,'w') do |f|
-						f.write(write_image)
+						# Here is where we watermark the image we are going to write if enabled.
+						if image_watermark == 0 then
+							f.write(timeStamp(image2,pullTime))
+						else
+							# No watermark
+							f.write(image2)
+						end
 					end
 				rescue Exception
 					log.warn("Encountered an error during image file output of: "+$!.to_s)
