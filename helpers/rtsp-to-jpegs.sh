@@ -53,7 +53,8 @@ if [ ${_imagePath} != "0" ] && [ ${_rtspPath} != "0" ]; then
 			if ! find ${_imagePath}/${_cameraNum}/ -name "*.jpg" -type f | grep -qs jpg
 			then
 				echo "E: Appears no jpg files found! Killing ffmpeg and sending break to respawn.";
-				kill ${_PID}
+				kill -9 ${_PID}
+				sleep 5
 				break
 			else
 				find ${_imagePath}/${_cameraNum}/ -name "*.jpg" -type f -mmin +1 -delete
