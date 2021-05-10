@@ -489,24 +489,52 @@ class CLive < HTTPServlet::AbstractServlet
 		}
 		res['Content-Type'] = "text/html" # Tell the browser how we are talking
 		myTempRespond = ""
+		if req.query['cameraList'] == nil
+			cameraList = Dir["/etc/ifetch-tools/cameras/*.conf"]
+		else
+			raise HTTPServerError, 'Error: cameraList parameter not passed correctly.' if /[0-9_]+/.match(req.query['cameraList']) == nil
+			cameraList = /[0-9_]+/.match(req.query['cameraList']).to_s.split("_")
+			#cameraList.reject { |item| item.nil? || item == '' }
+			cameraList.map! do |cam_tmp|
+				cam_tmp = '/etc/ifetch-tools/cameras/'+cam_tmp+'.conf'
+				#myTempRespond = myTempRespond+"<br> "+cam_tmp+" -- "+cam_tmp.class.to_s
+			end
+			#myTempRespond = myTempRespond+"<br> "+cameraList.length.to_s
+			#tmpCameraList.split("_").sort.each do |camera_num|
+			#	camera_num = '/etc/ifetch-tools/cameras/'+camera_num+'.conf'
+			#	#myTempRespond = myTempRespond+"<br> "+camera_num
+			#end
+		end
+		#cameraList = Dir["/etc/ifetch-tools/cameras/*.conf"]
+		#cameraList.sort.each do |cam_tmp|
+		#	cam_tmp = '/etc/ifetch-tools/cameras/'+cam_tmp+'.conf'
+		#	myTempRespond = myTempRespond+"<br> "+cam_tmp+" -- "+cam_tmp.class.to_s
+		#	#myTempRespond = myTempRespond+"<br> * "+cam_tmp
+		#end
 		###############################################################
 		# Setup the image_ vars we are going to need
 		image_alt = "no_image_alt"
-		Dir["/etc/ifetch-tools/cameras/*.conf"].sort.each do |cam_tmp|
-			# Camera collection being attempted
-			###############################################################
-			# First source in the locals from ifetch-tools.conf file
-			getlocalvars('CLive Class', 'image_')
-			# Now let the camera.conf file overload the settings they want.
-			begin
-				eval(File.open(cam_tmp) {|fh| fh.read})
-				rescue
-					res.body = eval(puts "Encountered reading the camera.conf file of: "+$!.to_s)
-					# Stop after the error feedback.
-				break
+		#myTempRespond = myTempRespond+"<br> Getting ready to spin the cameras!"
+		cameraList.sort.each do |cam_tmp|
+			#cam_tmp = '/etc/ifetch-tools/cameras/'+cam_tmp+'.conf'
+			if File.exist?(cam_tmp) then
+				# Camera collection being attempted
+				###############################################################
+				# First source in the locals from ifetch-tools.conf file
+				getlocalvars('CLive Class', 'image_')
+				# Now let the camera.conf file overload the settings they want.
+				begin
+					eval(File.open(cam_tmp) {|fh| fh.read})
+					rescue
+						res.body = eval(puts "Encountered reading the camera.conf file of: "+$!.to_s)
+						# Stop after the error feedback.
+					break
+				end
+				# Add the inline image and link to the page.
+				myTempRespond = myTempRespond+'<a href="/livesingle?cameraName='+File.basename(cam_tmp, ".conf")+'" title="'+image_alt+'"><img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" class="camImage" id="'+File.basename(cam_tmp, ".conf")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" height="'+HISTORYIMAGEHEIGHT+'" ></a>'
+			else
+				myTempRespond = myTempRespond+'*** Unable to locate '+cam_tmp+' file.! ***'
 			end
-			# Add the inline image and link to the page.
-			myTempRespond = myTempRespond+'<a href="/livesingle?cameraName='+File.basename(cam_tmp, ".conf")+'" title="'+image_alt+'"><img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" class="camImage" id="'+File.basename(cam_tmp, ".conf")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" height="'+HISTORYIMAGEHEIGHT+'" ></a>'
 		end
 		GC.start
 		res.body = eval(File.open("/usr/share/ifetch-tools/templates/Live") {|fh| fh.read})
