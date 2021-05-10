@@ -244,7 +244,7 @@ if lock_file.flock(File::LOCK_EX|File::LOCK_NB) == 0 then
 
 	###############################################################
 	# Setup for logging general output.
-	log = Logger.new(log_name, 5, log_size*1024)
+	log = Logger.new(log_name, log_files, log_size*1024)
 	log.info("RMagick memory management status: "+Magick::MANAGED_MEMORY.to_s)
 
 	###############################################################
