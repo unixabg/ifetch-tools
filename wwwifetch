@@ -427,28 +427,45 @@ class CArchive < HTTPServlet::AbstractServlet
 		}
 		res['Content-Type'] = "text/html" # Tell the browser how we are talking
 		myTempRespond = ""
+		if req.query['cameraList'] == nil
+			cameraList = Dir["/etc/ifetch-tools/cameras/*.conf"]
+		else
+			raise HTTPServerError, 'Error: cameraList parameter not passed correctly.' if /[0-9_]+/.match(req.query['cameraList']) == nil
+			cameraList = /[0-9_]+/.match(req.query['cameraList']).to_s.split("_")
+			#cameraList.reject { |item| item.nil? || item == '' }
+			cameraList.map! do |cam_tmp|
+				cam_tmp = '/etc/ifetch-tools/cameras/'+cam_tmp+'.conf'
+				#myTempRespond = myTempRespond+"<br> "+cam_tmp+" -- "+cam_tmp.class.to_s
+			end
+		end
 		###############################################################
 		# Setup the image_ vars we are going to need
 		image_alt = "no_image_alt"
-		Dir["/etc/ifetch-tools/cameras/*.conf"].sort.each do |cam_tmp|
-			###############################################################
-			# First source in the locals from ifetch-tools.conf file
-			getlocalvars('CArchive Class', 'image_')
-			# Now let the camera.conf file overload the settings they want.
-			begin
-				eval(File.open(cam_tmp) {|fh| fh.read})
-				rescue
-					res.body = eval(puts "Encountered reading the camera.conf file of: "+$!.to_s)
-					# Stop after the error feedback.
-				break
-			end
-			# Add the inline image and link to the page.
-			# If cam offline drop archive link
-			cam_status = camerastatus(File.basename(cam_tmp, ".conf"))
-			if cam_status[0] == 0 then
-				myTempRespond = myTempRespond+'<img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" class="camImage" id="'+File.basename(cam_tmp, ".conf")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" height="'+HISTORYIMAGEHEIGHT+'" >'
+		cameraList.sort.each do |cam_tmp|
+			#cam_tmp = '/etc/ifetch-tools/cameras/'+cam_tmp+'.conf'
+			if File.exist?(cam_tmp) then
+				# Camera collection being attempted
+				###############################################################
+				# First source in the locals from ifetch-tools.conf file
+				getlocalvars('CArchive Class', 'image_')
+				# Now let the camera.conf file overload the settings they want.
+				begin
+					eval(File.open(cam_tmp) {|fh| fh.read})
+					rescue
+						res.body = eval(puts "Encountered reading the camera.conf file of: "+$!.to_s)
+						# Stop after the error feedback.
+					break
+				end
+				# Add the inline image and link to the page.
+				# If cam offline drop archive link
+				cam_status = camerastatus(File.basename(cam_tmp, ".conf"))
+				if cam_status[0] == 0 then
+					myTempRespond = myTempRespond+'<img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" class="camImage" id="'+File.basename(cam_tmp, ".conf")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" height="'+HISTORYIMAGEHEIGHT+'" >'
+				else
+					myTempRespond = myTempRespond+'<a href="/camerahistory?cameraName='+File.basename(cam_tmp, ".conf").to_s+'&index=0&navigation=0&basicView=0" title="'+image_alt+'"><img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" class="camImage" id="'+File.basename(cam_tmp, ".conf")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" height="'+HISTORYIMAGEHEIGHT+'" ></a>'
+				end
 			else
-				myTempRespond = myTempRespond+'<a href="/camerahistory?cameraName='+File.basename(cam_tmp, ".conf").to_s+'&index=0&navigation=0&basicView=0" title="'+image_alt+'"><img src="/snapshot?cameraName='+File.basename(cam_tmp, ".*")+'" class="camImage" id="'+File.basename(cam_tmp, ".conf")+'" alt="'+image_alt+'" width="'+HISTORYIMAGEWIDTH+'" height="'+HISTORYIMAGEHEIGHT+'" ></a>'
+				myTempRespond = myTempRespond+'*** Unable to locate '+cam_tmp+' file.! ***'
 			end
 		end
 		GC.start
