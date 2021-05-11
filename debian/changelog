@@ -1,3 +1,28 @@
+ifetch-tools (0.18.3-1) unstable; urgency=medium
+
+  [ Debian Janitor ]
+  * Fix day-of-week for changelog entries 0.15.24-1, 0.15.16-1, 0.15.15-1,
+    0.15.12a-1.
+
+  [ Richard Nelson ]
+  * Minor adjustment on GC and log some memory info on ifetch.
+  * Drop timeout wrapper and use built in timeout to image pull in ifetch.
+  * Harmonize pullimage some in ifetch.
+  * Add the constants and methods to the Object namespace for rmagick in
+    ifetch.
+  * Drop temp variable for file write and just write file in ifetch.
+  * Send more forcefull kill signal in helpers/rtsp-to-jpegs.sh.
+  * Bump version numbers in ifetch and wwwifetch.
+  * Initial commit to Live View a given list of cameras with url param in
+    wwwifetch.
+  * Utilize log_files variable from examples/ifetch-tools.conf in ifetch.
+  * Initial commit to Archive View a given list of cameras with url param in
+    wwwifetch.
+  * Drop cameraList sort for unique presentation in wwwifetch.
+  * Adjust VER in ifetch and wwwifetch for release on master branch.
+
+ -- Richard Nelson <unixabg@gmail.com>  Tue, 11 May 2021 08:37:14 -0500
+
 ifetch-tools (0.18.2-2) unstable; urgency=medium
 
   [ Richard Nelson ]
