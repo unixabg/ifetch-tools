@@ -441,7 +441,7 @@ class CArchive < HTTPServlet::AbstractServlet
 		###############################################################
 		# Setup the image_ vars we are going to need
 		image_alt = "no_image_alt"
-		cameraList.sort.each do |cam_tmp|
+		cameraList.each do |cam_tmp|
 			#cam_tmp = '/etc/ifetch-tools/cameras/'+cam_tmp+'.conf'
 			if File.exist?(cam_tmp) then
 				# Camera collection being attempted
@@ -532,7 +532,7 @@ class CLive < HTTPServlet::AbstractServlet
 		# Setup the image_ vars we are going to need
 		image_alt = "no_image_alt"
 		#myTempRespond = myTempRespond+"<br> Getting ready to spin the cameras!"
-		cameraList.sort.each do |cam_tmp|
+		cameraList.each do |cam_tmp|
 			#cam_tmp = '/etc/ifetch-tools/cameras/'+cam_tmp+'.conf'
 			if File.exist?(cam_tmp) then
 				# Camera collection being attempted
