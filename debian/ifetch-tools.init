@@ -87,7 +87,7 @@ start_daemon()
 
 stop_daemon()
 {
-	signal=$1
+	signal=9
 
 	echo -n "Stopping $DESC: "
 	kill -s $signal $(pgrep -u $_UID ifetch)
