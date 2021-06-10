@@ -50,41 +50,32 @@ include WEBrick
 # This def will pull the image from the cam now and return the response.
 ##############################################################################################
 def pullimage(address,port,url,uid,pwd,auth_type)
-	Timeout.timeout(10) do
-		# Here we determine if we need to handle as basic auth or digest
-		if auth_type == 'digest' then
-			uri = URI.parse('http://'+address.to_s+':'+port.to_s+''+url.to_s)
-			uri.user = uid
-			uri.password = pwd
-			Net::HTTP.start(address, port) do |http|
-				req_img = Net::HTTP::Get.new uri.request_uri
-				digest_auth = Net::HTTP::DigestAuth.new
-				response = http.request(req_img)
-				# response is a 401 response with a WWW-Authenticate header
-				auth = digest_auth.auth_header uri, response['www-authenticate'], 'GET'
-				# create a new request with the Authorization header
-				req_img = Net::HTTP::Get.new uri.request_uri
-				req_img.add_field 'Authorization', auth
-				# re-issue request with Authorization
-				response = http.request req_img
-				# Now send response back
-				return response.body
-			end
-		else
-			Net::HTTP.start(address, port) do |http|
-				req_img = Net::HTTP::Get.new(url)
-				#req_img.basic_auth 'username', 'password'
-				req_img.basic_auth uid, pwd
-				response = http.request(req_img)
-				#puts "Code = #{response.code}"
-				#puts "Message = #{response.message}"
-				#response.each {|key, val| printf "%14s = %40.40s\n", key, val }
-				## Nelson working		f.write(response.body)
-				#Magick::Image.from_blob(response.body)[0];
-				return response.body
-			end
+	# Here we determine if we need to handle as basic auth or digest
+	if auth_type == 'digest' then
+		uri = URI.parse('http://'+address.to_s+':'+port.to_s+''+url.to_s)
+		uri.user = uid
+		uri.password = pwd
+		response = Net::HTTP.start(address, port, open_timeout: 5, read_timeout: 5) do |http|
+			req_img = Net::HTTP::Get.new uri.request_uri
+			digest_auth = Net::HTTP::DigestAuth.new
+			temp_response = http.request(req_img)
+			# response is a 401 response with a WWW-Authenticate header
+			auth = digest_auth.auth_header uri, temp_response['www-authenticate'], 'GET'
+			# create a new request with the Authorization header
+			req_img = Net::HTTP::Get.new uri.request_uri
+			req_img.add_field 'Authorization', auth
+			# re-issue request with Authorization
+			http.request(req_img)
+		end
+	else
+		response = Net::HTTP.start(address, port, open_timeout: 5, read_timeout: 5) do |http|
+			req_img = Net::HTTP::Get.new(url)
+			req_img.basic_auth uid, pwd
+			http.request(req_img)
 		end
 	end
+	# Now send response back
+	return response.body
 end
 
 ##############################################################################################
