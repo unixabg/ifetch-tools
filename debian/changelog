@@ -3,14 +3,14 @@ ifetch-tools (0.18.4-1) unstable; urgency=medium
   [ Richard Nelson ]
   * Be more aggressive on ifetch-tools stop_daemon in debian/ifetch-tools.init.
   * Reduce wait time for service to fully die in debian/ifetch-tools.init.
-  * Update debian/changelog for next upload to mentors.
   * Sync def of pullimage from ifetch to wwwifetch.
   * Improve logging and backup of logs for debug abilities in
     helpers/rtsp-to-jpegs.sh.
   * Update copyright in project files.
   * Adjust version number for release of 0.18.4 in ifetch and wwwifetch.
+  * Bump debhelper-compat to 13 in debian/control.
 
- -- Richard Nelson <unixabg@gmail.com>  Mon, 30 Aug 2021 18:56:23 -0500
+ -- Richard Nelson <unixabg@gmail.com>  Mon, 30 Aug 2021 21:11:16 -0500
 
 ifetch-tools (0.18.3-1) unstable; urgency=medium
 
