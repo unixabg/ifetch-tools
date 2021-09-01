@@ -92,17 +92,9 @@ def camerastatus(_camera_num)
 		lock_file.close
 	else
 		log_file_name = "/var/log/ifetch-tools/"+_camera_num.to_s+".txt"
-		# Remarked out the backtick with tail for a pure ruby try. Not for sure about performance but want to try.
-		# last_line = `/usr/bin/tail -n 1 #{log_file_name}`.split(/,/)
-		last_line= Array.new
-		File.open(log_file_name, "r") { |f|
-			while f.gets
-				last_line.push $_
-				last_line.shift if $. > 1
-			end
-		}
+		last_line = `/usr/bin/tail -n 1 #{log_file_name}`.split(/,/)
 		my_return[0] = 1
-		my_return[1] = last_line[0].split(/,/)
+		my_return[1] = last_line
 	end
 	return my_return
 end
