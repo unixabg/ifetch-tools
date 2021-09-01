@@ -19,7 +19,7 @@ while [ -n "$1" ]; do # while loop starts
 	--usage)
 		echo
 		echo "######################################### Required parameters #########################################"
-		echo "  --imagepath       - path to store images"
+		echo "  --imagepath       - path to store images (note: if using ifetch-tools imagepath should be /var/lib/ifetch-tools/rtsp/)"
 		echo "  --rtsppath        - path of the rtsp stream in the form rtsp://username:password@ipaddress/blah/blah/"
 		echo
 		exit 0
