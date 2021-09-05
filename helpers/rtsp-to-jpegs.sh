@@ -47,7 +47,7 @@ if [ ${_imagePath} != "0" ] && [ ${_rtspPath} != "0" ]; then
 	while true
 	do
 		_spawnCount=$((${_spawnCount} +1))
-		ffmpeg -y -rtsp_transport tcp -stimeout 2000000 -i ${_rtspPath} -vf fps=fps=10 ${_imagePath}/${_cameraNum}/%1d.jpg  >/dev/null 2>&1 < /dev/null &
+		ffmpeg -y -rtsp_transport tcp -stimeout 2000000 -i ${_rtspPath} -vf fps=fps=5 ${_imagePath}/${_cameraNum}/%1d.jpg  >/dev/null 2>&1 < /dev/null &
 		_PID=$!
 		echo "$(date +%Y%m%d%H%M%S) I: Spawning ffmpeg - spawn count of ${_spawnCount} and pid of ${_PID} ." >> ${_imagePath}/${_cameraNum}/log
 		sleep 45
