@@ -675,7 +675,7 @@ class CSnapshot < HTTPServlet::AbstractServlet
 				# return the current camera snapshot image.
 				res.body = pullimage(image_addr,image_addr_port,image_url,image_uid,image_pwd,image_auth_type)
 			else
-				res.body = IO.read('/usr/share/ifetch-tools/htdocs/ccerror.jpg')
+				res.body = IO.read('/usr/share/ifetch-tools/htdocs/loading.gif')
 			end
 		end
 	end
