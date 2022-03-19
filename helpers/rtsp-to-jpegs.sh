@@ -1,6 +1,27 @@
 #!/bin/bash
 #set -x
 
+Cleanup_worker () {
+	echo ${_PID}
+	if [ -z "${_PID}" ]; then
+		echo "$(date +%Y%m%d%H%M%S) I: Cleanup_worker called and no spawned ffmpeg process found." >> ${_imagePath}/${_cameraNum}/log
+	else
+		echo "$(date +%Y%m%d%H%M%S) I: Cleanup_worker called and attempting to kill ffmpeg process ${_PID}." >> ${_imagePath}/${_cameraNum}/log
+		if [ -d /proc/${_PID} ]; then
+			kill -9 ${_PID}
+		else
+			echo "$(date +%Y%m%d%H%M%S) I: Cleanup_worker says the process is not running." >> ${_imagePath}/${_cameraNum}/log
+		fi
+	fi
+}
+
+Cleanup_exit () {
+	Cleanup_worker
+}
+
+# Set a trap on exit and we will attempt to run Cleanup
+trap Cleanup_exit SIGHUP SIGINT SIGKILL EXIT
+
 # Test and assign some required variables for rtsp-to-jpegs
 _imagePath=0
 _rtspPath=0
@@ -37,13 +58,39 @@ if [ ${_imagePath} != "0" ] && [ ${_rtspPath} != "0" ]; then
 	then
 		mkdir -p ${_imagePath}/${_cameraNum}
 	fi
+	LOCKFILE="${_imagePath}/${_cameraNum}/lock"
+
+	# Timeout in seconds.
+	TIMEOUT=2
+
+	# Create the lockfile.
+	touch $LOCKFILE
+
+	# Create a file descriptor over the given lockfile.
+	exec {FD}<>$LOCKFILE
+	echo "The lock FD is: "$FD
+
+	# Try to lock the file descriptor $FD during $TIMEOUT seconds.
+	# If it failsm exit with an error.
+	# Otherwise, the lock is acquired and implicitely droped at the end of the script.
+	if ! flock -x -w $TIMEOUT $FD; then
+		echo "Failed to obtain a lock within $TIMEOUT seconds"
+		echo "Another collection instance for camera ${_cameraNum} is probably running."
+		exit 1
+	else
+		echo "Lock acquired for camera ${_cameraNum}."
+	fi
+
 	echo $$ > ${_imagePath}/${_cameraNum}/pid
 	if [ -f ${_imagePath}/${_cameraNum}/log ]
 	then
 		mv ${_imagePath}/${_cameraNum}/log ${_imagePath}/${_cameraNum}/$(date +%Y%m%d%H%M%S).log
 	fi
+
 	echo "I: Attempting to spawn ffmpeg rtsp collection and images housekeeper." > ${_imagePath}/${_cameraNum}/log
 	_spawnCount=0
+
+	# Run the collection and monitor
 	while true
 	do
 		_spawnCount=$((${_spawnCount} +1))
@@ -56,7 +103,7 @@ if [ ${_imagePath} != "0" ] && [ ${_rtspPath} != "0" ]; then
 			if ! find ${_imagePath}/${_cameraNum}/ -name "*.jpg" -type f | grep -qs jpg
 			then
 				echo "$(date +%Y%m%d%H%M%S) E: Appears no jpg files found! Killing ffmpeg and sending break to respawn." >> ${_imagePath}/${_cameraNum}/log
-				kill -9 ${_PID}
+				Cleanup_worker
 				sleep 5
 				break
 			else
