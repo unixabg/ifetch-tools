@@ -573,7 +573,7 @@ class CLiveSingle < HTTPServlet::AbstractServlet
 		end
 		# Add the inline image and link to the page.
 		# Put the camera image in the template return
-		myTempRespond = '<img height="80%" src="/snapshot?cameraName='+cameraName+'" id="myImage" alt="'+image_alt+'"></a>'
+		myTempRespond = '<img height="80%" src="/cfile?cameraName='+cameraName+'" id="myImage" alt="'+image_alt+'"></a>'
 		GC.start
 		res.body = eval(File.open("/usr/share/ifetch-tools/templates/LiveSingle") {|fh| fh.read})
 	end
