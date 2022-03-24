@@ -25,6 +25,8 @@ trap Cleanup_exit SIGHUP SIGINT SIGKILL EXIT
 # Test and assign some required variables for rtsp-to-jpegs
 _imagePath=0
 _rtspPath=0
+_rtspProto="udp"
+
 while [ -n "$1" ]; do # while loop starts
 	case "$1" in
 	--imagepath)
@@ -37,11 +39,17 @@ while [ -n "$1" ]; do # while loop starts
 		echo "--rtsppath of $1 was passed..."
 		_rtspPath=$1
 		;;
+	--rtspproto)
+		shift
+		echo "--rtsppath of $1 was passed..."
+		_rtspProto=$1
+		;;
 	--usage)
 		echo
 		echo "######################################### Required parameters #########################################"
 		echo "  --imagepath       - path to store images (note: if using ifetch-tools imagepath should be /var/lib/ifetch-tools/rtsp/)"
 		echo "  --rtsppath        - path of the rtsp stream in the form rtsp://username:password@ipaddress/blah/blah/"
+		echo "  --rtspproto       - tcp or udp for the rtsp_transport on ffmpeg, the default is udp"
 		echo
 		exit 0
 		;;
@@ -58,6 +66,7 @@ if [ ${_imagePath} != "0" ] && [ ${_rtspPath} != "0" ]; then
 	then
 		mkdir -p ${_imagePath}/${_cameraNum}
 	fi
+
 	LOCKFILE="${_imagePath}/${_cameraNum}/lock"
 
 	# Timeout in seconds.
@@ -94,7 +103,7 @@ if [ ${_imagePath} != "0" ] && [ ${_rtspPath} != "0" ]; then
 	while true
 	do
 		_spawnCount=$((${_spawnCount} +1))
-		ffmpeg -y -rtsp_transport tcp -stimeout 2000000 -i ${_rtspPath} -vf fps=fps=5 ${_imagePath}/${_cameraNum}/%1d.jpg  >/dev/null 2>&1 < /dev/null &
+		ffmpeg -y -rtsp_transport ${_rtspProto} -stimeout 2000000 -i ${_rtspPath} -vf fps=fps=5 ${_imagePath}/${_cameraNum}/%1d.jpg  >/dev/null 2>&1 < /dev/null &
 		_PID=$!
 		echo "$(date +%Y%m%d%H%M%S) I: Spawning ffmpeg - spawn count of ${_spawnCount} and pid of ${_PID} ." >> ${_imagePath}/${_cameraNum}/log
 		sleep 45
