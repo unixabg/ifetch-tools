@@ -105,20 +105,20 @@ if [ ${_imagePath} != "0" ] && [ ${_rtspPath} != "0" ]; then
 	while true
 	do
 		_spawnCount=$((${_spawnCount} +1))
-		ffmpeg -y -rtsp_transport ${_rtspProto} -stimeout 2000000 -i ${_rtspPath} -vf fps=fps=5 ${_imagePath}/${_cameraNum}/%1d.jpg  >/dev/null 2>&1 < /dev/null &
+		ffmpeg -y -rtsp_transport ${_rtspProto} -stimeout 2000000 -i ${_rtspPath} -vf fps=fps=5 ${_imagePath}/${_cameraNum}/rtsp-%1d.jpg  >/dev/null 2>&1 < /dev/null &
 		_PID=$!
 		echo "$(date +%Y%m%d%H%M%S) I: Spawning ffmpeg - spawn count of ${_spawnCount} and pid of ${_PID} ." >> ${_imagePath}/${_cameraNum}/log
 		sleep 45
 		while true
 		do
-			if ! find ${_imagePath}/${_cameraNum}/ -name "*.jpg" -type f | grep -qs jpg
+			if ! find ${_imagePath}/${_cameraNum}/ -name "rtsp-*.jpg" -type f | grep -qs jpg
 			then
 				echo "$(date +%Y%m%d%H%M%S) E: Appears no jpg files found! Killing ffmpeg and sending break to respawn." >> ${_imagePath}/${_cameraNum}/log
 				Cleanup_worker
 				sleep 5
 				break
 			else
-				find ${_imagePath}/${_cameraNum}/ -name "*.jpg" -type f -mmin +1 -delete
+				find ${_imagePath}/${_cameraNum}/ -name "rtsp-*.jpg" -type f -mmin +1 -delete
 				sleep 30
 			fi
 		done
