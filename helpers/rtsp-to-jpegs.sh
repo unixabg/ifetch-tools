@@ -1,6 +1,8 @@
 #!/bin/bash
 #set -x
 
+_ver="20220404.2"
+
 Cleanup_worker () {
 	echo ${_PID}
 	if [ -z "${_PID}" ]; then
@@ -95,10 +97,10 @@ if [ ${_imagePath} != "0" ] && [ ${_rtspPath} != "0" ]; then
 	echo $$ > ${_imagePath}/${_cameraNum}/pid
 	if [ -f ${_imagePath}/${_cameraNum}/log ]
 	then
-		mv ${_imagePath}/${_cameraNum}/log ${_imagePath}/${_cameraNum}/$(date +%Y%m%d%H%M%S).log
+		mv ${_imagePath}/${_cameraNum}/log ${_imagePath}/${_cameraNum}/log.$(date +%Y%m%d%H%M%S)
 	fi
 
-	echo "I: ${_hostname} - Attempting to spawn ffmpeg rtsp collection and images housekeeper." > ${_imagePath}/${_cameraNum}/log
+	echo "I: Versoin; ${_ver} on ${_hostname} : Attempting to spawn ffmpeg rtsp collection and images housekeeper." > ${_imagePath}/${_cameraNum}/log
 	_spawnCount=0
 
 	# Run the collection and monitor
