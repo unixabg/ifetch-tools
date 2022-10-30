@@ -17,7 +17,7 @@ Pre-Depends:
 Depends:
  adduser,
  ffmpeg,
- lsb-base (>= 3.0-6),
+ lsb-base,
  ruby,
  ruby-net-http-digest-auth,
  ruby-rmagick,
