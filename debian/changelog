@@ -1,3 +1,13 @@
+ifetch-tools (0.18.5-2) unstable; urgency=medium
+
+  * Address old-fsf-address-in-copyright-file warning in debian/copyright.
+  * Address Depends: lsb-base (>= 3.0-6) in debian/control.
+  * Bump standards version in debina/control.
+  * Address missing-systemd-service-for-init.d-script with
+    debian/ifetch-tools.service file (Closes: #1039227).
+
+ -- Richard Nelson <unixabg@gmail.com>  Thu, 01 Jan 2026 08:47:01 -0600
+
 ifetch-tools (0.18.5-1) unstable; urgency=medium
 
   [ Richard Nelson ]
