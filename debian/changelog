@@ -1,3 +1,51 @@
+ifetch-tools (0.18.6-1) unstable; urgency=medium
+
+  [ Richard Nelson ]
+  * Basic camera conf for rtsp-to-jpeg.sh in examples/ifetch-tools.conf and
+    examples/cameras/camera_number.conf.
+  * Bumper version for branch next to 0.18.6-next in ifetch and wwwifetch.
+  * Adjust release in ifetch-tools-html-page/index.html.
+  * Add image_url for rtsp-to-jpegs.sh usage in examples/ifetch-tools.conf and
+    examples/cameras/camera_number.conf.
+  * Cleaned up reference in htdocs/index.html.
+  * Attempt to add locking and signal handling on helpers/rtsp-to-jpegs.sh.
+  * Add default rtsp protocol to udp in helpers/rtsp-to-jpegs.sh.
+  * Add hostname to logging in helpers/rtsp-to-jpegs.sh.
+  * Initial commit to use temp image pulls for live and archive display groups
+    in ifetch and wwwifetch.
+  * Initial scratch work for cluster helper of helpers/rtsp-cluster.sh.
+  * Prefix image name on helpers/rtsp-to-jpegs.sh
+  * Adjusted log name and added version information on helpers/rtsp-to-jpegs.sh
+  * Adjust ffmept timeout param for latest ffmpeg in helpers/rtsp-to-jpegs.sh
+  * Basic camera conf for rtsp-to-jpeg.sh in examples/ifetch-tools.conf and
+    examples/cameras/camera_number.conf.
+  * Bumper version for branch next to 0.18.6-next in ifetch and wwwifetch.
+  * Adjust release in ifetch-tools-html-page/index.html.
+  * Add image_url for rtsp-to-jpegs.sh usage in examples/ifetch-tools.conf and
+    examples/cameras/camera_number.conf.
+  * Cleaned up reference in htdocs/index.html.
+  * Attempt to add locking and signal handling on helpers/rtsp-to-jpegs.sh.
+  * Add default rtsp protocol to udp in helpers/rtsp-to-jpegs.sh.
+  * Add hostname to logging in helpers/rtsp-to-jpegs.sh.
+  * Initial commit to use temp image pulls for live and archive display groups
+    in ifetch and wwwifetch.
+  * Initial scratch work for cluster helper of helpers/rtsp-cluster.sh.
+  * Prefix image name on helpers/rtsp-to-jpegs.sh
+  * Adjusted log name and added version information on helpers/rtsp-to-jpegs.sh
+  * Adjust ffmept timeout param for latest ffmpeg in helpers/rtsp-to-jpegs.sh
+  * Address old-fsf-address-in-copyright-file warning in debian/copyright.
+  * Address Depends: lsb-base (>= 3.0-6) in debian/control.
+  * Bump standards version in debina/control.
+  * Address missing-systemd-service-for-init.d-script with
+    debian/ifetch-tools.service file (Closes: #1039227).
+  * Bump versions to 0.18.6 for upload in ifetch, wwwifetch,
+    and ifetch-tools-html-page/index.html.
+
+  [ Debian Janitor ]
+  * Remove constraints unnecessary since buster (oldstable)
+
+ -- Richard Nelson <unixabg@gmail.com>  Thu, 01 Jan 2026 10:27:57 -0600
+
 ifetch-tools (0.18.5-2) unstable; urgency=medium
 
   * Address old-fsf-address-in-copyright-file warning in debian/copyright.
