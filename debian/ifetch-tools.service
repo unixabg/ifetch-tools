@@ -1,0 +1,34 @@
+[Unit]
+Description=ifetch-tools web service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+
+# run as the system user you already create in postinst
+User=ifetch-tools
+Group=ifetch-tools
+
+# If your app expects a writable state dir, keep it in /var/lib
+StateDirectory=ifetch-tools
+WorkingDirectory=/var/lib/ifetch-tools
+
+# logs: journald by default; keep syslog too if you want
+SyslogIdentifier=ifetch-tools
+
+# Start the actual daemon directly (native unit)
+ExecStart=/usr/bin/wwwifetch
+
+Restart=on-failure
+RestartSec=5
+
+# Optional hardening (safe defaults for many services)
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+ProtectHome=yes
+
+[Install]
+WantedBy=multi-user.target
+
