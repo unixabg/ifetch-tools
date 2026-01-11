@@ -1,6 +1,5 @@
 Source: ifetch-tools
 Section: web
-Priority: optional
 Maintainer: Richard Nelson <unixabg@gmail.com>
 Build-Depends:
  debhelper-compat (= 13),
