@@ -1,0 +1,5 @@
+d /var/lib/ifetch-tools 0700 ifetch-tools ifetch-tools
+d /var/log/ifetch-tools 0755 ifetch-tools ifetch-tools
+d /etc/ifetch-tools 0700 ifetch-tools ifetch-tools
+d /etc/ifetch-tools/cameras 0700 ifetch-tools ifetch-tools
+C /etc/ifetch-tools/ifetch-tools.conf 0600 ifetch-tools ifetch-tools - /usr/share/ifetch-tools/examples/ifetch-tools.conf

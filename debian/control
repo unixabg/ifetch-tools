@@ -3,6 +3,7 @@ Section: web
 Maintainer: Richard Nelson <unixabg@gmail.com>
 Build-Depends:
  debhelper-compat (= 13),
+ dh-sequence-installsysusers,
 Standards-Version: 4.7.3
 Homepage: https://fyeox.com/ifetch-tools/
 Vcs-Browser: https://github.com/unixabg/ifetch-tools
@@ -14,7 +15,6 @@ Architecture: all
 Pre-Depends:
  ${misc:Pre-Depends},
 Depends:
- adduser,
  ffmpeg,
  init-system-helpers,
  ruby,

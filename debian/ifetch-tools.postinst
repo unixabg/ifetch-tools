@@ -7,44 +7,6 @@ set -e
 # Set the prompt to remove data, logs, and settings each removal.
 db_fset ifetch-tools/remove seen false
 
-case "${1}" in
-	configure)
-		if ! getent passwd "ifetch-tools" > /dev/null 2>&1
-		then
-			# Add new user account
-			adduser --system --shell /bin/false --disabled-password --home /var/lib/ifetch-tools --gecos 'ifetch-tools account' --group --quiet ifetch-tools
-			if ! getent group "ifetch-tools" > /dev/null 2>&1
-			then
-				# Add existing user to new new group
-				addgroup --system --quiet ifetch-tools
-				gpasswd -a ifetch-tools ifetch-tools
-			fi
-		fi
-
-		mkdir -p /etc/ifetch-tools/cameras
-		mkdir -p /var/log/ifetch-tools
-
-		chown ifetch-tools:ifetch-tools /var/log/ifetch-tools /etc/ifetch-tools /etc/ifetch-tools/cameras
-		chmod 700 /etc/ifetch-tools /etc/ifetch-tools/cameras /var/lib/ifetch-tools
-
-		if [ ! -e /etc/ifetch-tools/ifetch-tools.conf ]
-		then
-			cp /usr/share/ifetch-tools/examples/ifetch-tools.conf /etc/ifetch-tools/ifetch-tools.conf
-			chmod 600 /etc/ifetch-tools/ifetch-tools.conf
-			chown ifetch-tools:ifetch-tools /etc/ifetch-tools/ifetch-tools.conf
-		fi
-		;;
-
-	abort-upgrade|abort-remove|abort-deconfigure)
-
-		;;
-
-	*)
-		echo "postinst called with unknown argument \`${1}'" >&2
-		exit 1
-		;;
-esac
-
 #DEBHELPER#
 
 exit 0
