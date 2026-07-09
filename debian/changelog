@@ -1,3 +1,16 @@
+ifetch-tools (0.18.6-4) unstable; urgency=medium
+
+  [ Luca Boccassi ]
+  * Stop deleting system users on purge
+  * Install and use sysusers.d/tmpfiles.d config files
+
+  [ Richard Nelson ]
+  * Drop init-system-helpers from debian/control for lintian issue.
+  * Adding Catalan translation of debconf messages from Carles Pina i Estany,
+    (Closes: #1127337).
+
+ -- Richard Nelson <unixabg@gmail.com>  Thu, 09 Jul 2026 09:19:24 -0500
+
 ifetch-tools (0.18.6-3) unstable; urgency=medium
 
   * Rebuild source package.
