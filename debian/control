@@ -16,7 +16,6 @@ Pre-Depends:
  ${misc:Pre-Depends},
 Depends:
  ffmpeg,
- init-system-helpers,
  ruby,
  ruby-net-http-digest-auth,
  ruby-rmagick,
